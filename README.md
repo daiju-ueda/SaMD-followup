@@ -1,1 +1,1 @@
-# samd-followup
+# SaMD-followup
