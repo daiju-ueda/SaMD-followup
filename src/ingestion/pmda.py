@@ -20,6 +20,7 @@ from typing import Any, Optional
 
 import httpx
 
+from src.utils import parse_date
 from src.models.product import (
     AliasType,
     EvidenceTier,
@@ -65,30 +66,7 @@ def _map_manufacturer(jp_name: str) -> tuple[str, Optional[str]]:
     return jp_name, None
 
 
-def _parse_jp_date(date_str: str) -> Optional[date]:
-    """Parse Japanese date formats: 令和X年Y月Z日, YYYY/MM/DD, YYYY-MM-DD."""
-    if not date_str:
-        return None
-
-    # ISO or slash format
-    for fmt in ("%Y-%m-%d", "%Y/%m/%d"):
-        try:
-            return datetime.strptime(date_str.strip()[:10], fmt).date()
-        except ValueError:
-            continue
-
-    # Japanese era format: 令和X年Y月Z日
-    m = re.match(r"令和(\d+)年(\d+)月(\d+)日", date_str)
-    if m:
-        year = 2018 + int(m.group(1))
-        return date(year, int(m.group(2)), int(m.group(3)))
-
-    m = re.match(r"平成(\d+)年(\d+)月(\d+)日", date_str)
-    if m:
-        year = 1988 + int(m.group(1))
-        return date(year, int(m.group(2)), int(m.group(3)))
-
-    return None
+_parse_jp_date = parse_date  # unified parser handles JP era formats
 
 
 def _determine_jp_pathway(

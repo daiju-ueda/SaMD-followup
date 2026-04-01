@@ -14,7 +14,7 @@ from typing import Any, Optional
 
 import httpx
 
-from config.settings import settings
+from src.config import settings
 from src.models.product import (
     AliasType,
     EvidenceTier,
@@ -26,6 +26,7 @@ from src.models.product import (
     RegulatoryPathway,
     RegulatoryStatusNormalized,
 )
+from src.utils import parse_date
 
 logger = logging.getLogger(__name__)
 
@@ -142,15 +143,7 @@ def _is_samd_candidate(record: dict[str, Any]) -> bool:
 
 # ---- Normalization -----------------------------------------------------------
 
-def _parse_date(date_str: Optional[str]) -> Optional[date]:
-    if not date_str:
-        return None
-    for fmt in ("%Y-%m-%d", "%m/%d/%Y", "%Y%m%d"):
-        try:
-            return datetime.strptime(date_str[:10], fmt).date()
-        except ValueError:
-            continue
-    return None
+_parse_date = parse_date  # alias for backward compat within this module
 
 
 def _pathway_and_status(record: dict[str, Any]) -> tuple[RegulatoryPathway, RegulatoryStatusNormalized, Optional[str]]:

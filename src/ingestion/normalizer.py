@@ -15,6 +15,7 @@ import uuid
 from difflib import SequenceMatcher
 from typing import Optional
 
+from src.config import settings
 from src.models.product import (
     AliasType,
     ManufacturerAlias,
@@ -25,9 +26,9 @@ from src.models.product import (
 
 logger = logging.getLogger(__name__)
 
-# Similarity threshold for fuzzy product name matching
-PRODUCT_NAME_SIMILARITY_THRESHOLD = 0.85
-MANUFACTURER_SIMILARITY_THRESHOLD = 0.80
+# Thresholds from settings (configurable via env)
+PRODUCT_NAME_SIMILARITY_THRESHOLD = settings.product_name_similarity
+MANUFACTURER_SIMILARITY_THRESHOLD = settings.manufacturer_similarity
 
 
 def _normalize_text(text: str) -> str:
@@ -82,63 +83,65 @@ def normalize_manufacturer_name(name: str) -> str:
 
 # ---- Disease area inference -------------------------------------------------
 
-DISEASE_AREA_PATTERNS: list[tuple[str, str]] = [
-    (r"diabetic retinopathy|retinal|fundus|eye", "Ophthalmology - Diabetic Retinopathy"),
-    (r"retinal|macular|amd|age.related macular", "Ophthalmology - Retinal Disease"),
-    (r"stroke|large vessel occlusion|lvo|cerebr", "Neurology - Stroke"),
-    (r"intracranial hemorrhage|ich|brain bleed", "Neurology - Intracranial Hemorrhage"),
-    (r"pulmonary embolism|pe detection", "Pulmonology - Pulmonary Embolism"),
-    (r"pneumothorax", "Pulmonology - Pneumothorax"),
-    (r"lung.?nodule|pulmonary nodule|lung cancer", "Oncology - Lung"),
-    (r"breast|mammo|tomosynthesis", "Oncology - Breast"),
-    (r"prostate|psa", "Oncology - Prostate"),
-    (r"colon|colorectal|polyp", "Oncology - Colorectal"),
-    (r"liver|hepatic", "Oncology - Liver"),
-    (r"skin|derm|melanoma|lesion", "Dermatology"),
-    (r"cardiac|heart|coronary|ecg|ekg|arrhythmia|atrial fibrillation|afib", "Cardiology"),
-    (r"fracture|bone|orthop|musculoskeletal|spine", "Orthopedics"),
-    (r"pathology|histology|cytology|biopsy", "Pathology"),
-    (r"radiology|x.?ray|ct|mri|imaging", "Radiology - General"),
-    (r"ultrasound|echo", "Radiology - Ultrasound"),
-    (r"sepsis|icu|critical care", "Critical Care"),
-    (r"diabetes|glucose|hba1c", "Endocrinology - Diabetes"),
-    (r"sleep|apnea", "Sleep Medicine"),
-    (r"mental|psychiatr|depress", "Psychiatry"),
+# Precompiled regex patterns for disease area inference
+_DISEASE_AREA_PATTERNS: list[tuple[re.Pattern, str]] = [
+    (re.compile(p, re.IGNORECASE), area) for p, area in [
+        (r"diabetic retinopathy|retinal|fundus|eye", "Ophthalmology - Diabetic Retinopathy"),
+        (r"retinal|macular|amd|age.related macular", "Ophthalmology - Retinal Disease"),
+        (r"stroke|large vessel occlusion|lvo|cerebr", "Neurology - Stroke"),
+        (r"intracranial hemorrhage|ich|brain bleed", "Neurology - Intracranial Hemorrhage"),
+        (r"pulmonary embolism|pe detection", "Pulmonology - Pulmonary Embolism"),
+        (r"pneumothorax", "Pulmonology - Pneumothorax"),
+        (r"lung.?nodule|pulmonary nodule|lung cancer", "Oncology - Lung"),
+        (r"breast|mammo|tomosynthesis", "Oncology - Breast"),
+        (r"prostate|psa", "Oncology - Prostate"),
+        (r"colon|colorectal|polyp", "Oncology - Colorectal"),
+        (r"liver|hepatic", "Oncology - Liver"),
+        (r"skin|derm|melanoma|lesion", "Dermatology"),
+        (r"cardiac|heart|coronary|ecg|ekg|arrhythmia|atrial fibrillation|afib", "Cardiology"),
+        (r"fracture|bone|orthop|musculoskeletal|spine", "Orthopedics"),
+        (r"pathology|histology|cytology|biopsy", "Pathology"),
+        (r"radiology|x.?ray|ct|mri|imaging", "Radiology - General"),
+        (r"ultrasound|echo", "Radiology - Ultrasound"),
+        (r"sepsis|icu|critical care", "Critical Care"),
+        (r"diabetes|glucose|hba1c", "Endocrinology - Diabetes"),
+        (r"sleep|apnea", "Sleep Medicine"),
+        (r"mental|psychiatr|depress", "Psychiatry"),
+    ]
 ]
 
 
 def infer_disease_area(text: str) -> Optional[str]:
     """Infer disease area from device description / intended use."""
-    text_lower = text.lower()
-    for pattern, area in DISEASE_AREA_PATTERNS:
-        if re.search(pattern, text_lower):
+    for pattern, area in _DISEASE_AREA_PATTERNS:
+        if pattern.search(text):
             return area
     return None
 
 
-# ---- Modality inference -----------------------------------------------------
-
-MODALITY_PATTERNS: list[tuple[str, str]] = [
-    (r"fundus|retinal imaging", "Fundus Photography"),
-    (r"ct scan|computed tomography", "CT"),
-    (r"mri|magnetic resonance", "MRI"),
-    (r"x.?ray|radiograph", "X-ray"),
-    (r"mammogra|tomosynthesis", "Mammography"),
-    (r"ultrasound|echo", "Ultrasound"),
-    (r"ecg|ekg|electrocardiogra", "ECG"),
-    (r"pathology|histology|whole slide", "Digital Pathology"),
-    (r"dermoscop|skin imaging", "Dermoscopy"),
-    (r"pet|positron emission", "PET"),
-    (r"endoscop", "Endoscopy"),
-    (r"oct|optical coherence", "OCT"),
+# Precompiled regex patterns for modality inference
+_MODALITY_PATTERNS: list[tuple[re.Pattern, str]] = [
+    (re.compile(p, re.IGNORECASE), modality) for p, modality in [
+        (r"fundus|retinal imaging", "Fundus Photography"),
+        (r"ct scan|computed tomography", "CT"),
+        (r"mri|magnetic resonance", "MRI"),
+        (r"x.?ray|radiograph", "X-ray"),
+        (r"mammogra|tomosynthesis", "Mammography"),
+        (r"ultrasound|echo", "Ultrasound"),
+        (r"ecg|ekg|electrocardiogra", "ECG"),
+        (r"pathology|histology|whole slide", "Digital Pathology"),
+        (r"dermoscop|skin imaging", "Dermoscopy"),
+        (r"pet|positron emission", "PET"),
+        (r"endoscop", "Endoscopy"),
+        (r"oct|optical coherence", "OCT"),
+    ]
 ]
 
 
 def infer_modality(text: str) -> Optional[str]:
     """Infer imaging modality from device description."""
-    text_lower = text.lower()
-    for pattern, modality in MODALITY_PATTERNS:
-        if re.search(pattern, text_lower):
+    for pattern, modality in _MODALITY_PATTERNS:
+        if pattern.search(text):
             return modality
     return None
 

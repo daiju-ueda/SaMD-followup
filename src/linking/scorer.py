@@ -11,11 +11,11 @@ import re
 from typing import Optional
 
 from src.models.linking import (
-    CLASSIFICATION_THRESHOLDS,
     DEFAULT_FEATURE_WEIGHTS,
     LinkClassification,
     LinkScoreDetail,
     ProductPaperLink,
+    get_classification_thresholds,
 )
 from src.models.paper import Paper, PaperAuthor, PaperStudyTag, StudyTypeTag
 from src.models.product import ProductSearchTerms
@@ -215,7 +215,7 @@ def classify_link(
     Returns (classification, raw_score, human_review_needed).
     """
     raw_score = sum(f.weighted_score for f in features)
-    thresholds = CLASSIFICATION_THRESHOLDS
+    thresholds = get_classification_thresholds()
 
     # Check which feature groups fired
     product_name_hit = any(

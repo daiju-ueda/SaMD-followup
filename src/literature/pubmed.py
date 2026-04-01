@@ -9,7 +9,7 @@ from typing import Any, Optional
 
 import httpx
 
-from config.settings import settings
+from src.config import settings
 from src.models.paper import Paper, PaperAuthor
 
 logger = logging.getLogger(__name__)

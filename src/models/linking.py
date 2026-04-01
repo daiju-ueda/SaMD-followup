@@ -80,12 +80,14 @@ DEFAULT_FEATURE_WEIGHTS: dict[str, float] = {
     "study_type_multicenter": 3.0,
 }
 
-# Classification thresholds
-CLASSIFICATION_THRESHOLDS = {
-    "exact_product_min_score": 50.0,
-    "product_family_min_score": 30.0,
-    "manufacturer_linked_min_score": 20.0,
-    "indication_related_min_score": 10.0,
-    "human_review_low": 20.0,
-    "human_review_high": 50.0,
-}
+def get_classification_thresholds() -> dict[str, float]:
+    """Load thresholds from settings (allows env override)."""
+    from src.config import settings
+    return {
+        "exact_product_min_score": settings.exact_product_min_score,
+        "product_family_min_score": settings.product_family_min_score,
+        "manufacturer_linked_min_score": settings.manufacturer_linked_min_score,
+        "indication_related_min_score": settings.indication_related_min_score,
+        "human_review_low": settings.human_review_score_low,
+        "human_review_high": settings.human_review_score_high,
+    }
