@@ -1,0 +1,1078 @@
+[
+  {
+    "product": "EndoBRAIN",
+    "manufacturer": "サイバネットシステム株式会社",
+    "disease_area": "Oncology - Colorectal",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30100BZX00048000"
+    ],
+    "queries_run": 5,
+    "papers_found": 12,
+    "papers_unique": 7,
+    "links_total": 5,
+    "exact_product": 5,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Artificial Intelligence-assisted System Improves Endoscopic Identification of Colorectal Neoplasms.",
+        "score": 0.178,
+        "terms": [
+          "EndoBRAIN"
+        ]
+      },
+      {
+        "title": "EndoBRAIN-EYE and the SUN database: important steps forward for computer-aided polyp detection.",
+        "score": 0.172,
+        "terms": [
+          "EndoBRAIN"
+        ]
+      },
+      {
+        "title": "White Light, Magnifying Endoscopy, Endocytoscopy, and Artificial Intelligence in Diagnosis of Early Colorectal Cancer: A",
+        "score": 0.161,
+        "terms": [
+          "EndoBRAIN"
+        ]
+      },
+      {
+        "title": "Leaving colorectal polyps in situ with endocytoscopy assisted by computer-aided diagnosis: a cost-effectiveness study.",
+        "score": 0.144,
+        "terms": [
+          "EndoBRAIN"
+        ]
+      },
+      {
+        "title": "Implementation of Artificial Intelligence in Colonoscopy Practice in Japan.",
+        "score": 0.144,
+        "terms": [
+          "EndoBRAIN"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "EIRL aneurysm",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Neurology - Cerebral Aneurysm",
+    "modality": "MRA",
+    "regulatory_ids": [
+      "30100BZX00142000"
+    ],
+    "queries_run": 5,
+    "papers_found": 4,
+    "papers_unique": 2,
+    "links_total": 1,
+    "exact_product": 1,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Comparison of 1.5 T and 3 T magnetic resonance angiography for detecting cerebral aneurysms using deep learning-based co",
+        "score": 0.161,
+        "terms": [
+          "EIRL aneurysm"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "OPTiM Doctor Eye",
+    "manufacturer": "株式会社オプティム",
+    "disease_area": "Ophthalmology - Glaucoma",
+    "modality": "Fundus Imaging",
+    "regulatory_ids": [
+      "301AGBZX00030000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "CureApp SC",
+    "manufacturer": "株式会社CureApp",
+    "disease_area": "Psychiatry - Nicotine Dependence",
+    "modality": "DTx App",
+    "regulatory_ids": [
+      "30200BZX00271000"
+    ],
+    "queries_run": 5,
+    "papers_found": 40,
+    "papers_unique": 24,
+    "links_total": 1,
+    "exact_product": 1,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Digital therapeutics in Japan: Present and future directions.",
+        "score": 0.161,
+        "terms": [
+          "CureApp SC"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "FS-AI688",
+    "manufacturer": "Fujifilm Corporation",
+    "disease_area": "Oncology - Lung",
+    "modality": "CT",
+    "regulatory_ids": [
+      "30200BZX00150000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "InferRead CT Pneumonia",
+    "manufacturer": "株式会社CESデカルト",
+    "disease_area": "Pulmonology - COVID-19",
+    "modality": "CT",
+    "regulatory_ids": [
+      "30200BZX00184000"
+    ],
+    "queries_run": 5,
+    "papers_found": 2,
+    "papers_unique": 1,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "AI-Rad Companion Chest CT",
+    "manufacturer": "Siemens Healthineers AG",
+    "disease_area": "Pulmonology",
+    "modality": "CT",
+    "regulatory_ids": [
+      "30200BZX00202000"
+    ],
+    "queries_run": 5,
+    "papers_found": 29,
+    "papers_unique": 16,
+    "links_total": 6,
+    "exact_product": 6,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Repeatability of AI-based, automatic measurement of vertebral and cardiovascular imaging biomarkers in low-dose chest CT",
+        "score": 0.161,
+        "terms": [
+          "AI-Rad Companion Chest CT"
+        ]
+      },
+      {
+        "title": "Artificial intelligence for opportunistic osteoporosis screening with a Hounsfield Unit in chronic obstructive pulmonary",
+        "score": 0.161,
+        "terms": [
+          "AI-Rad Companion Chest CT"
+        ]
+      },
+      {
+        "title": "Assessing the role of an artificial intelligence assessment tool for thoracic aorta diameter on routine chest CT.",
+        "score": 0.161,
+        "terms": [
+          "AI-Rad Companion Chest CT"
+        ]
+      },
+      {
+        "title": "Quantitative assessment of lung opacities from CT of pulmonary artery imaging data in COVID-19 patients: artificial inte",
+        "score": 0.161,
+        "terms": [
+          "AI-Rad Companion Chest CT"
+        ]
+      },
+      {
+        "title": "Association Between AI-derived Thoracic Calcium Volume and Aortic Valve Calcification Quantified by Agatston Scoring.",
+        "score": 0.161,
+        "terms": [
+          "AI-Rad Companion Chest CT"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "EndoBRAIN-EYE",
+    "manufacturer": "サイバネットシステム株式会社",
+    "disease_area": "Oncology - Colorectal",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30200BZX00208000"
+    ],
+    "queries_run": 5,
+    "papers_found": 1,
+    "papers_unique": 1,
+    "links_total": 1,
+    "exact_product": 1,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "EndoBRAIN-EYE and the SUN database: important steps forward for computer-aided polyp detection.",
+        "score": 0.172,
+        "terms": [
+          "EndoBRAIN-EYE"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "Ali-M3",
+    "manufacturer": "株式会社MICメディカル",
+    "disease_area": "Pulmonology - COVID-19",
+    "modality": "CT",
+    "regulatory_ids": [
+      "30200BZX00212000"
+    ],
+    "queries_run": 5,
+    "papers_found": 4,
+    "papers_unique": 2,
+    "links_total": 2,
+    "exact_product": 2,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Integrated model for COVID-19 diagnosis based on computed tomography artificial intelligence, and clinical features: a m",
+        "score": 0.178,
+        "terms": [
+          "Ali-M3"
+        ]
+      },
+      {
+        "title": "Accuracy of deep learning-based computed tomography diagnostic system for COVID-19: A consecutive sampling external vali",
+        "score": 0.161,
+        "terms": [
+          "Ali-M3"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "EndoBRAIN-Plus",
+    "manufacturer": "サイバネットシステム株式会社",
+    "disease_area": "Oncology - Colorectal",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30200BZX00235000"
+    ],
+    "queries_run": 5,
+    "papers_found": 2,
+    "papers_unique": 1,
+    "links_total": 1,
+    "exact_product": 1,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "White Light, Magnifying Endoscopy, Endocytoscopy, and Artificial Intelligence in Diagnosis of Early Colorectal Cancer: A",
+        "score": 0.161,
+        "terms": [
+          "EndoBRAIN-Plus"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "EIRL X-ray Lung nodule",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Oncology - Lung",
+    "modality": "X-ray",
+    "regulatory_ids": [
+      "30200BZX00269000"
+    ],
+    "queries_run": 5,
+    "papers_found": 4,
+    "papers_unique": 2,
+    "links_total": 1,
+    "exact_product": 1,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Can Artificial Intelligence Replace Humans for Detecting Lung Tumors on Radiographs? An Examination of Resected Malignan",
+        "score": 0.132,
+        "terms": [
+          "EIRL X-ray Lung nodule"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "CAD EYE (Colon) EW10-EC02",
+    "manufacturer": "Fujifilm Corporation",
+    "disease_area": "Oncology - Colorectal",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30200BZX00288000"
+    ],
+    "queries_run": 5,
+    "papers_found": 2,
+    "papers_unique": 1,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "EIRL Chest Metry",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Pulmonology",
+    "modality": "X-ray",
+    "regulatory_ids": [
+      "302AGBZX00101000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "WISE VISION Endoscopy",
+    "manufacturer": "日本電気株式会社",
+    "disease_area": "Oncology - Colorectal",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30200BZX00382000"
+    ],
+    "queries_run": 5,
+    "papers_found": 41,
+    "papers_unique": 24,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "EndoBRAIN-UC",
+    "manufacturer": "サイバネットシステム株式会社",
+    "disease_area": "Gastroenterology - UC",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30200BZX00136000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "FS-CM687",
+    "manufacturer": "Fujifilm Corporation",
+    "disease_area": "Radiology - General",
+    "modality": "CT",
+    "regulatory_ids": [
+      "30200BZX00100000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Ali's Triage",
+    "manufacturer": "M3 Inc.",
+    "disease_area": "Pulmonology - COVID-19",
+    "modality": "CT",
+    "regulatory_ids": [
+      "303AGBZX00021000"
+    ],
+    "queries_run": 5,
+    "papers_found": 74,
+    "papers_unique": 49,
+    "links_total": 2,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 2,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Plus.Lung.Nodule",
+    "manufacturer": "プラスマン合同会社",
+    "disease_area": "Oncology - Lung",
+    "modality": "CT",
+    "regulatory_ids": [
+      "301AGBZX00004000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "CXR-AID",
+    "manufacturer": "Fujifilm Corporation",
+    "disease_area": "Pulmonology / Oncology - Lung",
+    "modality": "X-ray",
+    "regulatory_ids": [
+      "30300BZX00188000"
+    ],
+    "queries_run": 5,
+    "papers_found": 2,
+    "papers_unique": 1,
+    "links_total": 1,
+    "exact_product": 1,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Performance of artificial intelligence-based software for the automatic detection of lung lesions on chest radiographs o",
+        "score": 0.144,
+        "terms": [
+          "CXR-AID"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "SYNAPSE VINCENT COVID-19",
+    "manufacturer": "Fujifilm Corporation",
+    "disease_area": "Pulmonology - COVID-19",
+    "modality": "CT",
+    "regulatory_ids": [
+      "22000BZX00238000"
+    ],
+    "queries_run": 5,
+    "papers_found": 2,
+    "papers_unique": 1,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "CXR Finding-i",
+    "manufacturer": "コニカミノルタ株式会社",
+    "disease_area": "Pulmonology / Oncology - Lung",
+    "modality": "X-ray",
+    "regulatory_ids": [
+      "30300BZX00271000"
+    ],
+    "queries_run": 5,
+    "papers_found": 100,
+    "papers_unique": 94,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Apple ECG App",
+    "manufacturer": "Apple Inc. (代理: Pacific Bridge Medical)",
+    "disease_area": "Cardiology - AF",
+    "modality": "ECG (Wearable)",
+    "regulatory_ids": [
+      "30200BZI00020000"
+    ],
+    "queries_run": 5,
+    "papers_found": 34,
+    "papers_unique": 19,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Apple Irregular Rhythm Notification",
+    "manufacturer": "Apple Inc. (代理: Pacific Bridge Medical)",
+    "disease_area": "Cardiology - AF",
+    "modality": "Wearable PPG",
+    "regulatory_ids": [
+      "30200BZI00021000"
+    ],
+    "queries_run": 5,
+    "papers_found": 18,
+    "papers_unique": 11,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "nodoca",
+    "manufacturer": "Aillis Inc.",
+    "disease_area": "Infectious Disease - Influenza",
+    "modality": "Pharyngeal Imaging",
+    "regulatory_ids": [
+      "30400BZX00090000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "CureApp HT",
+    "manufacturer": "株式会社CureApp",
+    "disease_area": "Cardiology - Hypertension",
+    "modality": "DTx App",
+    "regulatory_ids": [
+      "30400BZX00100000"
+    ],
+    "queries_run": 5,
+    "papers_found": 6,
+    "papers_unique": 4,
+    "links_total": 4,
+    "exact_product": 4,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": [
+      {
+        "title": "Digital therapeutic for hypertension improves physician-patient communication and clinical inertia: a survey of physicia",
+        "score": 0.287,
+        "terms": [
+          "CureApp HT"
+        ]
+      },
+      {
+        "title": "CureAPP HT is expected to be one piece of the puzzle that physicians and patients can work together to solve the problem",
+        "score": 0.172,
+        "terms": [
+          "CureApp HT"
+        ]
+      },
+      {
+        "title": "Digital therapeutics in Japan: Present and future directions.",
+        "score": 0.161,
+        "terms": [
+          "CureApp HT"
+        ]
+      },
+      {
+        "title": "Effects of a Hypertension Management Mobile App on Urinary Sodium Excretion in Patients With Chronic Kidney Disease: Ran",
+        "score": 0.144,
+        "terms": [
+          "CureApp HT"
+        ]
+      }
+    ]
+  },
+  {
+    "product": "COVID-19 Analysis SCO-PA01",
+    "manufacturer": "Canon Medical Systems",
+    "disease_area": "Pulmonology - COVID-19",
+    "modality": "CT",
+    "regulatory_ids": [
+      "30400BZX00123000"
+    ],
+    "queries_run": 5,
+    "papers_found": 100,
+    "papers_unique": 84,
+    "links_total": 1,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 1,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "CAD EYE (Upper GI) EW10-EG01",
+    "manufacturer": "Fujifilm Corporation",
+    "disease_area": "Oncology - Gastric/Esophageal",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30400BZX00217000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "EIRL Colon Polyp",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Oncology - Colorectal",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30400BZX00259000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "EIRL Chest XR",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Pulmonology / Oncology - Lung",
+    "modality": "X-ray",
+    "regulatory_ids": [
+      "30400BZX00285000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "SmartRobin AI",
+    "manufacturer": "株式会社カルディオインテリジェンス",
+    "disease_area": "Cardiology - AF",
+    "modality": "ECG",
+    "regulatory_ids": [
+      "303AGBZX00098000"
+    ],
+    "queries_run": 5,
+    "papers_found": 100,
+    "papers_unique": 100,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Join-Knee",
+    "manufacturer": "Aillis Inc.",
+    "disease_area": "Orthopedics - Knee OA",
+    "modality": "X-ray",
+    "regulatory_ids": [
+      "304ADBZX00007000"
+    ],
+    "queries_run": 5,
+    "papers_found": 4,
+    "papers_unique": 2,
+    "links_total": 1,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 1,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "SkinAI",
+    "manufacturer": "株式会社リンクエー",
+    "disease_area": "Dermatology",
+    "modality": "Dermoscopy",
+    "regulatory_ids": [
+      "304AGBZX00122000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "DeepEyeVision for RetinaStation",
+    "manufacturer": "株式会社ニコン (DeepEyeVision)",
+    "disease_area": "Ophthalmology - Retinal Disease",
+    "modality": "Fundus Imaging",
+    "regulatory_ids": [
+      "303ADBZX00110000"
+    ],
+    "queries_run": 5,
+    "papers_found": 42,
+    "papers_unique": 29,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "EIRL Brain Segmentation",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Neurology - Stroke",
+    "modality": "CT",
+    "regulatory_ids": [
+      "303AGBZX00043Z00"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "EIRL Brain Metry",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Neurology - White Matter Disease",
+    "modality": "MRI",
+    "regulatory_ids": [
+      "230AGBZX00107Z00"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "SusmeMed Med CBT-i",
+    "manufacturer": "サスメド株式会社",
+    "disease_area": "Psychiatry - Insomnia",
+    "modality": "DTx App",
+    "regulatory_ids": [
+      "30500BZX00033000"
+    ],
+    "queries_run": 5,
+    "papers_found": 100,
+    "papers_unique": 84,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "gastroAI model-G",
+    "manufacturer": "株式会社AIメディカルサービス",
+    "disease_area": "Oncology - Gastric",
+    "modality": "Endoscopy",
+    "regulatory_ids": [
+      "30500BZX00297000"
+    ],
+    "queries_run": 5,
+    "papers_found": 98,
+    "papers_unique": 73,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Apple AFib History",
+    "manufacturer": "Apple Inc. (代理: Vaupal Technologies)",
+    "disease_area": "Cardiology - AF",
+    "modality": "Wearable PPG",
+    "regulatory_ids": [
+      "30600BZI00010000"
+    ],
+    "queries_run": 5,
+    "papers_found": 50,
+    "papers_unique": 29,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Apple Sleep Apnea Notification",
+    "manufacturer": "Apple Inc. (代理: Vaupal Technologies)",
+    "disease_area": "Sleep Medicine - Apnea",
+    "modality": "Wearable",
+    "regulatory_ids": [
+      "30600BZI00017000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Apple Hearing Check",
+    "manufacturer": "Apple Inc. (代理: Vaupal Technologies)",
+    "disease_area": "ENT - Hearing",
+    "modality": "Wearable",
+    "regulatory_ids": [
+      "30600BZI00024000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Apple Hearing Aid",
+    "manufacturer": "Apple Inc. (代理: Vaupal Technologies)",
+    "disease_area": "ENT - Hearing",
+    "modality": "Wearable",
+    "regulatory_ids": [
+      "30600BZI00023000"
+    ],
+    "queries_run": 5,
+    "papers_found": 55,
+    "papers_unique": 36,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "SurVis-Hys",
+    "manufacturer": "株式会社Jmees",
+    "disease_area": "Gynecology",
+    "modality": "Endoscopy (Surgical)",
+    "regulatory_ids": [
+      "30600BZX00166000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "EIRL Chest CT2",
+    "manufacturer": "エルピクセル株式会社",
+    "disease_area": "Oncology - Lung",
+    "modality": "CT",
+    "regulatory_ids": [
+      "30700BZX00064000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "CoronaryDoc",
+    "manufacturer": "CLAIRVO Technologies株式会社",
+    "disease_area": "Cardiology - Coronary",
+    "modality": "CT",
+    "regulatory_ids": [
+      "306ADBZX00046000"
+    ],
+    "queries_run": 5,
+    "papers_found": 0,
+    "papers_unique": 0,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "HUAWEI ECG App",
+    "manufacturer": "HUAWEI (代理: ICST)",
+    "disease_area": "Cardiology - AF",
+    "modality": "ECG (Wearable)",
+    "regulatory_ids": [
+      "30600BZI00035000"
+    ],
+    "queries_run": 5,
+    "papers_found": 1,
+    "papers_unique": 1,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Fitbit ECG App",
+    "manufacturer": "Fitbit LLC (代理: Miclen Healthcare)",
+    "disease_area": "Cardiology - AF",
+    "modality": "ECG (Wearable)",
+    "regulatory_ids": [
+      "30700BZI00002000"
+    ],
+    "queries_run": 5,
+    "papers_found": 7,
+    "papers_unique": 4,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Garmin ECG App",
+    "manufacturer": "Garmin Japan株式会社",
+    "disease_area": "Cardiology - AF",
+    "modality": "ECG (Wearable)",
+    "regulatory_ids": [
+      "30700BZX00063000"
+    ],
+    "queries_run": 5,
+    "papers_found": 3,
+    "papers_unique": 2,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  },
+  {
+    "product": "Apple High Blood Pressure Notification",
+    "manufacturer": "Apple Inc. (代理: Vaupal Technologies)",
+    "disease_area": "Cardiology - Hypertension",
+    "modality": "Wearable PPG",
+    "regulatory_ids": [
+      "30700BZI00039000"
+    ],
+    "queries_run": 5,
+    "papers_found": 4,
+    "papers_unique": 2,
+    "links_total": 0,
+    "exact_product": 0,
+    "product_family": 0,
+    "manufacturer_linked": 0,
+    "indication_related": 0,
+    "review_needed": 0,
+    "top_exact_papers": []
+  }
+]

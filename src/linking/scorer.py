@@ -245,7 +245,8 @@ def classify_link(
     )
 
     # Classification logic
-    if raw_score >= thresholds["exact_product_min_score"] and (product_name_hit or product_alias_hit):
+    # Product name in title or abstract is strong enough signal on its own
+    if product_name_hit or (product_alias_hit and raw_score >= thresholds["manufacturer_linked_min_score"]):
         classification = LinkClassification.EXACT_PRODUCT
     elif raw_score >= thresholds["product_family_min_score"] and family_hit:
         classification = LinkClassification.PRODUCT_FAMILY

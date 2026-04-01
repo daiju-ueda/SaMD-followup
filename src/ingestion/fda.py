@@ -251,54 +251,97 @@ async def fetch_fda_denovo_samd(client: httpx.AsyncClient) -> list[tuple[Product
 
 # ---- AI/ML list ingestion (CSV/Excel) ---------------------------------------
 
+def _infer_pathway_from_submission_number(
+    submission_number: str,
+    decision_type: str = "",
+) -> tuple[RegulatoryPathway, RegulatoryStatusNormalized]:
+    """Infer regulatory pathway from submission number prefix or decision type text."""
+    sub = submission_number.upper().strip()
+    dt = decision_type.lower()
+
+    if sub.startswith("DEN") or "de novo" in dt:
+        return RegulatoryPathway.DE_NOVO, RegulatoryStatusNormalized.AUTHORIZED
+    if sub.startswith("P") or "pma" in dt:
+        return RegulatoryPathway.PMA, RegulatoryStatusNormalized.APPROVED
+    if sub.startswith("K") or "510" in dt:
+        return RegulatoryPathway.K510, RegulatoryStatusNormalized.CLEARED
+    if sub.startswith("H"):
+        return RegulatoryPathway.HDE, RegulatoryStatusNormalized.APPROVED
+    return RegulatoryPathway.K510, RegulatoryStatusNormalized.CLEARED
+
+
 def parse_fda_aiml_list(rows: list[dict[str, str]]) -> list[tuple[Product, RegulatoryEntry]]:
     """Parse the FDA AI/ML-Enabled Medical Devices list.
 
-    The FDA publishes this as a table (PDF/Excel) with columns like:
+    Actual CSV columns (as of 2026):
+      - Date of Final Decision
       - Submission Number
-      - Device / Trade Name
+      - Device
       - Company
-      - Date of Authorization
-      - Panel (Advisory Committee)
-      - Decision Type (510(k), De Novo, PMA)
+      - Panel (Lead)
+      - Primary Product Code
 
-    This function expects already-parsed rows as dicts.
+    Also handles older formats with columns like:
+      - Date of Authorization, Trade Name, Decision Type
     """
     results = []
     for row in rows:
         submission_number = row.get("Submission Number", "").strip()
-        device_name = row.get("Device", row.get("Trade Name", "")).strip()
+        device_name = (
+            row.get("Device", "")
+            or row.get("Trade Name", "")
+        ).strip()
         company = row.get("Company", "").strip()
-        date_str = row.get("Date of Authorization", row.get("Date", "")).strip()
-        decision_type = row.get("Decision Type", row.get("Type", "")).strip().lower()
+        date_str = (
+            row.get("Date of Final Decision", "")
+            or row.get("Date of Authorization", "")
+            or row.get("Date", "")
+        ).strip()
+        decision_type = row.get("Decision Type", row.get("Type", "")).strip()
+        panel = row.get("Panel (Lead)", row.get("Panel", "")).strip()
+        product_code = row.get("Primary Product Code", row.get("Product Code", "")).strip()
 
         if not device_name:
             continue
 
-        # Determine pathway
-        if "de novo" in decision_type:
-            pathway = RegulatoryPathway.DE_NOVO
-            status = RegulatoryStatusNormalized.AUTHORIZED
-        elif "pma" in decision_type:
-            pathway = RegulatoryPathway.PMA
-            status = RegulatoryStatusNormalized.APPROVED
-        else:
-            pathway = RegulatoryPathway.K510
-            status = RegulatoryStatusNormalized.CLEARED
+        # Split semicolon-separated device names (e.g., "MAGNETOM Sola; MAGNETOM Altea")
+        # Use the first name as canonical, rest as aliases
+        name_parts = [n.strip() for n in device_name.split(";") if n.strip()]
+        canonical = name_parts[0] if name_parts else device_name
+        extra_names = name_parts[1:] if len(name_parts) > 1 else []
+
+        pathway, status = _infer_pathway_from_submission_number(
+            submission_number, decision_type,
+        )
 
         product = Product(
-            canonical_name=device_name,
+            canonical_name=canonical,
             manufacturer_name=company,
             standalone_samd=True,
+            aliases=[
+                ProductAlias(
+                    product_id="00000000-0000-0000-0000-000000000000",  # fixed later
+                    alias_name=name,
+                    alias_type=AliasType.TRADE_NAME,
+                    source="fda_aiml_list",
+                )
+                for name in extra_names
+            ],
         )
+        # Fix alias product_id references
+        for alias in product.aliases:
+            alias.product_id = product.product_id
+
         entry = RegulatoryEntry(
             product_id=product.product_id,
             region=RegionCode.US,
             regulatory_pathway=pathway,
-            regulatory_status_raw=decision_type,
+            regulatory_status_raw=decision_type or pathway.value,
             regulatory_status=status,
             regulatory_id=submission_number or None,
             clearance_date=_parse_date(date_str),
+            product_code=product_code or None,
+            review_panel=panel or None,
             applicant=company,
             evidence_tier=EvidenceTier.TIER_1,
         )
