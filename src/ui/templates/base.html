@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SaMD Evidence Tracker{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; }
+        a { color: #2563eb; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        nav { background: #1a1a2e; color: #fff; padding: 0.75rem 2rem; display: flex; align-items: center; gap: 2rem; }
+        nav .brand { font-size: 1.1rem; font-weight: 700; color: #fff; }
+        nav a { color: #94a3b8; font-size: 0.9rem; }
+        nav a:hover { color: #fff; text-decoration: none; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: #fff; border-radius: 8px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: #1a1a2e; }
+        .stat-card .label { font-size: 0.85rem; color: #64748b; margin-top: 0.25rem; }
+
+        .card { background: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+        .card h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #1a1a2e; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th { background: #f1f5f9; text-align: left; padding: 0.6rem 0.75rem; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
+        td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+        tr:hover td { background: #f8fafc; }
+
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .badge-us { background: #dbeafe; color: #1d4ed8; }
+        .badge-jp { background: #fce7f3; color: #be185d; }
+        .badge-eu { background: #d1fae5; color: #065f46; }
+        .badge-exact { background: #dcfce7; color: #166534; }
+        .badge-family { background: #e0e7ff; color: #3730a3; }
+        .badge-mfg { background: #fef3c7; color: #92400e; }
+        .badge-indication { background: #f1f5f9; color: #475569; }
+        .badge-510k { background: #e0e7ff; color: #3730a3; }
+        .badge-de_novo { background: #dcfce7; color: #166534; }
+        .badge-pma { background: #fef3c7; color: #92400e; }
+        .badge-approval { background: #fce7f3; color: #be185d; }
+        .badge-certification { background: #ede9fe; color: #6d28d9; }
+
+        .search-bar { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .search-bar input, .search-bar select { padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem; }
+        .search-bar input[type="text"] { min-width: 300px; }
+        .search-bar button { padding: 0.5rem 1rem; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; }
+        .search-bar button:hover { background: #1d4ed8; }
+
+        .pagination { display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; font-size: 0.875rem; }
+        .pagination a { padding: 0.35rem 0.75rem; border: 1px solid #d1d5db; border-radius: 4px; }
+        .pagination .current { background: #2563eb; color: #fff; border-color: #2563eb; padding: 0.35rem 0.75rem; border-radius: 4px; }
+
+        .section-header { display: flex; align-items: center; gap: 0.5rem; margin: 1.5rem 0 0.75rem; }
+        .section-header h3 { font-size: 1rem; }
+        .count { color: #64748b; font-size: 0.85rem; }
+
+        .paper-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; }
+        .paper-item:last-child { border-bottom: none; }
+        .paper-title { font-weight: 500; }
+        .paper-meta { font-size: 0.8rem; color: #64748b; margin-top: 0.25rem; }
+        .paper-score { font-size: 0.8rem; color: #2563eb; }
+        .paper-terms { font-size: 0.75rem; color: #94a3b8; }
+
+        .detail-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0.25rem 1rem; font-size: 0.9rem; }
+        .detail-grid dt { font-weight: 600; color: #475569; }
+        .detail-grid dd { color: #1a1a2e; margin-bottom: 0.5rem; }
+
+        textarea { width: 100%; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; }
+        .error { color: #dc2626; background: #fef2f2; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; }
+        .empty { color: #94a3b8; font-style: italic; padding: 1rem 0; }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="brand">SaMD Evidence Tracker</span>
+        <a href="/">Dashboard</a>
+        <a href="/products">Products</a>
+        <a href="/products?region=us">US</a>
+        <a href="/products?region=jp">JP</a>
+        <a href="/papers">Papers</a>
+        <a href="/sql">SQL</a>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

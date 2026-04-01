@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — SaMD Evidence Tracker{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1rem; font-size:1.5rem;">Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="value">{{ total_products }}</div>
+        <div class="label">Products</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ total_papers }}</div>
+        <div class="label">Papers</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ total_links }}</div>
+        <div class="label">Product-Paper Links</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ total_aliases }}</div>
+        <div class="label">Aliases</div>
+    </div>
+    {% for r in by_region %}
+    <div class="stat-card">
+        <div class="value">{{ r.cnt }}</div>
+        <div class="label">{{ r.region|upper }} Products</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+    <div class="card">
+        <h2>Regulatory Pathways (US)</h2>
+        <table>
+            <tr><th>Pathway</th><th style="text-align:right">Count</th></tr>
+            {% for r in by_pathway %}
+            <tr>
+                <td><span class="badge badge-{{ r.regulatory_pathway }}">{{ r.regulatory_pathway }}</span></td>
+                <td style="text-align:right">{{ r.cnt }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="card">
+        <h2>Link Classifications</h2>
+        <table>
+            <tr><th>Classification</th><th style="text-align:right">Count</th></tr>
+            {% for r in by_classification %}
+            <tr>
+                <td><span class="badge badge-{{ r.link_classification.split('_')[0] }}">{{ r.link_classification }}</span></td>
+                <td style="text-align:right">{{ r.cnt }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Top Products by Linked Papers</h2>
+    <table>
+        <tr><th>Product</th><th>Manufacturer</th><th style="text-align:right">Papers</th></tr>
+        {% for p in top_products %}
+        <tr>
+            <td><a href="/products/{{ p.product_id }}">{{ p.canonical_name }}</a></td>
+            <td>{{ p.manufacturer_name }}</td>
+            <td style="text-align:right"><strong>{{ p.paper_count }}</strong></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

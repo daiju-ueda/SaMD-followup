@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}{{ product.canonical_name }} — SaMD Evidence Tracker{% endblock %}
+{% block content %}
+<div style="margin-bottom:0.5rem;">
+    <a href="/products">&laquo; Back to Products</a>
+</div>
+
+<h1 style="margin-bottom:0.25rem; font-size:1.5rem;">{{ product.canonical_name }}</h1>
+<p style="color:#64748b; margin-bottom:1.5rem;">{{ product.manufacturer_name }}</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+    <!-- Product Info -->
+    <div class="card">
+        <h2>Product Information</h2>
+        <dl class="detail-grid">
+            <dt>Canonical Name</dt>
+            <dd>{{ product.canonical_name }}</dd>
+            <dt>Manufacturer</dt>
+            <dd>{{ product.manufacturer_name }}</dd>
+            {% if product.intended_use %}
+            <dt>Intended Use</dt>
+            <dd>{{ product.intended_use }}</dd>
+            {% endif %}
+            {% if product.disease_area %}
+            <dt>Disease Area</dt>
+            <dd>{{ product.disease_area }}</dd>
+            {% endif %}
+            {% if product.modality %}
+            <dt>Modality</dt>
+            <dd>{{ product.modality }}</dd>
+            {% endif %}
+            {% if product.technology_type %}
+            <dt>Technology</dt>
+            <dd>{{ product.technology_type }}</dd>
+            {% endif %}
+            <dt>Standalone SaMD</dt>
+            <dd>{{ "Yes" if product.standalone_samd else "No" }}</dd>
+        </dl>
+    </div>
+
+    <!-- Regulatory Entries -->
+    <div class="card">
+        <h2>Regulatory Status</h2>
+        {% if reg_entries %}
+        <table>
+            <tr><th>Region</th><th>Pathway</th><th>Status</th><th>ID</th><th>Date</th></tr>
+            {% for e in reg_entries %}
+            <tr>
+                <td><span class="badge badge-{{ e.region }}">{{ e.region|upper }}</span></td>
+                <td><span class="badge badge-{{ e.regulatory_pathway }}">{{ e.regulatory_pathway }}</span></td>
+                <td>{{ e.regulatory_status }}</td>
+                <td style="font-family:monospace;">{{ e.regulatory_id or '—' }}</td>
+                <td>{{ e.clearance_date or '—' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p class="empty">No regulatory entries</p>
+        {% endif %}
+
+        {% if aliases %}
+        <h2 style="margin-top:1.5rem;">Aliases</h2>
+        <table>
+            <tr><th>Name</th><th>Type</th><th>Language</th></tr>
+            {% for a in aliases %}
+            <tr>
+                <td>{{ a.alias_name }}</td>
+                <td><span class="badge">{{ a.alias_type }}</span></td>
+                <td>{{ a.language or 'en' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Evidence Summary -->
+<div class="stats-grid" style="margin-top:1.5rem;">
+    <div class="stat-card">
+        <div class="value" style="color:#166534;">{{ exact_papers|length }}</div>
+        <div class="label">Exact Product Evidence</div>
+    </div>
+    <div class="stat-card">
+        <div class="value" style="color:#3730a3;">{{ family_papers|length }}</div>
+        <div class="label">Product Family</div>
+    </div>
+    <div class="stat-card">
+        <div class="value" style="color:#92400e;">{{ mfg_papers|length }}</div>
+        <div class="label">Manufacturer-linked</div>
+    </div>
+    <div class="stat-card">
+        <div class="value" style="color:#475569;">{{ indication_papers|length }}</div>
+        <div class="label">Indication-related</div>
+    </div>
+</div>
+
+<!-- Papers sections -->
+{% macro paper_section(title, papers, badge_class) %}
+{% if papers %}
+<div class="card">
+    <div class="section-header">
+        <h2>{{ title }}</h2>
+        <span class="count">({{ papers|length }})</span>
+    </div>
+    {% for p in papers %}
+    <div class="paper-item">
+        <div class="paper-title">{{ p.title }}</div>
+        <div class="paper-meta">
+            {% if p.journal %}{{ p.journal }}{% endif %}
+            {% if p.publication_year %} ({{ p.publication_year }}){% endif %}
+            {% if p.doi %} &middot; <a href="https://doi.org/{{ p.doi }}" target="_blank">DOI</a>{% endif %}
+            {% if p.pmid %} &middot; <a href="https://pubmed.ncbi.nlm.nih.gov/{{ p.pmid }}" target="_blank">PubMed</a>{% endif %}
+        </div>
+        <div class="paper-score">
+            Confidence: {{ "%.2f"|format(p.confidence_score) }}
+            {% if p.human_review_needed %} &middot; <span style="color:#dc2626;">Needs review</span>{% endif %}
+        </div>
+        {% if p.matched_terms %}
+        <div class="paper-terms">Matched: {{ p.matched_terms|join(', ') }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{{ paper_section("Exact Product Evidence", exact_papers, "exact") }}
+{{ paper_section("Product Family Evidence", family_papers, "family") }}
+{{ paper_section("Manufacturer-linked Evidence", mfg_papers, "mfg") }}
+{{ paper_section("Indication-related Papers", indication_papers, "indication") }}
+
+{% if total_papers == 0 %}
+<div class="card">
+    <p class="empty">No papers linked to this product yet. Run the literature search pipeline to find evidence.</p>
+</div>
+{% endif %}
+
+{% endblock %}

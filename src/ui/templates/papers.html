@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Papers — SaMD Evidence Tracker{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1rem; font-size:1.5rem;">Papers <span class="count">({{ total }})</span></h1>
+
+<form class="search-bar" method="get" action="/papers">
+    <input type="text" name="q" placeholder="Search paper title..." value="{{ q }}">
+    <button type="submit">Search</button>
+</form>
+
+<div class="card">
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Journal</th>
+            <th>Year</th>
+            <th>DOI</th>
+            <th style="text-align:right">Linked Products</th>
+        </tr>
+        {% for p in papers %}
+        <tr>
+            <td style="max-width:500px;">
+                {{ p.title }}
+                {% if p.pmid %}
+                <a href="https://pubmed.ncbi.nlm.nih.gov/{{ p.pmid }}" target="_blank" style="font-size:0.75rem;">[PubMed]</a>
+                {% endif %}
+            </td>
+            <td style="font-size:0.8rem; white-space:nowrap;">{{ p.journal or '' }}</td>
+            <td>{{ p.publication_year or '' }}</td>
+            <td style="font-size:0.8rem;">
+                {% if p.doi %}
+                <a href="https://doi.org/{{ p.doi }}" target="_blank">{{ p.doi[:30] }}{% if p.doi|length > 30 %}...{% endif %}</a>
+                {% endif %}
+            </td>
+            <td style="text-align:right">{{ p.linked_products }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if total_pages > 1 %}
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="?q={{ q }}&page={{ page - 1 }}&per_page={{ per_page }}">&laquo; Prev</a>
+        {% endif %}
+        <span class="current">{{ page }} / {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a href="?q={{ q }}&page={{ page + 1 }}&per_page={{ per_page }}">Next &raquo;</a>
+        {% endif %}
+        <span class="count" style="margin-left:1rem;">{{ total }} papers</span>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

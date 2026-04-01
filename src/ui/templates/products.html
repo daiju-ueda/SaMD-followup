@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Products — SaMD Evidence Tracker{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1rem; font-size:1.5rem;">Products <span class="count">({{ total }})</span></h1>
+
+<form class="search-bar" method="get" action="/products">
+    <input type="text" name="q" placeholder="Search product or manufacturer..." value="{{ q }}">
+    <select name="region">
+        <option value="">All Regions</option>
+        <option value="us" {% if region == 'us' %}selected{% endif %}>US (FDA)</option>
+        <option value="jp" {% if region == 'jp' %}selected{% endif %}>JP (PMDA)</option>
+        <option value="eu" {% if region == 'eu' %}selected{% endif %}>EU</option>
+    </select>
+    <select name="pathway">
+        <option value="">All Pathways</option>
+        <option value="510k" {% if pathway == '510k' %}selected{% endif %}>510(k)</option>
+        <option value="de_novo" {% if pathway == 'de_novo' %}selected{% endif %}>De Novo</option>
+        <option value="pma" {% if pathway == 'pma' %}selected{% endif %}>PMA</option>
+        <option value="approval" {% if pathway == 'approval' %}selected{% endif %}>JP Approval</option>
+        <option value="certification" {% if pathway == 'certification' %}selected{% endif %}>JP Certification</option>
+    </select>
+    <button type="submit">Search</button>
+</form>
+
+<div class="card">
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Manufacturer</th>
+            <th>Region</th>
+            <th>Pathway</th>
+            <th>Status</th>
+            <th>Reg ID</th>
+            <th>Date</th>
+            <th>Disease Area</th>
+            <th style="text-align:right">Papers</th>
+        </tr>
+        {% for p in products %}
+        <tr>
+            <td><a href="/products/{{ p.product_id }}">{{ p.canonical_name }}</a></td>
+            <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ p.manufacturer_name }}</td>
+            <td><span class="badge badge-{{ p.region or '' }}">{{ (p.region or '')|upper }}</span></td>
+            <td><span class="badge badge-{{ p.regulatory_pathway or '' }}">{{ p.regulatory_pathway or '' }}</span></td>
+            <td>{{ p.regulatory_status or '' }}</td>
+            <td style="font-family:monospace; font-size:0.8rem;">{{ p.regulatory_id or '' }}</td>
+            <td style="white-space:nowrap;">{{ p.clearance_date or '' }}</td>
+            <td style="font-size:0.8rem;">{{ p.disease_area or '' }}</td>
+            <td style="text-align:right">{% if p.paper_count > 0 %}<strong>{{ p.paper_count }}</strong>{% else %}<span style="color:#cbd5e1">0</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if total_pages > 1 %}
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="?q={{ q }}&region={{ region }}&pathway={{ pathway }}&page={{ page - 1 }}&per_page={{ per_page }}">&laquo; Prev</a>
+        {% endif %}
+        <span class="current">{{ page }} / {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a href="?q={{ q }}&region={{ region }}&pathway={{ pathway }}&page={{ page + 1 }}&per_page={{ per_page }}">Next &raquo;</a>
+        {% endif %}
+        <span class="count" style="margin-left:1rem;">{{ total }} products</span>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
