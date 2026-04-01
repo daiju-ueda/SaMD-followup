@@ -226,12 +226,52 @@ class PaperRepository:
         """, (product_id,))
         return cur.fetchall()
 
-    def insert(self, paper_id: str, title: str, source: str = None) -> None:
+    def find_by_doi(self, doi: str) -> Optional[dict]:
+        if not doi:
+            return None
+        cur = self._cur()
+        cur.execute("SELECT * FROM papers WHERE doi = %s", (doi,))
+        return cur.fetchone()
+
+    def find_by_pmid(self, pmid: str) -> Optional[dict]:
+        if not pmid:
+            return None
+        cur = self._cur()
+        cur.execute("SELECT * FROM papers WHERE pmid = %s", (pmid,))
+        return cur.fetchone()
+
+    def find_by_title(self, title: str) -> Optional[dict]:
+        """Exact title match — fallback when no DOI/PMID."""
+        cur = self._cur()
+        cur.execute("SELECT * FROM papers WHERE title = %s", (title,))
+        return cur.fetchone()
+
+    def upsert(self, paper_id: str, title: str, doi: str = None,
+               pmid: str = None, pmcid: str = None, openalex_id: str = None,
+               journal: str = None, publication_year: int = None,
+               is_open_access: bool = None, citation_count: int = None,
+               source: str = None) -> str:
+        """Insert or find existing paper. Returns the paper_id (existing or new)."""
+        # Check for existing by DOI first, then PMID, then title
+        existing = self.find_by_doi(doi) or self.find_by_pmid(pmid)
+        if existing:
+            return str(existing["paper_id"])
+
+        # Check by exact title as last resort
+        if not doi and not pmid:
+            existing = self.find_by_title(title)
+            if existing:
+                return str(existing["paper_id"])
+
         cur = self._cur()
         cur.execute("""
-            INSERT INTO papers (paper_id, title, source)
-            VALUES (%s, %s, %s)
-        """, (paper_id, title, source))
+            INSERT INTO papers
+                (paper_id, title, doi, pmid, pmcid, openalex_id,
+                 journal, publication_year, is_open_access, citation_count, source)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (paper_id, title, doi, pmid, pmcid, openalex_id,
+              journal, publication_year, is_open_access, citation_count, source))
+        return paper_id
 
     def insert_link(self, product_id: str, paper_id: str,
                     classification: str, confidence_score: float,

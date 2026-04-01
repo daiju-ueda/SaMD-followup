@@ -62,7 +62,11 @@ def load_products(conn, products_with_entries) -> int:
 
 
 def load_literature_results(conn, results_path: Path, label: str) -> tuple[int, int]:
-    """Load paper links from pipeline results JSON."""
+    """Load paper links from pipeline results JSON.
+
+    Uses DOI/PMID for deduplication — same paper linked to multiple products
+    will be stored once in papers table with multiple links.
+    """
     prod_repo = ProductRepository(conn)
     paper_repo = PaperRepository(conn)
 
@@ -70,29 +74,75 @@ def load_literature_results(conn, results_path: Path, label: str) -> tuple[int, 
     papers_inserted = links_inserted = 0
 
     for r in results:
-        # Find product in DB
-        products, _ = prod_repo.list_products(q=r.get("product", ""), per_page=1)
-        if not products:
+        product_name = r.get("product", "")
+        manufacturer = r.get("manufacturer", "")
+        if not product_name:
             continue
-        product_id = str(products[0]["product_id"])
+
+        # Find product in DB by exact name + manufacturer
+        products, _ = prod_repo.list_products(q=product_name, per_page=5)
+        matched = None
+        for p in products:
+            if p["canonical_name"] == product_name and p["manufacturer_name"] == manufacturer:
+                matched = p
+                break
+        if not matched:
+            continue
+        product_id = str(matched["product_id"])
 
         # Update metadata
         prod_repo.update_metadata(product_id, r.get("disease_area"), r.get("modality"))
 
-        for paper_info in r.get("top_exact_papers", []):
+        # Load linked papers (full metadata format)
+        for paper_info in r.get("linked_papers", []):
             title = paper_info.get("title", "")
             if not title:
                 continue
-            paper_id = str(uuid.uuid4())
-            paper_repo.insert(paper_id, title, f"pipeline_{label}")
-            paper_repo.insert_link(
-                product_id, paper_id, "exact_product",
-                paper_info.get("score", 0),
-                paper_info.get("terms"),
-                f"From pipeline run ({label})",
+
+            # Upsert paper — deduplicates by DOI/PMID/title
+            paper_id = paper_repo.upsert(
+                paper_id=str(uuid.uuid4()),
+                title=title,
+                doi=paper_info.get("doi"),
+                pmid=paper_info.get("pmid"),
+                pmcid=paper_info.get("pmcid"),
+                openalex_id=paper_info.get("openalex_id"),
+                journal=paper_info.get("journal"),
+                publication_year=paper_info.get("publication_year"),
+                is_open_access=paper_info.get("is_open_access"),
+                citation_count=paper_info.get("citation_count"),
+                source=paper_info.get("source", f"pipeline_{label}"),
             )
             papers_inserted += 1
+
+            paper_repo.insert_link(
+                product_id, paper_id,
+                paper_info.get("link_classification", "exact_product"),
+                paper_info.get("confidence_score", 0),
+                paper_info.get("matched_terms"),
+                f"From pipeline run ({label})",
+            )
             links_inserted += 1
+
+        # Fallback: legacy format (top_exact_papers with title-only)
+        if not r.get("linked_papers"):
+            for paper_info in r.get("top_exact_papers", []):
+                title = paper_info.get("title", "")
+                if not title:
+                    continue
+                paper_id = paper_repo.upsert(
+                    paper_id=str(uuid.uuid4()),
+                    title=title,
+                    source=f"pipeline_{label}",
+                )
+                paper_repo.insert_link(
+                    product_id, paper_id, "exact_product",
+                    paper_info.get("score", 0),
+                    paper_info.get("terms"),
+                    f"From pipeline run ({label})",
+                )
+                papers_inserted += 1
+                links_inserted += 1
 
     conn.commit()
     return papers_inserted, links_inserted

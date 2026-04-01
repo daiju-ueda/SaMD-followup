@@ -190,9 +190,38 @@ async def process_product(
     papers = await search_papers_for_product(client, terms)
     links = link_papers_to_product(papers, terms)
 
-    by_type = {}
+    papers_by_id = {str(p.paper_id): p for p in papers}
+
+    by_type: dict[str, int] = {}
     for l in links:
         by_type[l.link_classification.value] = by_type.get(l.link_classification.value, 0) + 1
+
+    # Serialize linked papers with full metadata
+    linked_papers = []
+    for l in links:
+        paper = papers_by_id.get(str(l.paper_id))
+        if not paper:
+            continue
+        linked_papers.append({
+            "title": paper.title,
+            "doi": paper.doi,
+            "pmid": paper.pmid,
+            "pmcid": paper.pmcid,
+            "openalex_id": paper.openalex_id,
+            "journal": paper.journal,
+            "publication_year": paper.publication_year,
+            "is_open_access": paper.is_open_access,
+            "citation_count": paper.citation_count,
+            "source": paper.source,
+            "authors": [
+                {"name": a.author_name, "affiliation": a.affiliation}
+                for a in paper.authors[:10]
+            ],
+            "link_classification": l.link_classification.value,
+            "confidence_score": l.confidence_score,
+            "matched_terms": l.matched_terms[:10],
+            "human_review_needed": l.human_review_needed,
+        })
 
     return {
         "product": product.canonical_name,
@@ -208,20 +237,5 @@ async def process_product(
         "manufacturer_linked": by_type.get("manufacturer_linked", 0),
         "indication_related": by_type.get("indication_related", 0),
         "review_needed": sum(1 for l in links if l.human_review_needed),
-        "top_exact_papers": [
-            {
-                "title": _find_title(papers, l.paper_id),
-                "score": l.confidence_score,
-                "terms": l.matched_terms[:5],
-            }
-            for l in links[:5]
-            if l.link_classification.value == "exact_product"
-        ],
+        "linked_papers": linked_papers,
     }
-
-
-def _find_title(papers: list[Paper], paper_id) -> str:
-    for p in papers:
-        if p.paper_id == paper_id:
-            return p.title[:120]
-    return "?"

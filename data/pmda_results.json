@@ -7,8 +7,7 @@
     "regulatory_ids": [
       "30100BZX00048000"
     ],
-    "queries_run": 5,
-    "papers_found": 12,
+    "papers_found": 7,
     "papers_unique": 7,
     "links_total": 5,
     "exact_product": 5,
@@ -16,41 +15,246 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
         "title": "Artificial Intelligence-assisted System Improves Endoscopic Identification of Colorectal Neoplasms.",
-        "score": 0.178,
-        "terms": [
+        "doi": "10.1016/j.cgh.2019.09.009",
+        "pmid": "31525512",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Clinical gastroenterology and hepatology : the official clinical practice journal of the American Gastroenterological Association",
+        "publication_year": 2020,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Kudo Shin-Ei",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan. Electronic address: kudos@med.showa-u.ac.jp."
+          },
+          {
+            "name": "Misawa Masashi",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Mori Yuichi",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Hotta Kinichi",
+            "affiliation": "Division of Endoscopy, Shizuoka Cancer Center Hospital, Shizuoka, Japan."
+          },
+          {
+            "name": "Ohtsuka Kazuo",
+            "affiliation": "Department of Endoscopy, Tokyo Medical and Dental University, Tokyo, Japan."
+          },
+          {
+            "name": "Ikematsu Hiroaki",
+            "affiliation": "Department of Gastroenterology and Endoscopy, National Cancer Center Hospital East, Chiba, Japan."
+          },
+          {
+            "name": "Saito Yutaka",
+            "affiliation": "Endoscopy Division, National Cancer Center Hospital, Tokyo, Japan."
+          },
+          {
+            "name": "Takeda Kenichi",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Nakamura Hiroki",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Ichimasa Katsuro",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.178,
+        "matched_terms": [
           "EndoBRAIN"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
         "title": "EndoBRAIN-EYE and the SUN database: important steps forward for computer-aided polyp detection.",
-        "score": 0.172,
-        "terms": [
+        "doi": "10.1016/j.gie.2020.09.016",
+        "pmid": "33741095",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Gastrointestinal endoscopy",
+        "publication_year": 2021,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Glissen Brown Jeremy R",
+            "affiliation": "Center for Advanced Endoscopy, Division of Gastroenterology, Beth Israel Deaconess Medical Center and Harvard Medical School, Boston, Massachusetts, USA."
+          },
+          {
+            "name": "Berzin Tyler M",
+            "affiliation": "Center for Advanced Endoscopy, Division of Gastroenterology, Beth Israel Deaconess Medical Center and Harvard Medical School, Boston, Massachusetts, USA."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.172,
+        "matched_terms": [
           "EndoBRAIN"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
-        "title": "White Light, Magnifying Endoscopy, Endocytoscopy, and Artificial Intelligence in Diagnosis of Early Colorectal Cancer: A",
-        "score": 0.161,
-        "terms": [
+        "title": "White Light, Magnifying Endoscopy, Endocytoscopy, and Artificial Intelligence in Diagnosis of Early Colorectal Cancer: A Comparative Study.",
+        "doi": "10.1002/deo2.70240",
+        "pmid": "41262550",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "DEN open",
+        "publication_year": 2026,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Tamura Eri",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Kudo Shin-Ei",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Iwasaki Shunto",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Semba Shigenori",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Shibuya Tomoya",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Kato Shun",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Kuroki Takanori",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Sato Yuta",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Sakurai Tatsuya",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Ogawa Yushi",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "EndoBRAIN"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
         "title": "Leaving colorectal polyps in situ with endocytoscopy assisted by computer-aided diagnosis: a cost-effectiveness study.",
-        "score": 0.144,
-        "terms": [
+        "doi": "10.1055/a-2532-9282",
+        "pmid": "39999970",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Endoscopy",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Halvorsen Natalie",
+            "affiliation": "Clinical Effectiveness Research Group, University of Oslo, Oslo, Norway."
+          },
+          {
+            "name": "Barua Ishita",
+            "affiliation": "Clinical Effectiveness Research Group, University of Oslo, Oslo, Norway."
+          },
+          {
+            "name": "Kudo Shin-Ei",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Gulati Shraddha",
+            "affiliation": "King's Institute of Therapeutic Endoscopy, King's College Hospital NHS Foundation Trust, London, UK."
+          },
+          {
+            "name": "Misawa Masashi",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Mori Kensaku",
+            "affiliation": "Graduate School of Informatics, Nagoya University, Nagoya, Japan."
+          },
+          {
+            "name": "Hayee Bu'Hussain",
+            "affiliation": "King's Institute of Therapeutic Endoscopy, King's College Hospital NHS Foundation Trust, London, UK."
+          },
+          {
+            "name": "Olabintan Olaolu",
+            "affiliation": "King's Institute of Therapeutic Endoscopy, King's College Hospital NHS Foundation Trust, London, UK."
+          },
+          {
+            "name": "Nilsen Jens Aksel",
+            "affiliation": "Clinical Effectiveness Research Group, University of Oslo, Oslo, Norway."
+          },
+          {
+            "name": "Frigstad Svein Oskar",
+            "affiliation": "Department of Medicine, Baerum Hospital, Vestre Viken Hospital Trust, Gjettum, Norway."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.144,
+        "matched_terms": [
           "EndoBRAIN"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
         "title": "Implementation of Artificial Intelligence in Colonoscopy Practice in Japan.",
-        "score": 0.144,
-        "terms": [
+        "doi": "10.31662/jmaj.2024-0133",
+        "pmid": "39926078",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "JMA journal",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Misawa Masashi",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Kudo Shin-Ei",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          },
+          {
+            "name": "Mori Yuichi",
+            "affiliation": "Digestive Disease Center, Showa University Northern Yokohama Hospital, Yokohama, Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.144,
+        "matched_terms": [
           "EndoBRAIN"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -62,8 +266,7 @@
     "regulatory_ids": [
       "30100BZX00142000"
     ],
-    "queries_run": 5,
-    "papers_found": 4,
+    "papers_found": 2,
     "papers_unique": 2,
     "links_total": 1,
     "exact_product": 1,
@@ -71,13 +274,62 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
-        "title": "Comparison of 1.5 T and 3 T magnetic resonance angiography for detecting cerebral aneurysms using deep learning-based co",
-        "score": 0.161,
-        "terms": [
+        "title": "Comparison of 1.5 T and 3 T magnetic resonance angiography for detecting cerebral aneurysms using deep learning-based computer-assisted detection software.",
+        "doi": "10.1007/s00234-023-03216-8",
+        "pmid": "37646791",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Neuroradiology",
+        "publication_year": 2023,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Tajima Taku",
+            "affiliation": "Department of Radiology, International University of Health and Welfare Mita Hospital, 1-4-3 Mita, Minato-Ku, Tokyo, 108-8329, Japan."
+          },
+          {
+            "name": "Akai Hiroyuki",
+            "affiliation": "Department of Radiology, International University of Health and Welfare Narita Hospital, 852 Hatakeda, Narita, Chiba, 286-0124, Japan."
+          },
+          {
+            "name": "Yasaka Koichiro",
+            "affiliation": "Department of Radiology, International University of Health and Welfare Narita Hospital, 852 Hatakeda, Narita, Chiba, 286-0124, Japan."
+          },
+          {
+            "name": "Kunimatsu Akira",
+            "affiliation": "Department of Radiology, International University of Health and Welfare Mita Hospital, 1-4-3 Mita, Minato-Ku, Tokyo, 108-8329, Japan."
+          },
+          {
+            "name": "Yoshioka Naoki",
+            "affiliation": "Department of Radiology, International University of Health and Welfare Narita Hospital, 852 Hatakeda, Narita, Chiba, 286-0124, Japan."
+          },
+          {
+            "name": "Akahane Masaaki",
+            "affiliation": "Department of Radiology, International University of Health and Welfare Narita Hospital, 852 Hatakeda, Narita, Chiba, 286-0124, Japan."
+          },
+          {
+            "name": "Ohtomo Kuni",
+            "affiliation": "International University of Health and Welfare, 2600-1 Kitakanamaru, Otawara, Tochigi, 324-8501, Japan."
+          },
+          {
+            "name": "Abe Osamu",
+            "affiliation": "Department of Radiology, Graduate School of Medicine, The University of Tokyo, 7-3-1 Hongo, Bunkyo-Ku, Tokyo, 113-0033, Japan."
+          },
+          {
+            "name": "Kiryu Shigeru",
+            "affiliation": "Department of Radiology, International University of Health and Welfare Narita Hospital, 852 Hatakeda, Narita, Chiba, 286-0124, Japan. kiryu-tky@umin.ac.jp."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "EIRL aneurysm"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -89,7 +341,6 @@
     "regulatory_ids": [
       "301AGBZX00030000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -98,7 +349,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "CureApp SC",
@@ -108,8 +359,7 @@
     "regulatory_ids": [
       "30200BZX00271000"
     ],
-    "queries_run": 5,
-    "papers_found": 40,
+    "papers_found": 24,
     "papers_unique": 24,
     "links_total": 1,
     "exact_product": 1,
@@ -117,13 +367,30 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
         "title": "Digital therapeutics in Japan: Present and future directions.",
-        "score": 0.161,
-        "terms": [
+        "doi": "10.1016/j.jjcc.2024.11.005",
+        "pmid": "39613155",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of cardiology",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Nomura Akihiro",
+            "affiliation": "College of Transdisciplinary Sciences for Innovation, Kanazawa University, Kanazawa, Japan; Department of Cardiovascular Medicine, Kanazawa University Graduate School of Medical Sciences, Kanazawa, Japan; Frontier Institute of Tourism Sciences, Kanazawa University, Kanazawa, Japan; CureApp Institute, Karuizawa, Japan. Electronic address: anomura@med.kanazawa-u.ac.jp."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "CureApp SC"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -135,7 +402,6 @@
     "regulatory_ids": [
       "30200BZX00150000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -144,7 +410,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "InferRead CT Pneumonia",
@@ -154,8 +420,7 @@
     "regulatory_ids": [
       "30200BZX00184000"
     ],
-    "queries_run": 5,
-    "papers_found": 2,
+    "papers_found": 1,
     "papers_unique": 1,
     "links_total": 0,
     "exact_product": 0,
@@ -163,7 +428,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "AI-Rad Companion Chest CT",
@@ -173,8 +438,7 @@
     "regulatory_ids": [
       "30200BZX00202000"
     ],
-    "queries_run": 5,
-    "papers_found": 29,
+    "papers_found": 16,
     "papers_unique": 16,
     "links_total": 6,
     "exact_product": 6,
@@ -182,41 +446,294 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
-        "title": "Repeatability of AI-based, automatic measurement of vertebral and cardiovascular imaging biomarkers in low-dose chest CT",
-        "score": 0.161,
-        "terms": [
+        "title": "Repeatability of AI-based, automatic measurement of vertebral and cardiovascular imaging biomarkers in low-dose chest CT: the ImaLife cohort.",
+        "doi": "10.1007/s00330-024-11328-9",
+        "pmid": "39779514",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "European radiology",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Hamelink Iris",
+            "affiliation": "Department of Radiology, University of Groningen, University Medical Center of Groningen, Groningen, The Netherlands."
+          },
+          {
+            "name": "van Tuinen Marcel",
+            "affiliation": "Department of Radiology, University of Groningen, University Medical Center of Groningen, Groningen, The Netherlands."
+          },
+          {
+            "name": "Kwee Thomas C",
+            "affiliation": "Department of Radiology, University of Groningen, University Medical Center of Groningen, Groningen, The Netherlands."
+          },
+          {
+            "name": "van Ooijen Peter M A",
+            "affiliation": "Department of Radiation Oncology, University of Groningen, University Medical Center of Groningen, Groningen, The Netherlands."
+          },
+          {
+            "name": "Vliegenthart Rozemarijn",
+            "affiliation": "Department of Radiology, University of Groningen, University Medical Center of Groningen, Groningen, The Netherlands. r.vliegenthart@umcg.nl."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "AI-Rad Companion Chest CT"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
-        "title": "Artificial intelligence for opportunistic osteoporosis screening with a Hounsfield Unit in chronic obstructive pulmonary",
-        "score": 0.161,
-        "terms": [
+        "title": "Artificial intelligence for opportunistic osteoporosis screening with a Hounsfield Unit in chronic obstructive pulmonary disease patients.",
+        "doi": "10.1016/j.jocd.2025.101576",
+        "pmid": "40048870",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of clinical densitometry : the official journal of the International Society for Clinical Densitometry",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Li Yali",
+            "affiliation": "Department of Radiology, the First Affiliated Hospital of Zhengzhou University, 1 Jianshe East Road, Zhengzhou, 450052, China."
+          },
+          {
+            "name": "Wu Yan",
+            "affiliation": "Department of Radiology, the First Affiliated Hospital of Zhengzhou University, 1 Jianshe East Road, Zhengzhou, 450052, China. Electronic address: yanzi155@hotmail.com."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "AI-Rad Companion Chest CT"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
         "title": "Assessing the role of an artificial intelligence assessment tool for thoracic aorta diameter on routine chest CT.",
-        "score": 0.161,
-        "terms": [
+        "doi": "10.1259/bjr.20220853",
+        "pmid": "37335231",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "The British journal of radiology",
+        "publication_year": 2023,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Graby John",
+            "affiliation": "Department of Cardiology, Royal United Hospital, Bath, United Kingdom."
+          },
+          {
+            "name": "Harris Maredudd",
+            "affiliation": "Department of Radiology, Royal United Hospital, Bath, United Kingdom."
+          },
+          {
+            "name": "Jones Calum",
+            "affiliation": "Department of Radiology, Royal United Hospital, Bath, United Kingdom."
+          },
+          {
+            "name": "Waring Harry",
+            "affiliation": "Department of Radiology, Royal United Hospital, Bath, United Kingdom."
+          },
+          {
+            "name": "Lyen Stephen",
+            "affiliation": "Department of Radiology, Royal United Hospital, Bath, United Kingdom."
+          },
+          {
+            "name": "Hudson Benjamin J",
+            "affiliation": "Department of Radiology, Royal United Hospital, Bath, United Kingdom."
+          },
+          {
+            "name": "Rodrigues Jonathan Carl Luis",
+            "affiliation": "Department for Health, University of Bath, Bath, United Kingdom."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "AI-Rad Companion Chest CT"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
-        "title": "Quantitative assessment of lung opacities from CT of pulmonary artery imaging data in COVID-19 patients: artificial inte",
-        "score": 0.161,
-        "terms": [
+        "title": "Quantitative assessment of lung opacities from CT of pulmonary artery imaging data in COVID-19 patients: artificial intelligence versus radiologist.",
+        "doi": "10.1093/bjro/tzaf008",
+        "pmid": "40370862",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "BJR open",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Svensson Ann Mari",
+            "affiliation": "Department of Molecular Medicine and Surgery, Karolinska Institutet, Stockholm, 171 76, Sweden."
+          },
+          {
+            "name": "Kistner Anna",
+            "affiliation": "Department of Molecular Medicine and Surgery, Karolinska Institutet, Stockholm, 171 76, Sweden."
+          },
+          {
+            "name": "Kairaitis Kristina",
+            "affiliation": "Ludwig Engel Centre for Respiratory Research, Westmead Institute for Medical Research, Sydney, NSW 2145, Australia."
+          },
+          {
+            "name": "Prisk G Kim",
+            "affiliation": "Department of Medicine, University of California, San Diego, CA 92037, United States."
+          },
+          {
+            "name": "Farrow Catherine",
+            "affiliation": "Ludwig Engel Centre for Respiratory Research, Westmead Institute for Medical Research, Sydney, NSW 2145, Australia."
+          },
+          {
+            "name": "Amis Terence",
+            "affiliation": "Ludwig Engel Centre for Respiratory Research, Westmead Institute for Medical Research, Sydney, NSW 2145, Australia."
+          },
+          {
+            "name": "Wagner Peter D",
+            "affiliation": "Department of Medicine, University of California, San Diego, CA 92037, United States."
+          },
+          {
+            "name": "Malhotra Atul",
+            "affiliation": "Department of Medicine, University of California, San Diego, CA 92037, United States."
+          },
+          {
+            "name": "Harbut Piotr",
+            "affiliation": "Department of Medical Sciences, Danderyd Hospital, Karolinska Institutet, Stockholm, 182 88, Sweden."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "AI-Rad Companion Chest CT"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
         "title": "Association Between AI-derived Thoracic Calcium Volume and Aortic Valve Calcification Quantified by Agatston Scoring.",
-        "score": 0.161,
-        "terms": [
+        "doi": "10.21873/invivo.14266",
+        "pmid": "41760332",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "In vivo (Athens, Greece)",
+        "publication_year": 2026,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Almeida Gonçalo G",
+            "affiliation": "Department of Radiology, Kantonsspital Baden, affiliated Hospital for Research and Teaching of the Faculty of Medicine of the University of Zurich, Baden, Switzerland."
+          },
+          {
+            "name": "Belde Dana",
+            "affiliation": "Department of Radiology, Kantonsspital Baden, affiliated Hospital for Research and Teaching of the Faculty of Medicine of the University of Zurich, Baden, Switzerland."
+          },
+          {
+            "name": "Guldimann Mike",
+            "affiliation": "Department of Radiology, Kantonsspital Baden, affiliated Hospital for Research and Teaching of the Faculty of Medicine of the University of Zurich, Baden, Switzerland."
+          },
+          {
+            "name": "Engelberger Stephan",
+            "affiliation": "Department of Surgery, Section of Vascular Surgery, Kantonsspital Baden, Baden, Switzerland."
+          },
+          {
+            "name": "Euler André",
+            "affiliation": "Department of Radiology, Kantonsspital Baden, affiliated Hospital for Research and Teaching of the Faculty of Medicine of the University of Zurich, Baden, Switzerland."
+          },
+          {
+            "name": "Knöpfli Fabienne",
+            "affiliation": "Department of Radiology, Kantonsspital Baden, affiliated Hospital for Research and Teaching of the Faculty of Medicine of the University of Zurich, Baden, Switzerland."
+          },
+          {
+            "name": "Kubik-Huch Rahel A",
+            "affiliation": "Department of Radiology, Kantonsspital Baden, affiliated Hospital for Research and Teaching of the Faculty of Medicine of the University of Zurich, Baden, Switzerland."
+          },
+          {
+            "name": "Thali Michael",
+            "affiliation": "Department of Forensic Medicine Zurich, University of Zurich, Zurich, Switzerland."
+          },
+          {
+            "name": "Niemann Tilo",
+            "affiliation": "Department of Radiology, Kantonsspital Baden, affiliated Hospital for Research and Teaching of the Faculty of Medicine of the University of Zurich, Baden, Switzerland; tilo.niemann@ksb.ch."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "AI-Rad Companion Chest CT"
-        ]
+        ],
+        "human_review_needed": false
+      },
+      {
+        "title": "Quantitative Chest Computed Tomography and Machine Learning for Subphenotyping Small Airways Disease in Long COVID.",
+        "doi": "10.1097/RTI.0000000000000861",
+        "pmid": "41099164",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of thoracic imaging",
+        "publication_year": 2026,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Chate Rodrigo Caruso",
+            "affiliation": "Department of Radiology."
+          },
+          {
+            "name": "Carvalho Carlos Roberto Ribeiro",
+            "affiliation": "Division of Pulmonary Medicine, Instituto do Coração do Hospital das Clínicas da Faculdade de Medicina da Universidade de São Paulo HCFMUSP."
+          },
+          {
+            "name": "Sawamura Marcio Valente Yamada",
+            "affiliation": "Department of Radiology."
+          },
+          {
+            "name": "Salge João Marcos",
+            "affiliation": "Division of Pulmonary Medicine, Instituto do Coração do Hospital das Clínicas da Faculdade de Medicina da Universidade de São Paulo HCFMUSP."
+          },
+          {
+            "name": "Fonseca Eduardo Kaiser Ururahy Nunes",
+            "affiliation": "Department of Radiology."
+          },
+          {
+            "name": "Amaral Paula Terra Martins Almeida",
+            "affiliation": "Department of Radiology, Hospital Israelita Albert Einstein, São Paulo, SP, Brazil."
+          },
+          {
+            "name": "de Almeida Lamas Celina",
+            "affiliation": "Division of Pulmonary Medicine, Instituto do Coração do Hospital das Clínicas da Faculdade de Medicina da Universidade de São Paulo HCFMUSP."
+          },
+          {
+            "name": "de Luna Luis Augusto Visani",
+            "affiliation": "Division of Pulmonary Medicine, Instituto do Coração do Hospital das Clínicas da Faculdade de Medicina da Universidade de São Paulo HCFMUSP."
+          },
+          {
+            "name": "Kay Fernando Uliana",
+            "affiliation": "Department of Radiology, University of Texas Southwestern Medical Center, Dallas, TX."
+          },
+          {
+            "name": "Junior Antonildes Nascimento Assunção",
+            "affiliation": "Department of Radiology."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
+          "AI-Rad Companion Chest CT"
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -228,7 +745,6 @@
     "regulatory_ids": [
       "30200BZX00208000"
     ],
-    "queries_run": 5,
     "papers_found": 1,
     "papers_unique": 1,
     "links_total": 1,
@@ -237,13 +753,34 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
         "title": "EndoBRAIN-EYE and the SUN database: important steps forward for computer-aided polyp detection.",
-        "score": 0.172,
-        "terms": [
+        "doi": "10.1016/j.gie.2020.09.016",
+        "pmid": "33741095",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Gastrointestinal endoscopy",
+        "publication_year": 2021,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Glissen Brown Jeremy R",
+            "affiliation": "Center for Advanced Endoscopy, Division of Gastroenterology, Beth Israel Deaconess Medical Center and Harvard Medical School, Boston, Massachusetts, USA."
+          },
+          {
+            "name": "Berzin Tyler M",
+            "affiliation": "Center for Advanced Endoscopy, Division of Gastroenterology, Beth Israel Deaconess Medical Center and Harvard Medical School, Boston, Massachusetts, USA."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.172,
+        "matched_terms": [
           "EndoBRAIN-EYE"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -255,8 +792,7 @@
     "regulatory_ids": [
       "30200BZX00212000"
     ],
-    "queries_run": 5,
-    "papers_found": 4,
+    "papers_found": 2,
     "papers_unique": 2,
     "links_total": 2,
     "exact_product": 2,
@@ -264,20 +800,126 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
-        "title": "Integrated model for COVID-19 diagnosis based on computed tomography artificial intelligence, and clinical features: a m",
-        "score": 0.178,
-        "terms": [
+        "title": "Integrated model for COVID-19 diagnosis based on computed tomography artificial intelligence, and clinical features: a multicenter cohort study.",
+        "doi": "10.21037/atm-21-5571",
+        "pmid": "35284557",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Annals of translational medicine",
+        "publication_year": 2022,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Kataoka Yuki",
+            "affiliation": "Department of Internal Medicine, Kyoto Min-Iren Asukai Hospital, Tanaka Asukai-cho, Kyoto, Japan."
+          },
+          {
+            "name": "Kimura Yuya",
+            "affiliation": "Clinical Research Center, Department of Respiratory Medicine, National Hospital Organization Tokyo National Hospital, Kiyose-shi, Tokyo, Japan."
+          },
+          {
+            "name": "Ikenoue Tatsuyoshi",
+            "affiliation": "Human Health Sciences, Kyoto University Graduate School of Medicine, Sakyo-ku, Kyoto, Japan."
+          },
+          {
+            "name": "Matsuoka Yoshinori",
+            "affiliation": "Department of Healthcare Epidemiology, Kyoto University Graduate School of Medicine/Public Health, Sakyo-ku, Kyoto, Japan."
+          },
+          {
+            "name": "Matsumoto Junichi",
+            "affiliation": "Department of Emergency and Critical Care Medicine, St. Marianna University School of Medicine, Kawasaki, Kanagawa, Japan."
+          },
+          {
+            "name": "Kumasawa Junji",
+            "affiliation": "Human Health Sciences, Kyoto University Graduate School of Medicine, Sakyo-ku, Kyoto, Japan."
+          },
+          {
+            "name": "Tochitatni Kentaro",
+            "affiliation": "Department of Infectious Diseases, Kyoto City Hospital, Nakagyo-ku, Kyoto, Japan."
+          },
+          {
+            "name": "Funakoshi Hiraku",
+            "affiliation": "Department of Emergency and Critical Care Medicine, Tokyobay Urayasu Ichikawa Medical Center, Urayasu, Chiba, Japan."
+          },
+          {
+            "name": "Hosoda Tomohiro",
+            "affiliation": "Department of Infectious Disease, Kawasaki Municipal Kawasaki Hospital, Kawasaki, Kanagawa, Japan."
+          },
+          {
+            "name": "Kugimiya Aiko",
+            "affiliation": "Department of Emergency and Critical Care Medicine, Yamanashi Prefectural Central Hospital, Kofu, Yamanashi, Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.178,
+        "matched_terms": [
           "Ali-M3"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
-        "title": "Accuracy of deep learning-based computed tomography diagnostic system for COVID-19: A consecutive sampling external vali",
-        "score": 0.161,
-        "terms": [
+        "title": "Accuracy of deep learning-based computed tomography diagnostic system for COVID-19: A consecutive sampling external validation cohort study.",
+        "doi": "10.1371/journal.pone.0258760",
+        "pmid": "34735458",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "PloS one",
+        "publication_year": 2021,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Ikenoue Tatsuyoshi",
+            "affiliation": "Human Health Sciences, Kyoto University Graduate School of Medicine, Kyoto, Japan."
+          },
+          {
+            "name": "Kataoka Yuki",
+            "affiliation": "Hospital Care Research Unit, Hyogo Prefectural Amagasaki General Medical Center, Amagasaki, Hyogo, Japan."
+          },
+          {
+            "name": "Matsuoka Yoshinori",
+            "affiliation": "Department of Emergency Medicine, Kobe City Medical Center General Hospital, Kobe City, Hyogo, Japan."
+          },
+          {
+            "name": "Matsumoto Junichi",
+            "affiliation": "Department of Emergency and Critical Care Medicine, St. Marianna University School of Medicine, Kawasaki, Kanagawa, Japan."
+          },
+          {
+            "name": "Kumasawa Junji",
+            "affiliation": "Department of Critical Care Medicine, Sakai City Medical Center, Sakai, Osaka, Japan."
+          },
+          {
+            "name": "Tochitatni Kentaro",
+            "affiliation": "Department of Infectious Diseases, Kyoto City Hospital, Kyoto-city, Kyoto, Japan."
+          },
+          {
+            "name": "Funakoshi Hiraku",
+            "affiliation": "Department of Emergency and Critical Care Medicine, Tokyobay Urayasu Ichikawa Medical Center, Urayasu, Chiba, Japan."
+          },
+          {
+            "name": "Hosoda Tomohiro",
+            "affiliation": "Department of Infectious Disease, Kawasaki Municipal Kawasaki Hospital, Kawasaki-ku, Kawasaki Kanagawa, Japan."
+          },
+          {
+            "name": "Kugimiya Aiko",
+            "affiliation": "Department of Emergency and Critical Care Medicine, Yamanashi Prefectural Central Hospital, Kofu, Yamanashi, Japan."
+          },
+          {
+            "name": "Shirano Michinori",
+            "affiliation": "Department of Infectious Diseases, Osaka City General Hospital, Osaka, Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "Ali-M3"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -289,8 +931,7 @@
     "regulatory_ids": [
       "30200BZX00235000"
     ],
-    "queries_run": 5,
-    "papers_found": 2,
+    "papers_found": 1,
     "papers_unique": 1,
     "links_total": 1,
     "exact_product": 1,
@@ -298,13 +939,66 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
-        "title": "White Light, Magnifying Endoscopy, Endocytoscopy, and Artificial Intelligence in Diagnosis of Early Colorectal Cancer: A",
-        "score": 0.161,
-        "terms": [
+        "title": "White Light, Magnifying Endoscopy, Endocytoscopy, and Artificial Intelligence in Diagnosis of Early Colorectal Cancer: A Comparative Study.",
+        "doi": "10.1002/deo2.70240",
+        "pmid": "41262550",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "DEN open",
+        "publication_year": 2026,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Tamura Eri",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Kudo Shin-Ei",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Iwasaki Shunto",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Semba Shigenori",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Shibuya Tomoya",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Kato Shun",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Kuroki Takanori",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Sato Yuta",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Sakurai Tatsuya",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          },
+          {
+            "name": "Ogawa Yushi",
+            "affiliation": "Digestive Disease Center Showa Medical University Northern Yokohama Hospital Kanagawa Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "EndoBRAIN-Plus"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -316,8 +1010,7 @@
     "regulatory_ids": [
       "30200BZX00269000"
     ],
-    "queries_run": 5,
-    "papers_found": 4,
+    "papers_found": 2,
     "papers_unique": 2,
     "links_total": 1,
     "exact_product": 1,
@@ -325,13 +1018,34 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
-        "title": "Can Artificial Intelligence Replace Humans for Detecting Lung Tumors on Radiographs? An Examination of Resected Malignan",
-        "score": 0.132,
-        "terms": [
+        "title": "Can Artificial Intelligence Replace Humans for Detecting Lung Tumors on Radiographs? An Examination of Resected Malignant Lung Tumors.",
+        "doi": "10.3390/jpm14020164",
+        "pmid": "38392597",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of personalized medicine",
+        "publication_year": 2024,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Hamanaka Rurika",
+            "affiliation": "Department of Thoracic Surgery, Shin-Yurigaoka General Hospital, 255 Furusawa Asao-ku, Kawasaki 215-0026, Japan."
+          },
+          {
+            "name": "Oda Makoto",
+            "affiliation": "Department of Thoracic Surgery, Shin-Yurigaoka General Hospital, 255 Furusawa Asao-ku, Kawasaki 215-0026, Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.132,
+        "matched_terms": [
           "EIRL X-ray Lung nodule"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -343,8 +1057,7 @@
     "regulatory_ids": [
       "30200BZX00288000"
     ],
-    "queries_run": 5,
-    "papers_found": 2,
+    "papers_found": 1,
     "papers_unique": 1,
     "links_total": 0,
     "exact_product": 0,
@@ -352,7 +1065,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "EIRL Chest Metry",
@@ -362,7 +1075,6 @@
     "regulatory_ids": [
       "302AGBZX00101000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -371,7 +1083,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "WISE VISION Endoscopy",
@@ -381,8 +1093,7 @@
     "regulatory_ids": [
       "30200BZX00382000"
     ],
-    "queries_run": 5,
-    "papers_found": 41,
+    "papers_found": 24,
     "papers_unique": 24,
     "links_total": 0,
     "exact_product": 0,
@@ -390,7 +1101,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "EndoBRAIN-UC",
@@ -400,7 +1111,6 @@
     "regulatory_ids": [
       "30200BZX00136000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -409,7 +1119,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "FS-CM687",
@@ -419,7 +1129,6 @@
     "regulatory_ids": [
       "30200BZX00100000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -428,7 +1137,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Ali's Triage",
@@ -438,8 +1147,7 @@
     "regulatory_ids": [
       "303AGBZX00021000"
     ],
-    "queries_run": 5,
-    "papers_found": 74,
+    "papers_found": 49,
     "papers_unique": 49,
     "links_total": 2,
     "exact_product": 0,
@@ -447,7 +1155,100 @@
     "manufacturer_linked": 0,
     "indication_related": 2,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": [
+      {
+        "title": "The Cortical Vein Opacification Score Is Independently Associated with Good and Excellent Functional Outcomes at 90 Days in Patients with Minor Stroke with Anterior Circulation Large-Vessel Occlusion: A Multicenter Study.",
+        "doi": "10.3174/ajnr.A8739",
+        "pmid": "40389269",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "AJNR. American journal of neuroradiology",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Lakhani Dhairya A",
+            "affiliation": "From the Department of Neuroradiology (D.A.L., H.S., A.B.B., S.A.), Rockefeller Neuroscience Institute, West Virginia University, Morgantown, West Virginia dhairyalakhani@gmail.com."
+          },
+          {
+            "name": "Salim Hamza",
+            "affiliation": "From the Department of Neuroradiology (D.A.L., H.S., A.B.B., S.A.), Rockefeller Neuroscience Institute, West Virginia University, Morgantown, West Virginia."
+          },
+          {
+            "name": "Balar Aneri B",
+            "affiliation": "From the Department of Neuroradiology (D.A.L., H.S., A.B.B., S.A.), Rockefeller Neuroscience Institute, West Virginia University, Morgantown, West Virginia."
+          },
+          {
+            "name": "Ali Subtain",
+            "affiliation": "From the Department of Neuroradiology (D.A.L., H.S., A.B.B., S.A.), Rockefeller Neuroscience Institute, West Virginia University, Morgantown, West Virginia."
+          },
+          {
+            "name": "Wen Sijin",
+            "affiliation": "Department of Epidemiology and Biostatistics (S.W.), West Virginia University School of Public Health, Morgantown, West Virginia."
+          },
+          {
+            "name": "Mei Janet",
+            "affiliation": "The Russell H. Morgan Department of Radiology and Radiological Science (D.A.L., J.M., V.S.Y.), Johns Hopkins University, Baltimore, Maryland."
+          },
+          {
+            "name": "Hillis Argye E",
+            "affiliation": "Departments of Neurology (A.E.H.), Johns Hopkins University School of Medicine, Baltimore, Maryland."
+          },
+          {
+            "name": "Urrutia Victor C",
+            "affiliation": "Department of Neurosurgery (V.C.U., R.X.), Johns Hopkins University School of Medicine, Baltimore, Maryland."
+          },
+          {
+            "name": "Xu Risheng",
+            "affiliation": "Department of Neurosurgery (V.C.U., R.X.), Johns Hopkins University School of Medicine, Baltimore, Maryland."
+          },
+          {
+            "name": "Broocks Gabriel",
+            "affiliation": "Department of Diagnostic and Interventional Neuroradiology (G.B.), University Medical Center Hamburg-Eppendorf, Hamburg, Germany."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.063,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Boarding is Associated with Reduced Emergency Department Efficiency that is not Mitigated by a Provider in Triage.",
+        "doi": "10.5811/westjem.2020.2.45728",
+        "pmid": "32421514",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "The western journal of emergency medicine",
+        "publication_year": 2020,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Napoli Anthony M",
+            "affiliation": "Warren Alpert Medical School of Brown University, Department of Emergency Medicine, Providence, Rhode Island."
+          },
+          {
+            "name": "Ali Shihab",
+            "affiliation": "Warren Alpert Medical School of Brown University, Department of Emergency Medicine, Providence, Rhode Island."
+          },
+          {
+            "name": "Lawrence Alexis",
+            "affiliation": "Warren Alpert Medical School of Brown University, Department of Emergency Medicine, Providence, Rhode Island."
+          },
+          {
+            "name": "Baird Janette",
+            "affiliation": "Warren Alpert Medical School of Brown University, Department of Emergency Medicine, Providence, Rhode Island."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.063,
+        "matched_terms": [],
+        "human_review_needed": false
+      }
+    ]
   },
   {
     "product": "Plus.Lung.Nodule",
@@ -457,7 +1258,6 @@
     "regulatory_ids": [
       "301AGBZX00004000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -466,7 +1266,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "CXR-AID",
@@ -476,8 +1276,7 @@
     "regulatory_ids": [
       "30300BZX00188000"
     ],
-    "queries_run": 5,
-    "papers_found": 2,
+    "papers_found": 1,
     "papers_unique": 1,
     "links_total": 1,
     "exact_product": 1,
@@ -485,13 +1284,50 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
-        "title": "Performance of artificial intelligence-based software for the automatic detection of lung lesions on chest radiographs o",
-        "score": 0.144,
-        "terms": [
+        "title": "Performance of artificial intelligence-based software for the automatic detection of lung lesions on chest radiographs of patients with suspected lung cancer.",
+        "doi": "10.1007/s11604-023-01503-1",
+        "pmid": "38032419",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Japanese journal of radiology",
+        "publication_year": 2024,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Takamatsu Atsushi",
+            "affiliation": "Department of Radiology, Kanazawa University Graduate School of Medical Sciences, 13-1 Takaramachi, Kanazawa, Ishikawa, 920-8641, Japan."
+          },
+          {
+            "name": "Ueno Midori",
+            "affiliation": "Department of Radiology, Kanazawa University Graduate School of Medical Sciences, 13-1 Takaramachi, Kanazawa, Ishikawa, 920-8641, Japan."
+          },
+          {
+            "name": "Yoshida Kotaro",
+            "affiliation": "Department of Radiology, Kanazawa University Graduate School of Medical Sciences, 13-1 Takaramachi, Kanazawa, Ishikawa, 920-8641, Japan. kotaro_yoshida@staff.kanazawa-u.ac.jp."
+          },
+          {
+            "name": "Kobayashi Takeshi",
+            "affiliation": "Department of Diagnostic and Interventional Radiology, Ishikawa Prefectural Central Hospital, Kanazawa, Ishikawa, 920-8530, Japan."
+          },
+          {
+            "name": "Kobayashi Satoshi",
+            "affiliation": "Department of Radiology, Kanazawa University Graduate School of Medical Sciences, 13-1 Takaramachi, Kanazawa, Ishikawa, 920-8641, Japan."
+          },
+          {
+            "name": "Gabata Toshifumi",
+            "affiliation": "Department of Radiology, Kanazawa University Graduate School of Medical Sciences, 13-1 Takaramachi, Kanazawa, Ishikawa, 920-8641, Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.144,
+        "matched_terms": [
           "CXR-AID"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -503,8 +1339,7 @@
     "regulatory_ids": [
       "22000BZX00238000"
     ],
-    "queries_run": 5,
-    "papers_found": 2,
+    "papers_found": 1,
     "papers_unique": 1,
     "links_total": 0,
     "exact_product": 0,
@@ -512,7 +1347,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "CXR Finding-i",
@@ -522,8 +1357,7 @@
     "regulatory_ids": [
       "30300BZX00271000"
     ],
-    "queries_run": 5,
-    "papers_found": 100,
+    "papers_found": 94,
     "papers_unique": 94,
     "links_total": 0,
     "exact_product": 0,
@@ -531,7 +1365,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Apple ECG App",
@@ -541,16 +1375,672 @@
     "regulatory_ids": [
       "30200BZI00020000"
     ],
-    "queries_run": 5,
-    "papers_found": 34,
+    "papers_found": 19,
     "papers_unique": 19,
-    "links_total": 0,
+    "links_total": 14,
     "exact_product": 0,
     "product_family": 0,
     "manufacturer_linked": 0,
-    "indication_related": 0,
+    "indication_related": 14,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": [
+      {
+        "title": "Large-Scale Assessment of a Smartwatch to Identify Atrial Fibrillation.",
+        "doi": "10.1056/NEJMoa1901183",
+        "pmid": "31722151",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "The New England journal of medicine",
+        "publication_year": 2019,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Perez Marco V",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Mahaffey Kenneth W",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Hedlin Haley",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Rumsfeld John S",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Garcia Ariadna",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Ferris Todd",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Balasubramanian Vidhya",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Russo Andrea M",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Rajmane Amol",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          },
+          {
+            "name": "Cheung Lauren",
+            "affiliation": "From the Division of Cardiovascular Medicine (M.V.P.), Stanford Center for Clinical Research (K.W.M., A.R., N.T.), the Quantitative Sciences Unit (H.H., A.G., V.B., J.L., S.E.G., M.D.), Information Resources and Technology (T.F., G.H.), Department of Medicine (S.D.), and the Center for Digital Health (M.P.T.), Stanford University, Stanford, Apple, Cupertino (L.C., D.N., A.B., S.D.), and the Veterans Affairs Palo Alto Health Care System, Palo Alto (M.P.T.) - all in California; the University of Colorado School of Medicine, Aurora (J.S.R.); the Division of Cardiovascular Disease, Cooper Medical School of Rowan University, Camden, NJ (A.M.R.); the Lankenau Heart Institute and Jefferson Medical College, Philadelphia (P.K.); StopAfib.org, American Foundation for Women's Health, Decatur, TX (M.T.H.); and the Duke Clinical Research Institute, Duke University, Durham, NC (C.B.G.)."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "How useful is the smartwatch ECG?",
+        "doi": "10.1016/j.tcm.2019.10.010",
+        "pmid": "31706789",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Trends in cardiovascular medicine",
+        "publication_year": 2020,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Isakadze Nino",
+            "affiliation": "Department of Medicine, Division of Cardiology, Johns Hopkins University School of Medicine, Baltimore, MD, United States."
+          },
+          {
+            "name": "Martin Seth S",
+            "affiliation": "Department of Medicine, Division of Cardiology, Ciccarone Center for the Prevention of Cardiovascular Disease, Johns Hopkins University School of Medicine, 600N Wolfe St, Carnegie 568, Baltimore, MD 21287, United States. Electronic address: smart100@jhmi.edu."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Rationale and design of a large-scale, app-based study to identify cardiac arrhythmias using a smartwatch: The Apple Heart Study.",
+        "doi": "10.1016/j.ahj.2018.09.002",
+        "pmid": "30392584",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "American heart journal",
+        "publication_year": 2019,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Turakhia Mintu P",
+            "affiliation": "Center for Digital Health, Stanford University Stanford, CA; VA Palo Alto Health Care System, Palo Alto, CA. Electronic address: mintu@stanford.edu."
+          },
+          {
+            "name": "Desai Manisha",
+            "affiliation": "Quantitative Sciences Unit, Stanford University, Stanford, CA."
+          },
+          {
+            "name": "Hedlin Haley",
+            "affiliation": "Quantitative Sciences Unit, Stanford University, Stanford, CA."
+          },
+          {
+            "name": "Rajmane Amol",
+            "affiliation": "Stanford Center for Clinical Research, Stanford University, Stanford, CA."
+          },
+          {
+            "name": "Talati Nisha",
+            "affiliation": "Stanford Center for Clinical Research, Stanford University, Stanford, CA."
+          },
+          {
+            "name": "Ferris Todd",
+            "affiliation": "Information Resources and Technology, Stanford University, Stanford, CA."
+          },
+          {
+            "name": "Desai Sumbul",
+            "affiliation": "Apple Inc. Cupertino, CA."
+          },
+          {
+            "name": "Nag Divya",
+            "affiliation": "Apple Inc. Cupertino, CA."
+          },
+          {
+            "name": "Patel Mithun",
+            "affiliation": "Apple Inc. Cupertino, CA."
+          },
+          {
+            "name": "Kowey Peter",
+            "affiliation": "Lankenau Heart Institute and Jefferson Medical College, Philadelphia, PA."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Smartwatch: Looking beyond what you see.",
+        "doi": "10.1016/j.jelectrocard.2023.07.010",
+        "pmid": "37562224",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of electrocardiology",
+        "publication_year": 2023,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Buelga Suárez Mauro",
+            "affiliation": "Cardiology Department, Hospital Universitario Ramón y Cajal, Madrid, Spain; Nursing Department, Universidad de Alcalá Alcalá de Henares, Spain; Instituto Ramón y Cajal de Investigación Sanitaria (IRYCIS), Spain."
+          },
+          {
+            "name": "Rebolleda Sánchez Alfonso",
+            "affiliation": "Computer Sciences Department, IES Leonardo Da Vinci. Polytechnic University of Madrid, Spain."
+          },
+          {
+            "name": "Pascual Izco Marina",
+            "affiliation": "Cardiology Department, Clinica Universidad de Navarra, Pamplona, Spain; Universidad de Navarra, Pamplona, Spain."
+          },
+          {
+            "name": "García Montalvo Jesús",
+            "affiliation": "Cardiology Department, Hospital Universitario Ramón y Cajal, Madrid, Spain; Instituto Ramón y Cajal de Investigación Sanitaria (IRYCIS), Spain."
+          },
+          {
+            "name": "Alonso Salinas Gonzalo Luis",
+            "affiliation": "Hospital Universitario de Navarra, Pamplona, Spain; Cardiology Department, Navarrabiomed, Pamplona, Spain; Health Sciences Department, Universidad Publica de Navarra (UPNA), Pamplona, Spain. Electronic address: Gonzalol.alonso@gmail.com."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Diagnostic Accuracy of Single-Lead Electrocardiograms Using the Kardia Mobile App and the Apple Watch 4: Validation Study.",
+        "doi": "10.2196/50701",
+        "pmid": "37995111",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "JMIR cardio",
+        "publication_year": 2023,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Klier Kristina",
+            "affiliation": "Institute of Sport Science, University of the Bundeswehr Munich, Neubiberg, Germany."
+          },
+          {
+            "name": "Koch Lucas",
+            "affiliation": "Institute of Sport Science, University of the Bundeswehr Munich, Neubiberg, Germany."
+          },
+          {
+            "name": "Graf Lisa",
+            "affiliation": "Institute of Sport Science, University of the Bundeswehr Munich, Neubiberg, Germany."
+          },
+          {
+            "name": "Schinköthe Timo",
+            "affiliation": "CANKADO GmbH, Ottobrunn, Germany."
+          },
+          {
+            "name": "Schmidt Annette",
+            "affiliation": "Institute of Sport Science, University of the Bundeswehr Munich, Neubiberg, Germany."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Can heart rate variability data from the Apple Watch electrocardiogram quantify stress?",
+        "doi": "10.3389/fpubh.2023.1178491",
+        "pmid": "37475772",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Frontiers in public health",
+        "publication_year": 2023,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Velmovitsky Pedro Elkind",
+            "affiliation": "School of Public Health Sciences, University of Waterloo, Waterloo, ON, Canada."
+          },
+          {
+            "name": "Lotto Matheus",
+            "affiliation": "School of Public Health Sciences, University of Waterloo, Waterloo, ON, Canada."
+          },
+          {
+            "name": "Alencar Paulo",
+            "affiliation": "David R. Cheriton School of Computer Science, University of Waterloo, Waterloo, ON, Canada."
+          },
+          {
+            "name": "Leatherdale Scott T",
+            "affiliation": "School of Public Health Sciences, University of Waterloo, Waterloo, ON, Canada."
+          },
+          {
+            "name": "Cowan Donald",
+            "affiliation": "David R. Cheriton School of Computer Science, University of Waterloo, Waterloo, ON, Canada."
+          },
+          {
+            "name": "Morita Plinio Pelegrini",
+            "affiliation": "School of Public Health Sciences, University of Waterloo, Waterloo, ON, Canada."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Artificial intelligence-based electrocardiogram analysis improves atrial arrhythmia detection from a smartwatch electrocardiogram.",
+        "doi": "10.1093/ehjdh/ztae047",
+        "pmid": "39318690",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "European heart journal. Digital health",
+        "publication_year": 2024,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Fiorina Laurent",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Chemaly Pascale",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Cellier Joffrey",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Said Mina Ait",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Coquard Charlène",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Younsi Salem",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Salerno Fiorella",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Horvilleur Jérôme",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Lacotte Jérôme",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          },
+          {
+            "name": "Manenti Vladimir",
+            "affiliation": "Ramsay Santé, Institut Cardiovasculaire Paris Sud, Hôpital privé Jacques Cartier, 6 avenue du Noyer Lambert, 91 300 Massy, France."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Smartwatch Algorithm for Automated Detection of Atrial Fibrillation.",
+        "doi": "10.1016/j.jacc.2018.03.003",
+        "pmid": "29535065",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of the American College of Cardiology",
+        "publication_year": 2018,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Bumgarner Joseph M",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Lambert Cameron T",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Hussein Ayman A",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Cantillon Daniel J",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Baranowski Bryan",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Wolski Kathy",
+            "affiliation": "Cleveland Clinic Coordinating Center for Clinical Research (C5Research), Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Lindsay Bruce D",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Wazni Oussama M",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio."
+          },
+          {
+            "name": "Tarakji Khaldoun G",
+            "affiliation": "Department of Cardiovascular Medicine, Cleveland Clinic, Cleveland, Ohio. Electronic address: tarakjk@ccf.org."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "A Digital Home-Based Health Care Center for Remote Monitoring of Side Effects During Breast Cancer Therapy: Prospective, Single-Arm, Monocentric Feasibility Study.",
+        "doi": "10.2196/64083",
+        "pmid": "40315425",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "JMIR cancer",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Huebner Hanna",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          },
+          {
+            "name": "Wurmthaler Lena A",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          },
+          {
+            "name": "Goossens Chloë",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          },
+          {
+            "name": "Ernst Mathias",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          },
+          {
+            "name": "Mocker Alexander",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          },
+          {
+            "name": "Krückel Annika",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          },
+          {
+            "name": "Kallert Maximilian",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          },
+          {
+            "name": "Geck Jürgen",
+            "affiliation": "REFINIO GmbH, Rohr, Germany."
+          },
+          {
+            "name": "Limpert Milena",
+            "affiliation": "REFINIO GmbH, Rohr, Germany."
+          },
+          {
+            "name": "Seitz Katharina",
+            "affiliation": "Department of Gynecology and Obstetrics, Universitätsklinikum Erlangen, Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU), Universitätsstraße 21/23, Erlangen, 91054, Germany, 49 9131 8533553."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Individualized prediction of atrial fibrillation onset risk based on lifelogs.",
+        "doi": "10.1016/j.ajpc.2025.100951",
+        "pmid": "40103686",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "American journal of preventive cardiology",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Kimura Takehiro",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Jinzaki Masahiro",
+            "affiliation": "Department of Radiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Miyama Hiroshi",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Hashimoto Kenji",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Yamashita Terumasa",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Katsumata Yoshinori",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Takatsuki Seiji",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Fukuda Keiichi",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          },
+          {
+            "name": "Ieda Masaki",
+            "affiliation": "Department of Cardiology, Keio University School of Medicine, 35 Shinanomachi Shinjuku-ku, Tokyo, Japan."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Mobile health apps for QT interval measurement: A systematic review.",
+        "doi": "10.1016/j.jelectrocard.2025.154041",
+        "pmid": "40627921",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of electrocardiology",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Chavez-Ecos Fabian A",
+            "affiliation": "CHANGE Research Working Group, Carrera de Medicina Humana, Facultad de Ciencias de la Salud, Universidad Científica del Sur. Lima, Peru; Red de Cardiología y Salud Pública (RCSP), Ica, Peru."
+          },
+          {
+            "name": "Uribe-Cavero Leonardo J",
+            "affiliation": "CHANGE Research Working Group, Carrera de Medicina Humana, Facultad de Ciencias de la Salud, Universidad Científica del Sur. Lima, Peru; Red de Cardiología y Salud Pública (RCSP), Ica, Peru; Sociedad Científica de Estudiantes de Medicina de Ica (SOCEMI), Facultad de Medicina Humana, Universidad Nacional San Luis Gonzaga, Ica, Peru."
+          },
+          {
+            "name": "Chavez-Ecos Rodrigo",
+            "affiliation": "CHANGE Research Working Group, Carrera de Medicina Humana, Facultad de Ciencias de la Salud, Universidad Científica del Sur. Lima, Peru; Red de Cardiología y Salud Pública (RCSP), Ica, Peru."
+          },
+          {
+            "name": "Arias-Arias Sebastián",
+            "affiliation": "Sociedad Científica de Estudiantes de Medicina de Ica (SOCEMI), Facultad de Medicina Humana, Universidad Nacional San Luis Gonzaga, Ica, Peru."
+          },
+          {
+            "name": "Chavez-Gutarra Miguel A",
+            "affiliation": "Red de Cardiología y Salud Pública (RCSP), Ica, Peru."
+          },
+          {
+            "name": "Montesinos-Segura Renee",
+            "affiliation": "Instituto Nacional Cardiovascular \"Carlos Alberto Peschiera Carrillo\" INCOR, EsSalud, Lima, Peru."
+          },
+          {
+            "name": "Camacho-Caballero Kiara",
+            "affiliation": "CHANGE Research Working Group, Carrera de Medicina Humana, Facultad de Ciencias de la Salud, Universidad Científica del Sur. Lima, Peru. Electronic address: kiaracamacho96@gmail.com."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Accuracy of Heart Rate Watches: Implications for Weight Management.",
+        "doi": "10.1371/journal.pone.0154420",
+        "pmid": "27232714",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "PloS one",
+        "publication_year": 2016,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Wallen Matthew P",
+            "affiliation": "Centre for Research on Exercise, Physical Activity and Health (CRExPAH), School of Human Movement and Nutrition Sciences, The University of Queensland, Brisbane, Queensland, Australia."
+          },
+          {
+            "name": "Gomersall Sjaan R",
+            "affiliation": "Centre for Research on Exercise, Physical Activity and Health (CRExPAH), School of Human Movement and Nutrition Sciences, The University of Queensland, Brisbane, Queensland, Australia."
+          },
+          {
+            "name": "Keating Shelley E",
+            "affiliation": "Centre for Research on Exercise, Physical Activity and Health (CRExPAH), School of Human Movement and Nutrition Sciences, The University of Queensland, Brisbane, Queensland, Australia."
+          },
+          {
+            "name": "Wisløff Ulrik",
+            "affiliation": "K.G. Jebsen Center of Exercise in Medicine, Department of Circulation and Medical Imaging, Norwegian University of Science and Technology, Trondheim, Norway."
+          },
+          {
+            "name": "Coombes Jeff S",
+            "affiliation": "Centre for Research on Exercise, Physical Activity and Health (CRExPAH), School of Human Movement and Nutrition Sciences, The University of Queensland, Brisbane, Queensland, Australia."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Validity of Heart Rate Variability Measured with Apple Watch Series 6 Compared to Laboratory Measures.",
+        "doi": "10.3390/s25082380",
+        "pmid": "40285070",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Sensors (Basel, Switzerland)",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Bonneval Lauren",
+            "affiliation": "San Diego General Preventive Medicine Residency, Herbert Wertheim School of Public Health and Human Longevity Science, University of California San Diego, La Jolla, CA 92093, USA."
+          },
+          {
+            "name": "Wing David",
+            "affiliation": "Exercise and Physical Activity Resource Center, Herbert Wertheim School of Public Health and Human Longevity Science, University of California San Diego, La Jolla, CA 92093, USA."
+          },
+          {
+            "name": "Sharp Sydney",
+            "affiliation": "Exercise and Physical Activity Resource Center, Herbert Wertheim School of Public Health and Human Longevity Science, University of California San Diego, La Jolla, CA 92093, USA."
+          },
+          {
+            "name": "Tristao Parra Maira",
+            "affiliation": "Exercise and Physical Activity Resource Center, Herbert Wertheim School of Public Health and Human Longevity Science, University of California San Diego, La Jolla, CA 92093, USA."
+          },
+          {
+            "name": "Moran Ryan",
+            "affiliation": "San Diego General Preventive Medicine Residency, Herbert Wertheim School of Public Health and Human Longevity Science, University of California San Diego, La Jolla, CA 92093, USA."
+          },
+          {
+            "name": "LaCroix Andrea",
+            "affiliation": "Exercise and Physical Activity Resource Center, Herbert Wertheim School of Public Health and Human Longevity Science, University of California San Diego, La Jolla, CA 92093, USA."
+          },
+          {
+            "name": "Godino Job",
+            "affiliation": "Exercise and Physical Activity Resource Center, Herbert Wertheim School of Public Health and Human Longevity Science, University of California San Diego, La Jolla, CA 92093, USA."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      },
+      {
+        "title": "Monitoring heart rhythms in adult males with X-linked ichthyosis using wearable technology: a feasibility study.",
+        "doi": "10.1007/s00403-025-03884-x",
+        "pmid": "39912958",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Archives of dermatological research",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Wren Georgina H",
+            "affiliation": "School of Psychology, Cardiff University, Cardiff, UK."
+          },
+          {
+            "name": "O'Callaghan Peter",
+            "affiliation": "University Hospital of Wales, Cardiff, UK."
+          },
+          {
+            "name": "Zaidi Abbas",
+            "affiliation": "University Hospital of Wales, Cardiff, UK."
+          },
+          {
+            "name": "Thompson Andrew R",
+            "affiliation": "School of Psychology, Cardiff University, Cardiff, UK."
+          },
+          {
+            "name": "Humby Trevor",
+            "affiliation": "School of Psychology, Cardiff University, Cardiff, UK."
+          },
+          {
+            "name": "Davies William",
+            "affiliation": "School of Psychology, Cardiff University, Cardiff, UK. daviesw4@cardiff.ac.uk."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.057,
+        "matched_terms": [],
+        "human_review_needed": false
+      }
+    ]
   },
   {
     "product": "Apple Irregular Rhythm Notification",
@@ -560,8 +2050,7 @@
     "regulatory_ids": [
       "30200BZI00021000"
     ],
-    "queries_run": 5,
-    "papers_found": 18,
+    "papers_found": 11,
     "papers_unique": 11,
     "links_total": 0,
     "exact_product": 0,
@@ -569,7 +2058,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "nodoca",
@@ -579,7 +2068,6 @@
     "regulatory_ids": [
       "30400BZX00090000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -588,7 +2076,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "CureApp HT",
@@ -598,8 +2086,7 @@
     "regulatory_ids": [
       "30400BZX00100000"
     ],
-    "queries_run": 5,
-    "papers_found": 6,
+    "papers_found": 4,
     "papers_unique": 4,
     "links_total": 4,
     "exact_product": 4,
@@ -607,34 +2094,158 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": [
+    "linked_papers": [
       {
-        "title": "Digital therapeutic for hypertension improves physician-patient communication and clinical inertia: a survey of physicia",
-        "score": 0.287,
-        "terms": [
+        "title": "Digital therapeutic for hypertension improves physician-patient communication and clinical inertia: a survey of physicians who implemented CureApp HT in clinical practice.",
+        "doi": "10.1038/s41440-024-01899-x",
+        "pmid": "39394509",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Hypertension research : official journal of the Japanese Society of Hypertension",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Katsuya Tomohiro",
+            "affiliation": "Katsuya Clinic, Amagasaki, Japan. tkatsuya@iris.eonet.ne.jp."
+          },
+          {
+            "name": "Hisaki Fumi",
+            "affiliation": "Medical Division, CureApp Inc., Tokyo, Japan."
+          },
+          {
+            "name": "Aga Mitsuharu",
+            "affiliation": "Medical Division, CureApp Inc., Tokyo, Japan."
+          },
+          {
+            "name": "Hirayama Yumi",
+            "affiliation": "Medical Division, CureApp Inc., Tokyo, Japan."
+          },
+          {
+            "name": "Takagi Yusuke",
+            "affiliation": "Medical Division, CureApp Inc., Tokyo, Japan."
+          },
+          {
+            "name": "Ichikihara Yuko",
+            "affiliation": "Medical Division, CureApp Inc., Tokyo, Japan."
+          },
+          {
+            "name": "Tanigawa Tomoyuki",
+            "affiliation": "Medical Division, CureApp Inc., Tokyo, Japan."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.287,
+        "matched_terms": [
           "CureApp HT"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
-        "title": "CureAPP HT is expected to be one piece of the puzzle that physicians and patients can work together to solve the problem",
-        "score": 0.172,
-        "terms": [
+        "title": "CureAPP HT is expected to be one piece of the puzzle that physicians and patients can work together to solve the problem of uncontrolled hypertension.",
+        "doi": "10.1038/s41440-024-01962-7",
+        "pmid": "39455864",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Hypertension research : official journal of the Japanese Society of Hypertension",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Yoshida Tetsuro",
+            "affiliation": "Department of Cardiovascular Medicine, Onga Nakama Medical Association Onga Hospital, Onga, Japan. tetsuro-moet@nifty.com."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.172,
+        "matched_terms": [
           "CureApp HT"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
         "title": "Digital therapeutics in Japan: Present and future directions.",
-        "score": 0.161,
-        "terms": [
+        "doi": "10.1016/j.jjcc.2024.11.005",
+        "pmid": "39613155",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Journal of cardiology",
+        "publication_year": 2025,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Nomura Akihiro",
+            "affiliation": "College of Transdisciplinary Sciences for Innovation, Kanazawa University, Kanazawa, Japan; Department of Cardiovascular Medicine, Kanazawa University Graduate School of Medical Sciences, Kanazawa, Japan; Frontier Institute of Tourism Sciences, Kanazawa University, Kanazawa, Japan; CureApp Institute, Karuizawa, Japan. Electronic address: anomura@med.kanazawa-u.ac.jp."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.161,
+        "matched_terms": [
           "CureApp HT"
-        ]
+        ],
+        "human_review_needed": false
       },
       {
-        "title": "Effects of a Hypertension Management Mobile App on Urinary Sodium Excretion in Patients With Chronic Kidney Disease: Ran",
-        "score": 0.144,
-        "terms": [
+        "title": "Effects of a Hypertension Management Mobile App on Urinary Sodium Excretion in Patients With Chronic Kidney Disease: Randomized Controlled Trial.",
+        "doi": "10.2196/68447",
+        "pmid": "41838898",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "JMIR mHealth and uHealth",
+        "publication_year": 2026,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Kawaoka Takayuki",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Sakaguchi Yusuke",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Oka Tatsufumi",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Doi Yohei",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Yamamoto Ryohei",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Matsui Isao",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Mizui Masayuki",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Kaimori Jun-Ya",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          },
+          {
+            "name": "Isaka Yoshitaka",
+            "affiliation": "Department of Nephrology, Graduate School of Medicine, The University of Osaka, 2-2-D11, Yamada-oka, Suita, 565-0871, Japan, 81 6-6879-3230."
+          }
+        ],
+        "link_classification": "exact_product",
+        "confidence_score": 0.144,
+        "matched_terms": [
           "CureApp HT"
-        ]
+        ],
+        "human_review_needed": false
       }
     ]
   },
@@ -646,8 +2257,7 @@
     "regulatory_ids": [
       "30400BZX00123000"
     ],
-    "queries_run": 5,
-    "papers_found": 100,
+    "papers_found": 84,
     "papers_unique": 84,
     "links_total": 1,
     "exact_product": 0,
@@ -655,7 +2265,66 @@
     "manufacturer_linked": 0,
     "indication_related": 1,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": [
+      {
+        "title": "Efficacy of the ChAdOx1 nCoV-19 Covid-19 Vaccine against the B.1.351 Variant.",
+        "doi": "10.1056/NEJMoa2102214",
+        "pmid": "33725432",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "The New England journal of medicine",
+        "publication_year": 2021,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Madhi Shabir A",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Baillie Vicky",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Cutland Clare L",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Voysey Merryn",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Koen Anthonet L",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Fairlie Lee",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Padayachee Sherman D",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Dheda Keertan",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Barnabas Shaun L",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          },
+          {
+            "name": "Bhorat Qasim E",
+            "affiliation": "From the South African Medical Research Council Vaccines and Infectious Diseases Analytics Research Unit (S.A.M., V.B., A.L.K., G.K., S.B., J.P., A.J., M.L., S.M., A.M., C.T., A.T., A.I.), African Leadership in Vaccinology Expertise (C.L.C.), Wits Reproductive Health and HIV Institute (L.F., E.H., M. Masenya, F.P., S.E.), the Antibody Immunity Research Unit, School of Pathology (J.N.B., C.K.W., P.L.M.), and the Perinatal HIV Research Unit (C.B.), Faculty of Health Sciences, and the Department of Science and Innovation/National Research Foundation South African Research Chair Initiative in Vaccine Preventable Diseases Unit (S.A.M., V.B., A.L.K., G.K., S.B., A.I.), University of the Witwatersrand, and the National Institute for Communicable Diseases (NICD) of the National Health Laboratory Service (NHLS) (J.N.B., C.K.W., P.L.M.), Johannesburg, Setshaba Research Centre, Tshwane (S.D.P., K.A., M. Malahleha, M. Masilela, K.M.), the Division of Pulmonology, Groote Schuur Hospital and the University of Cape Town (K.D., A.E., S.O.), and the Family Centre for Research with Ubuntu, Department of Paediatrics, University of Stellenbosch (S.L.B., M.G., L.R.), Cape Town, Soweto Clinical Trials Centre, Soweto (Q.E.B., A.E.B.), and the Africa Health Research Institute (S.-H.H., H.R., A.S.) and the KwaZulu-Natal Research and Innovation Sequencing Platform (KRISP), University of KwaZulu-Natal (S.P., H.T., T.O., A.S.), Durban - all in South Africa; the Oxford Vaccine Group, Department of Paediatrics (M.V., P.A., S.R., A.J.P.), and Jenner Institute, Nuffield Department of Medicine (T.L., S.G.), University of Oxford, Oxford, the Faculty of Infectious and Tropical Diseases, Department of Immunology and Infection, London School of Hygiene and Tropical Medicine, London (K.D., A.E.), Division of Infection and Immunity, University College London, London (K.D.), and AstraZeneca Biopharmaceuticals, Cambridge (N.M.D., E.J.K., T.L.V.) - all in the United Kingdom; and Max Planck Institute for Infection Biology, Berlin (S.-H.H., H.R.)."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.063,
+        "matched_terms": [],
+        "human_review_needed": false
+      }
+    ]
   },
   {
     "product": "CAD EYE (Upper GI) EW10-EG01",
@@ -665,7 +2334,6 @@
     "regulatory_ids": [
       "30400BZX00217000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -674,7 +2342,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "EIRL Colon Polyp",
@@ -684,7 +2352,6 @@
     "regulatory_ids": [
       "30400BZX00259000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -693,7 +2360,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "EIRL Chest XR",
@@ -703,7 +2370,6 @@
     "regulatory_ids": [
       "30400BZX00285000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -712,7 +2378,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "SmartRobin AI",
@@ -722,7 +2388,6 @@
     "regulatory_ids": [
       "303AGBZX00098000"
     ],
-    "queries_run": 5,
     "papers_found": 100,
     "papers_unique": 100,
     "links_total": 0,
@@ -731,7 +2396,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Join-Knee",
@@ -741,8 +2406,7 @@
     "regulatory_ids": [
       "304ADBZX00007000"
     ],
-    "queries_run": 5,
-    "papers_found": 4,
+    "papers_found": 2,
     "papers_unique": 2,
     "links_total": 1,
     "exact_product": 0,
@@ -750,7 +2414,58 @@
     "manufacturer_linked": 0,
     "indication_related": 1,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": [
+      {
+        "title": "Comparison of a novel handheld accelerometer-based navigation system and conventional instrument for performing distal femoral resection in total knee arthroplasty: a randomized controlled trial.",
+        "doi": "10.21037/atm.2019.10.55",
+        "pmid": "31930060",
+        "pmcid": null,
+        "openalex_id": null,
+        "journal": "Annals of translational medicine",
+        "publication_year": 2019,
+        "is_open_access": null,
+        "citation_count": null,
+        "source": "pubmed",
+        "authors": [
+          {
+            "name": "Xu Xingquan",
+            "affiliation": "State Key Laboratory of Pharmaceutical Biotechnology, Department of Sports Medicine and Adult Reconstructive Surgery, Nanjing Drum Tower Hospital, The Affiliated Hospital of Nanjing University Medical School, Nanjing 210008, China."
+          },
+          {
+            "name": "Liu Peilai",
+            "affiliation": "Qilu Hospital of Shandong University, Jinan 250012, China."
+          },
+          {
+            "name": "Yuan Zhenfeng",
+            "affiliation": "Liaocheng People's Hospital, Liaocheng 252000, China."
+          },
+          {
+            "name": "Wang Dawei",
+            "affiliation": "Liaocheng People's Hospital, Liaocheng 252000, China."
+          },
+          {
+            "name": "Lu Qunshan",
+            "affiliation": "Qilu Hospital of Shandong University, Jinan 250012, China."
+          },
+          {
+            "name": "Zhang Zhe",
+            "affiliation": "State Key Laboratory of Pharmaceutical Biotechnology, Department of Sports Medicine and Adult Reconstructive Surgery, Nanjing Drum Tower Hospital, The Affiliated Hospital of Nanjing University Medical School, Nanjing 210008, China."
+          },
+          {
+            "name": "Jiang Qing",
+            "affiliation": "State Key Laboratory of Pharmaceutical Biotechnology, Department of Sports Medicine and Adult Reconstructive Surgery, Nanjing Drum Tower Hospital, The Affiliated Hospital of Nanjing University Medical School, Nanjing 210008, China."
+          },
+          {
+            "name": "Shi Dongquan",
+            "affiliation": "State Key Laboratory of Pharmaceutical Biotechnology, Department of Sports Medicine and Adult Reconstructive Surgery, Nanjing Drum Tower Hospital, The Affiliated Hospital of Nanjing University Medical School, Nanjing 210008, China."
+          }
+        ],
+        "link_classification": "indication_related",
+        "confidence_score": 0.063,
+        "matched_terms": [],
+        "human_review_needed": false
+      }
+    ]
   },
   {
     "product": "SkinAI",
@@ -760,7 +2475,6 @@
     "regulatory_ids": [
       "304AGBZX00122000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -769,7 +2483,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "DeepEyeVision for RetinaStation",
@@ -779,8 +2493,7 @@
     "regulatory_ids": [
       "303ADBZX00110000"
     ],
-    "queries_run": 5,
-    "papers_found": 42,
+    "papers_found": 29,
     "papers_unique": 29,
     "links_total": 0,
     "exact_product": 0,
@@ -788,7 +2501,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "EIRL Brain Segmentation",
@@ -798,7 +2511,6 @@
     "regulatory_ids": [
       "303AGBZX00043Z00"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -807,7 +2519,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "EIRL Brain Metry",
@@ -817,7 +2529,6 @@
     "regulatory_ids": [
       "230AGBZX00107Z00"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -826,7 +2537,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "SusmeMed Med CBT-i",
@@ -836,8 +2547,7 @@
     "regulatory_ids": [
       "30500BZX00033000"
     ],
-    "queries_run": 5,
-    "papers_found": 100,
+    "papers_found": 84,
     "papers_unique": 84,
     "links_total": 0,
     "exact_product": 0,
@@ -845,7 +2555,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "gastroAI model-G",
@@ -855,8 +2565,7 @@
     "regulatory_ids": [
       "30500BZX00297000"
     ],
-    "queries_run": 5,
-    "papers_found": 98,
+    "papers_found": 73,
     "papers_unique": 73,
     "links_total": 0,
     "exact_product": 0,
@@ -864,7 +2573,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Apple AFib History",
@@ -874,8 +2583,7 @@
     "regulatory_ids": [
       "30600BZI00010000"
     ],
-    "queries_run": 5,
-    "papers_found": 50,
+    "papers_found": 29,
     "papers_unique": 29,
     "links_total": 0,
     "exact_product": 0,
@@ -883,7 +2591,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Apple Sleep Apnea Notification",
@@ -893,7 +2601,6 @@
     "regulatory_ids": [
       "30600BZI00017000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -902,7 +2609,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Apple Hearing Check",
@@ -912,7 +2619,6 @@
     "regulatory_ids": [
       "30600BZI00024000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -921,7 +2627,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Apple Hearing Aid",
@@ -931,8 +2637,7 @@
     "regulatory_ids": [
       "30600BZI00023000"
     ],
-    "queries_run": 5,
-    "papers_found": 55,
+    "papers_found": 36,
     "papers_unique": 36,
     "links_total": 0,
     "exact_product": 0,
@@ -940,7 +2645,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "SurVis-Hys",
@@ -950,7 +2655,6 @@
     "regulatory_ids": [
       "30600BZX00166000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -959,7 +2663,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "EIRL Chest CT2",
@@ -969,7 +2673,6 @@
     "regulatory_ids": [
       "30700BZX00064000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -978,7 +2681,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "CoronaryDoc",
@@ -988,7 +2691,6 @@
     "regulatory_ids": [
       "306ADBZX00046000"
     ],
-    "queries_run": 5,
     "papers_found": 0,
     "papers_unique": 0,
     "links_total": 0,
@@ -997,7 +2699,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "HUAWEI ECG App",
@@ -1007,7 +2709,6 @@
     "regulatory_ids": [
       "30600BZI00035000"
     ],
-    "queries_run": 5,
     "papers_found": 1,
     "papers_unique": 1,
     "links_total": 0,
@@ -1016,7 +2717,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Fitbit ECG App",
@@ -1026,8 +2727,7 @@
     "regulatory_ids": [
       "30700BZI00002000"
     ],
-    "queries_run": 5,
-    "papers_found": 7,
+    "papers_found": 4,
     "papers_unique": 4,
     "links_total": 0,
     "exact_product": 0,
@@ -1035,7 +2735,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Garmin ECG App",
@@ -1045,8 +2745,7 @@
     "regulatory_ids": [
       "30700BZX00063000"
     ],
-    "queries_run": 5,
-    "papers_found": 3,
+    "papers_found": 2,
     "papers_unique": 2,
     "links_total": 0,
     "exact_product": 0,
@@ -1054,7 +2753,7 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   },
   {
     "product": "Apple High Blood Pressure Notification",
@@ -1064,8 +2763,7 @@
     "regulatory_ids": [
       "30700BZI00039000"
     ],
-    "queries_run": 5,
-    "papers_found": 4,
+    "papers_found": 2,
     "papers_unique": 2,
     "links_total": 0,
     "exact_product": 0,
@@ -1073,6 +2771,6 @@
     "manufacturer_linked": 0,
     "indication_related": 0,
     "review_needed": 0,
-    "top_exact_papers": []
+    "linked_papers": []
   }
 ]
