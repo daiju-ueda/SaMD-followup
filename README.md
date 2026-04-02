@@ -1,209 +1,215 @@
 # SaMD Evidence Tracker
 
-**製品を軸に、規制情報と英語論文を統合管理するデータ基盤**
+**Product-centric regulatory and literature database for Software as a Medical Device**
 
-米国（FDA）・日本（PMDA）の SaMD（Software as a Medical Device）について、承認・認証済み製品を広く収集し、英語論文を製品単位で紐づけて検索・表示できるシステムです。
+Collects approved/cleared SaMD products from the US (FDA) and Japan (PMDA), links them to English-language publications, and displays evidence organized by product — with strict separation between exact product evidence and related literature.
 
-## 概要
+## Overview
 
-| 項目 | 内容 |
-|------|------|
-| 対象地域 | 米国 (FDA), 日本 (PMDA), EU (設計済み・Phase 2) |
-| FDA ソース | accessdata.fda.gov bulk files (foiclass, PMA, 510(k), De Novo) |
-| PMDA ソース | pmda.go.jp Excel 一覧 (承認品 + 認証品) |
-| 論文ソース | PubMed, Europe PMC, OpenAlex |
-| 全文取得 | Europe PMC OA, NCBI PMC OA, ローカル PMC XML |
-| DB | PostgreSQL |
-| UI | FastAPI + Jinja2 (ポート 8001) |
-| 自動更新 | 月次 cron (毎月1日 3:00 AM) |
+| | |
+|---|---|
+| **Regions** | US (FDA), Japan (PMDA), EU (designed, Phase 2) |
+| **FDA sources** | accessdata.fda.gov bulk files (foiclass, PMA, 510(k), De Novo) |
+| **PMDA sources** | pmda.go.jp Excel lists (approved + certified devices) |
+| **Literature** | PubMed, Europe PMC, OpenAlex |
+| **Full text** | Europe PMC OA, NCBI PMC OA |
+| **Database** | PostgreSQL |
+| **UI** | FastAPI + Jinja2 |
+| **Updates** | Monthly cron (1st of each month, 3:00 AM) |
 
-## アーキテクチャ
+## Architecture
 
 ```
-データ取得              正規化・リンク            表示
-─────────           ─────────────          ──────
-FDA bulk zips  ──┐                          
-PMDA Excel     ──┼→ Product Master ──┐     Dashboard
-                 │   (名寄せ・多地域統合)  │     Product List
-PubMed API     ──┐                    ├──→ Product Detail
-Europe PMC API ──┼→ Paper Corpus ────┤     Paper Detail
-OpenAlex API   ──┘   (DOI重複排除)     │     SQL Console
+Data Ingestion          Normalization & Linking      Display
+──────────────          ───────────────────────      ───────
+FDA bulk zips  ──┐
+PMDA Excel     ──┼→ Product Master ──┐              Dashboard
+                 │   (dedup, cross-   │              Product List
+PubMed API     ──┐   region merge)   ├───────────→  Product Detail
+Europe PMC API ──┼→ Paper Corpus ────┤              Paper Detail
+OpenAlex API   ──┘   (DOI dedup)     │              SQL Console
                                      │
                   Scorer ────────────┘
-                  (15特徴量 × 重み付け)
+                  (15 features, weighted)
                   exact_product / product_family /
                   manufacturer_linked / indication_related
 ```
 
-## 論文の3層分類
+## Evidence Classification
 
-| 分類 | 意味 | 表示 |
-|------|------|------|
-| **exact_product** | 論文中に製品名が明示 | 製品固有のエビデンス |
-| **manufacturer_linked** | メーカー名 + 適応が一致 | メーカー関連エビデンス |
-| **indication_related** | 同疾患領域・同モダリティ | 周辺の関連論文 |
+Papers are classified into three tiers, displayed separately to prevent misattribution:
 
-exact と related は明確に分離して表示し、誤解を防ぎます。
+| Classification | Meaning | Criteria |
+|---|---|---|
+| **exact_product** | Paper explicitly names the product | Product name in title/abstract + manufacturer corroboration for generic names |
+| **manufacturer_linked** | Same manufacturer + matching indication | Manufacturer in author affiliations + disease/modality match |
+| **indication_related** | Same disease area and modality | Disease + modality + AI/ML terms, no product-specific mention |
 
-## セットアップ
+**False positive handling**: Generic product names (e.g., "Rapid", "HALO", "Vision") require manufacturer co-occurrence or regulatory ID confirmation. Without corroboration, they are demoted to `indication_related` with `human_review_needed=true`.
 
-### 前提条件
+## Setup
+
+### Prerequisites
 
 - Python 3.10+
 - PostgreSQL 9.5+
-- pip パッケージ: `httpx`, `pydantic`, `pydantic-settings`, `psycopg2-binary`, `fastapi`, `uvicorn`, `jinja2`, `pandas`, `openpyxl`, `beautifulsoup4`, `lxml`
 
-### インストール
+### Installation
 
 ```bash
-# DB 作成
+# Create database
 sudo -u postgres createuser -s $(whoami)
 sudo -u postgres createdb samd_evidence -O $(whoami)
 
-# スキーマ適用
+# Apply schema
 psql -d samd_evidence -f src/db/schema_pg95.sql
 
-# .env 設定
+# Configure API keys
 cat > .env << EOF
 SAMD_NCBI_API_KEY=your_key_here
 SAMD_NCBI_EMAIL=your_email@example.com
 EOF
 
-# パッケージインストール
-pip install httpx pydantic pydantic-settings psycopg2-binary fastapi uvicorn jinja2 pandas openpyxl beautifulsoup4 lxml
+# Install dependencies
+pip install httpx pydantic pydantic-settings psycopg2-binary \
+    fastapi uvicorn jinja2 pandas openpyxl beautifulsoup4 lxml
 ```
 
-### 実行
+### Running
 
 ```bash
-# パイプライン実行（FDA + PMDA → 論文検索 → スコアリング）
+# Full pipeline: FDA + PMDA → literature search → scoring
 python3 scripts/run_pipeline.py --fda-web --pmda-web --output data/pipeline_results.json
 
-# DB ロード（増分 upsert）
-python3 scripts/load_to_db.py
+# Load into database (incremental upsert)
+python3 scripts/load_to_db.py --fda-web --pmda-web
 
-# 全文取得
+# Fetch full text for open-access papers
 python3 scripts/fetch_fulltext.py
 
-# UI 起動
+# Start web UI
 python3 -m uvicorn src.ui.app:app --host 0.0.0.0 --port 8001
 ```
 
-### CLI オプション
+### CLI Options
 
 ```bash
-# FDA のみ（ローカル CSV フォールバック）
-python3 scripts/run_pipeline.py --skip-pmda --output data/fda_results.json
+# FDA only (from bulk files)
+python3 scripts/run_pipeline.py --skip-pmda --fda-web
 
-# PMDA のみ（web から Excel 取得）
-python3 scripts/run_pipeline.py --skip-fda --pmda-web --output data/pmda_results.json
+# PMDA only (from Excel download)
+python3 scripts/run_pipeline.py --skip-fda --pmda-web
 
-# 途中再開（300件目から）
+# Resume from checkpoint
 python3 scripts/run_pipeline.py --resume 300 --max-products 600
 
-# 全文取得（未取得分のみ）
-python3 scripts/fetch_fulltext.py
-python3 scripts/fetch_fulltext.py --retry-failed  # 失敗分も再試行
+# Retry failed full-text fetches
+python3 scripts/fetch_fulltext.py --retry-failed
 ```
 
-## プロジェクト構成
+## Project Structure
 
 ```
 src/
-├── bootstrap.py              # パス・.env 設定（全エントリポイント共通）
-├── config/settings.py        # 環境変数ベースの設定
-├── utils.py                  # 日付パース、ロギング設定
-├── pipeline.py               # パイプラインオーケストレーター
+├── bootstrap.py              # Path + .env setup (shared by all entry points)
+├── config/settings.py        # Environment-based configuration
+├── utils.py                  # Date parsing, logging
+├── pipeline.py               # Pipeline orchestrator
 │
-├── ingestion/                # 製品データ取得
-│   ├── fda.py                # FDA CSV パース・重複排除
-│   ├── fda_scraper.py        # FDA bulk file ダウンロード (foiclass/PMA/510k/De Novo)
-│   ├── pmda.py               # PMDA CSV パーサー（フォールバック用）
-│   ├── pmda_scraper.py       # PMDA Excel ダウンロード（承認 + 認証）
-│   ├── normalizer.py         # 製品名正規化・疾患領域/モダリティ推論
-│   ├── cross_region.py       # 多地域間の製品統合（FDA ↔ PMDA）
-│   └── jp_mappings.py        # メーカー名 日英マッピング
+├── ingestion/                # Product data collection
+│   ├── fda.py                # FDA CSV parsing, deduplication, pathway inference
+│   ├── fda_scraper.py        # FDA bulk file download (foiclass/PMA/510k/De Novo)
+│   ├── pmda.py               # PMDA CSV parser (fallback)
+│   ├── pmda_scraper.py       # PMDA Excel download (approved + certified)
+│   ├── normalizer.py         # Name normalization, disease area/modality inference
+│   ├── cross_region.py       # Cross-region product merge (FDA ↔ PMDA)
+│   └── jp_mappings.py        # Japanese → English manufacturer name mappings
 │
-├── literature/               # 論文検索・取得
-│   ├── query_generator.py    # 5レベルの検索クエリ自動生成
-│   ├── pubmed.py             # PubMed E-utilities クライアント
-│   ├── openalex.py           # OpenAlex REST API クライアント
-│   ├── europe_pmc.py         # Europe PMC REST API クライアント
-│   ├── fulltext.py           # 全文取得（Europe PMC / NCBI PMC OA）
-│   ├── parsers.py            # 共通パーサー（abstract復元・JATS XML抽出）
-│   ├── local_openalex.py     # ローカル OpenAlex スナップショット検索
-│   └── local_pmc.py          # ローカル PMC XML 全文検索
+├── literature/               # Literature search and retrieval
+│   ├── query_generator.py    # 5-level search query generation
+│   ├── pubmed.py             # PubMed E-utilities client
+│   ├── openalex.py           # OpenAlex API client
+│   ├── europe_pmc.py         # Europe PMC API client
+│   ├── fulltext.py           # Full-text fetcher (Europe PMC / NCBI PMC OA)
+│   ├── parsers.py            # Shared parsers (abstract reconstruction, JATS XML)
+│   ├── local_openalex.py     # Local OpenAlex snapshot search
+│   └── local_pmc.py          # Local PMC XML full-text search
 │
-├── linking/                  # 論文-製品リンク
-│   ├── scorer.py             # 15特徴量スコアリング・5段階分類
-│   └── deduplicator.py       # DOI/PMID ベースの論文重複排除
+├── linking/                  # Product-paper linking
+│   ├── scorer.py             # 15-feature weighted scoring, 5-way classification
+│   └── deduplicator.py       # DOI/PMID-based paper deduplication
 │
-├── models/                   # Pydantic ドメインモデル
+├── models/                   # Pydantic domain models
 │   ├── product.py            # Product, RegulatoryEntry, ProductAlias
 │   ├── paper.py              # Paper, PaperAuthor
-│   └── linking.py            # ProductPaperLink, スコアリング設定
+│   └── linking.py            # ProductPaperLink, scoring config
 │
-├── db/                       # データベース層
-│   ├── schema_pg95.sql       # PostgreSQL スキーマ
-│   ├── connection.py         # 接続管理
-│   └── repositories.py       # Product/Paper/Stats リポジトリ（upsert対応）
+├── db/                       # Database layer
+│   ├── schema_pg95.sql       # PostgreSQL schema
+│   ├── connection.py         # Connection management
+│   └── repositories.py       # Product/Paper/Stats repositories (upsert)
 │
 └── ui/                       # Web UI
-    ├── app.py                # FastAPI アプリケーション
-    └── templates/            # Jinja2 テンプレート
+    ├── app.py                # FastAPI application
+    └── templates/            # Jinja2 templates
 
 scripts/
-├── run_pipeline.py           # パイプライン CLI
-├── load_to_db.py             # DB ロード（増分 upsert）
-├── fetch_fulltext.py         # 全文取得バッチ
-└── monthly_update.sh         # 月次自動更新 cron スクリプト
+├── run_pipeline.py           # Pipeline CLI
+├── load_to_db.py             # Database loader (incremental upsert)
+├── fetch_fulltext.py         # Full-text batch fetcher
+└── monthly_update.sh         # Monthly cron update script
 ```
 
-## データソース
+## Data Sources
 
-### FDA（米国）
+### FDA (United States)
 
-| ソース | URL | 内容 |
-|--------|-----|------|
-| foiclass.zip | accessdata.fda.gov/premarket/ftparea/ | 製品分類 → SaMD コード導出 |
-| pma.zip | 同上 | PMA 承認 |
-| pmnlstmn.zip | 同上 | 510(k) 月次クリアランス |
-| De Novo DB | accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/denovo.cfm | De Novo 認可 |
+| Source | URL | Content |
+|---|---|---|
+| foiclass.zip | accessdata.fda.gov/premarket/ftparea/ | Product classification → derive SaMD codes |
+| pma.zip | Same | PMA approvals (pipe-delimited) |
+| pmnlstmn.zip | Same | 510(k) monthly clearances (pipe-delimited) |
+| De Novo DB | accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/denovo.cfm | De Novo authorizations (HTML) |
 
-### PMDA（日本）
+### PMDA (Japan)
 
-| ソース | URL | 内容 |
-|--------|-----|------|
-| 承認品目 Excel | pmda.go.jp (プログラム医療機器の製造販売承認品目一覧) | クラスIII/IV 承認品 |
-| 認証品目 Excel | pmda.go.jp (認証品目リスト) | クラスII 認証品（SaMD キーワードフィルタ） |
+| Source | URL | Content |
+|---|---|---|
+| Approved SaMD Excel | pmda.go.jp | Class III/IV approved program medical devices |
+| Certified device Excel | pmda.go.jp | Class II certified devices (filtered by SaMD keywords) |
 
-## スコアリング
+## Scoring
 
-15 の特徴量に重み付けスコアを計算し、閾値で分類:
+15 features with weighted scores, classified by thresholds:
 
-| 特徴量 | 重み | 説明 |
-|--------|------|------|
-| product_name_in_title | 30 | タイトルに製品名 |
-| product_name_in_abstract | 20 | 抄録に製品名 |
-| regulatory_id_in_text | 25 | 510(k)番号等が出現 |
-| product_alias_in_title | 20 | 別名がタイトルに |
-| product_alias_in_abstract | 15 | 別名が抄録に |
-| manufacturer_in_affiliation | 8 | 著者所属にメーカー名 |
-| ... | | 他10特徴量 |
+| Feature | Weight | Description |
+|---|---|---|
+| product_name_in_title | 30 | Product name appears in paper title |
+| product_name_in_abstract | 20 | Product name appears in abstract |
+| regulatory_id_in_text | 25 | Regulatory ID (e.g., K210000) in text |
+| product_alias_in_title | 20 | Alias/trade name in title |
+| product_alias_in_abstract | 15 | Alias/trade name in abstract |
+| product_family_in_title | 12 | Product family name in title |
+| product_family_in_abstract | 10 | Product family name in abstract |
+| manufacturer_in_affiliation | 8 | Manufacturer in author affiliations |
+| manufacturer_in_text | 5 | Manufacturer mentioned in text |
+| intended_use_match | 5 | Intended use keywords match |
+| disease_area_match | 3 | Disease area match |
+| modality_match | 3 | Imaging modality match |
+| study_type_clinical | 5 | Clinical validation terms present |
+| study_type_multicenter | 3 | Multicenter study |
 
-**False positive 対策**: 一般語の製品名（Rapid, HALO 等）は、メーカー名共起または規制ID確認がない限り `indication_related` に降格し、`human_review_needed=true` を設定。
-
-## 月次自動更新
+## Monthly Updates
 
 ```
-cron: 0 3 1 * *   毎月1日 AM 3:00
+cron: 0 3 1 * *
 
-1. PMDA: Excel ダウンロード（承認 + 認証）→ 論文検索
-2. FDA: bulk file ダウンロード → 論文検索（300件バッチ）
-3. DB 増分更新（upsert — human review・全文を保持）
-4. 全文取得（未取得分のみ）
+1. PMDA: download Excel lists (approved + certified) → literature search
+2. FDA: download bulk files (foiclass + PMA + 510k + De Novo) → literature search
+3. Incremental DB update (upsert — preserves human reviews + full text)
+4. Full-text fetch (new papers only)
 ```
 
-## ライセンス
+## License
 
 MIT

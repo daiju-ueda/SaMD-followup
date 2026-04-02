@@ -17,7 +17,11 @@ from src.bootstrap import PROJECT_ROOT
 
 from src.db.connection import get_connection
 from src.db.repositories import ProductRepository, PaperRepository
-from src.pipeline import ingest_fda_from_csv, ingest_pmda_from_csv
+from src.pipeline import (
+    ingest_fda_from_csv, ingest_fda_from_web,
+    ingest_pmda_from_csv, ingest_pmda_from_web,
+    merge_products,
+)
 from src.utils import setup_logging
 
 setup_logging()
@@ -140,20 +144,39 @@ def load_literature_results(conn, results_path: Path, label: str) -> tuple[int, 
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Load products + papers into DB")
+    parser.add_argument("--fda-web", action="store_true", help="Fetch FDA from bulk files")
+    parser.add_argument("--pmda-web", action="store_true", help="Fetch PMDA from web")
+    parser.add_argument("--fda-csv", default=str(PROJECT_ROOT / "ai-ml-enabled-devices.csv"))
+    parser.add_argument("--pmda-csv", default=str(PROJECT_ROOT / "data/seed/pmda_devices.csv"))
+    args = parser.parse_args()
+
     conn = get_connection(autocommit=False)
     logger.info("Connected to database")
 
-    fda_csv = PROJECT_ROOT / "ai-ml-enabled-devices.csv"
-    pmda_csv = PROJECT_ROOT / "data" / "seed" / "pmda_devices.csv"
     fda_results = PROJECT_ROOT / "data" / "pipeline_results.json"
     pmda_results = PROJECT_ROOT / "data" / "pmda_results.json"
 
-    # Use the same ingestion logic as the pipeline
-    fda_products = ingest_fda_from_csv(fda_csv) if fda_csv.exists() else []
-    pmda_products = ingest_pmda_from_csv(pmda_csv) if pmda_csv.exists() else []
+    # Ingest products from web or CSV
+    fda_products = []
+    if args.fda_web:
+        fda_products = ingest_fda_from_web()
+    elif Path(args.fda_csv).exists():
+        fda_products = ingest_fda_from_csv(args.fda_csv)
 
-    fda_count = load_products(conn, fda_products)
-    pmda_count = load_products(conn, pmda_products)
+    pmda_products = []
+    if args.pmda_web:
+        pmda_products = ingest_pmda_from_web()
+    elif Path(args.pmda_csv).exists():
+        pmda_products = ingest_pmda_from_csv(args.pmda_csv)
+
+    # Cross-region merge
+    all_products = fda_products + pmda_products
+    if fda_products and pmda_products:
+        all_products = merge_products(all_products)
+
+    product_count = load_products(conn, all_products)
 
     fda_p = fda_l = pmda_p = pmda_l = 0
     if fda_results.exists():
@@ -166,7 +189,7 @@ def main():
     stats = StatsRepository(conn)
     logger.info("=" * 50)
     logger.info("LOAD COMPLETE")
-    logger.info("Products:  %d (FDA=%d, PMDA=%d)", fda_count + pmda_count, fda_count, pmda_count)
+    logger.info("Products:  %d", product_count)
     logger.info("Papers:    %d", PaperRepository(conn).count())
     logger.info("Links:     %d", stats.link_count())
     logger.info("Aliases:   %d", stats.alias_count())
