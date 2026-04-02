@@ -114,17 +114,48 @@ def _is_japanese(text: str) -> bool:
 def _extract_latin_from_japanese(text: str) -> Optional[str]:
     """Extract Latin (ASCII/halfwidth) tokens from a mixed JP/EN string.
 
-    Example: 'ＴｏｍｏＴｈｅｒａｐｙプランニングステーション' → 'TomoTherapy'
+    Only extracts tokens that look like product-specific proper nouns:
+    - Contains mixed case (EndoBRAIN, IDx-DR) or all-upper acronyms (EIRL)
+    - Multi-word phrases with at least one proper-noun-like token
+    - Excludes common English/medical words (Holter, Eclipse, Velocity, etc.)
+
     Example: '内視鏡画像診断支援ソフトウェア EndoBRAIN' → 'EndoBRAIN'
+    Example: 'パッチ型心電計 ＥＧ Ｈｏｌｔｅｒ 解析システム' → None (Holter is generic)
     """
     import re
     import unicodedata
-    # Normalize fullwidth ASCII to halfwidth
     text = unicodedata.normalize("NFKC", text)
-    # Extract sequences of Latin letters, digits, hyphens
     tokens = re.findall(r'[A-Za-z][A-Za-z0-9\-\.]{2,}', text)
-    if tokens:
-        return " ".join(tokens)
+    if not tokens:
+        return None
+
+    # Filter: keep only tokens that look like product names, not generic words
+    # A token is "product-like" if:
+    # 1. Contains mixed case within word (EndoBRAIN, IDx, CureApp) OR
+    # 2. Is all-uppercase and >= 4 chars (EIRL, QSPECT) OR
+    # 3. Contains digits (Pinnacle3, 4D) OR
+    # 4. Contains hyphens/dots (IDx-DR, syngo.via)
+    product_tokens = []
+    for t in tokens:
+        has_mixed_case = any(c.isupper() for c in t[1:]) and any(c.islower() for c in t)
+        is_acronym = t.isupper() and len(t) >= 4
+        has_special = '-' in t or '.' in t
+        has_digit = any(c.isdigit() for c in t)
+        if has_mixed_case or is_acronym or has_special or has_digit:
+            product_tokens.append(t)
+
+    if product_tokens:
+        return " ".join(product_tokens)
+
+    # Fallback: check against known SaMD product names
+    # (products that are all-lowercase or standard capitalization)
+    known_names = {
+        "nodoca", "fitbit", "garmin", "exocad", "medicad",
+    }
+    for t in tokens:
+        if t.lower() in known_names:
+            return t
+
     return None
 
 
