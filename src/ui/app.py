@@ -166,6 +166,51 @@ async def paper_detail(request: Request, paper_id: str):
 
 
 # ---------------------------------------------------------------------------
+# Review Queue
+# ---------------------------------------------------------------------------
+
+@app.get("/review", response_class=HTMLResponse)
+async def review_queue(
+    request: Request,
+    status: str = Query("pending"),
+):
+    conn = get_connection()
+    stats = StatsRepository(conn)
+    queue = stats.review_queue(status=status, limit=100)
+    review_stats = stats.review_stats()
+    conn.close()
+
+    return _render(request, "review.html", {
+        "queue": queue,
+        "review_stats": review_stats,
+        "current_status": status,
+    })
+
+
+@app.post("/review/{link_id}", response_class=HTMLResponse)
+async def submit_review(request: Request, link_id: str):
+    form = await request.form()
+    action = form.get("action", "")
+    notes = form.get("notes", "")
+    new_classification = form.get("new_classification")
+
+    conn = get_connection()
+    stats = StatsRepository(conn)
+
+    if action == "confirm":
+        stats.submit_review(link_id, "confirmed", notes=notes)
+    elif action == "reject":
+        stats.submit_review(link_id, "rejected", notes=notes)
+    elif action == "reclassify" and new_classification:
+        stats.submit_review(link_id, "reclassified",
+                           new_classification=new_classification, notes=notes)
+    conn.close()
+
+    from starlette.responses import RedirectResponse
+    return RedirectResponse(url="/review", status_code=303)
+
+
+# ---------------------------------------------------------------------------
 # SQL Console (read-only, admin/debug)
 # ---------------------------------------------------------------------------
 

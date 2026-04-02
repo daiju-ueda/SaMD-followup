@@ -454,6 +454,58 @@ class StatsRepository:
         """, (limit,))
         return cur.fetchall()
 
+    def review_queue(self, status: str = "pending", limit: int = 50) -> list[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT ppl.link_id, p.canonical_name AS product_name,
+                   p.product_id, pa.paper_id,
+                   pa.title AS paper_title, pa.doi, pa.pmid,
+                   ppl.link_classification, ppl.confidence_score,
+                   ppl.matched_terms, ppl.rationale,
+                   ppl.review_status, ppl.reviewed_by, ppl.review_notes,
+                   ppl.created_at
+            FROM product_paper_links ppl
+            JOIN products p ON p.product_id = ppl.product_id
+            JOIN papers pa ON pa.paper_id = ppl.paper_id
+            WHERE ppl.human_review_needed = TRUE
+              AND ppl.review_status = %s
+            ORDER BY ppl.confidence_score DESC
+            LIMIT %s
+        """, (status, limit))
+        return cur.fetchall()
+
+    def review_stats(self) -> dict:
+        cur = self._cur()
+        cur.execute("""
+            SELECT review_status, COUNT(*) AS cnt
+            FROM product_paper_links
+            WHERE human_review_needed = TRUE
+            GROUP BY review_status
+        """)
+        return {r["review_status"]: r["cnt"] for r in cur.fetchall()}
+
+    def submit_review(self, link_id: str, status: str,
+                      new_classification: str = None,
+                      reviewer: str = "admin",
+                      notes: str = None) -> None:
+        cur = self._cur()
+        if new_classification:
+            cur.execute("""
+                UPDATE product_paper_links
+                SET review_status = %s, link_classification = %s,
+                    reviewed_by = %s, review_notes = %s,
+                    reviewed_at = NOW(), updated_at = NOW()
+                WHERE link_id = %s
+            """, (status, new_classification, reviewer, notes, link_id))
+        else:
+            cur.execute("""
+                UPDATE product_paper_links
+                SET review_status = %s, reviewed_by = %s,
+                    review_notes = %s, reviewed_at = NOW(), updated_at = NOW()
+                WHERE link_id = %s
+            """, (status, reviewer, notes, link_id))
+        self.conn.commit()
+
     def execute_readonly(self, query: str) -> tuple[list[dict], list[str], int]:
         """Execute a read-only query. Returns (rows, columns, row_count).
 

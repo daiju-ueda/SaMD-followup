@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Review Queue — SaMD Evidence Tracker{% endblock %}
+{% block content %}
+<h1>Review Queue</h1>
+
+<!-- Status tabs -->
+<div style="display:flex; gap:0.5rem; margin-bottom:1.25rem;">
+    {% for st in ['pending', 'confirmed', 'reclassified', 'rejected'] %}
+    <a href="/review?status={{ st }}"
+       style="padding:0.4rem 1rem; border-radius:8px; font-size:0.85rem;
+              {% if current_status == st %}background:var(--primary); color:#fff;{% else %}background:var(--surface); border:1px solid var(--border);{% endif %}
+              text-decoration:none;">
+        {{ st|capitalize }}
+        {% if review_stats.get(st) %}<span class="badge badge-count" style="margin-left:0.3rem;">{{ review_stats[st] }}</span>{% endif %}
+    </a>
+    {% endfor %}
+</div>
+
+{% if not queue %}
+<div class="card">
+    <p class="empty">No items in {{ current_status }} queue.</p>
+</div>
+{% endif %}
+
+{% for item in queue %}
+<div class="card" style="margin-bottom:1rem;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                <span class="badge badge-{{ item.link_classification.split('_')[0] }}">{{ item.link_classification }}</span>
+                <span style="font-size:0.82rem; color:var(--text-muted);">Score: {{ "%.3f"|format(item.confidence_score) }}</span>
+            </div>
+            <div style="margin-bottom:0.5rem;">
+                <strong>Product:</strong>
+                <a href="/products/{{ item.product_id }}">{{ item.product_name }}</a>
+            </div>
+            <div style="margin-bottom:0.5rem;">
+                <strong>Paper:</strong>
+                <a href="/papers/{{ item.paper_id }}">{{ item.paper_title }}</a>
+                {% if item.doi %}
+                <a href="https://doi.org/{{ item.doi }}" target="_blank" style="font-size:0.75rem; margin-left:0.3rem;">[DOI]</a>
+                {% endif %}
+                {% if item.pmid %}
+                <a href="https://pubmed.ncbi.nlm.nih.gov/{{ item.pmid }}" target="_blank" style="font-size:0.75rem;">[PubMed]</a>
+                {% endif %}
+            </div>
+            {% if item.matched_terms %}
+            <div style="font-size:0.78rem; color:var(--text-muted);">
+                Matched: {{ item.matched_terms|join(', ') }}
+            </div>
+            {% endif %}
+            {% if item.review_notes %}
+            <div style="font-size:0.82rem; margin-top:0.5rem; padding:0.5rem; background:var(--surface-alt); border-radius:6px;">
+                <strong>Notes:</strong> {{ item.review_notes }}
+            </div>
+            {% endif %}
+        </div>
+
+        {% if current_status == 'pending' %}
+        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-left:1rem; min-width:200px;">
+            <form method="post" action="/review/{{ item.link_id }}">
+                <input type="hidden" name="action" value="confirm">
+                <button type="submit" style="width:100%; padding:0.4rem; background:var(--green); color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:0.82rem;">Confirm</button>
+            </form>
+            <form method="post" action="/review/{{ item.link_id }}">
+                <input type="hidden" name="action" value="reject">
+                <button type="submit" style="width:100%; padding:0.4rem; background:var(--rose); color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:0.82rem;">Reject</button>
+            </form>
+            <form method="post" action="/review/{{ item.link_id }}" style="display:flex; gap:0.25rem;">
+                <input type="hidden" name="action" value="reclassify">
+                <select name="new_classification" style="flex:1; padding:0.3rem; font-size:0.78rem; border:1px solid var(--border); border-radius:4px;">
+                    <option value="exact_product">exact_product</option>
+                    <option value="product_family">product_family</option>
+                    <option value="manufacturer_linked">manufacturer_linked</option>
+                    <option value="indication_related" selected>indication_related</option>
+                </select>
+                <button type="submit" style="padding:0.3rem 0.5rem; background:var(--amber); color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:0.78rem;">Reclassify</button>
+            </form>
+            <form method="post" action="/review/{{ item.link_id }}" style="margin-top:0.25rem;">
+                <input type="hidden" name="action" value="confirm">
+                <input type="text" name="notes" placeholder="Add note..." style="width:100%; padding:0.3rem; font-size:0.78rem; border:1px solid var(--border); border-radius:4px;">
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
