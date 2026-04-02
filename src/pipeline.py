@@ -105,23 +105,42 @@ def merge_products(
 # Search terms
 # ---------------------------------------------------------------------------
 
+def _is_japanese(text: str) -> bool:
+    """Check if text contains Japanese characters (hiragana, katakana, kanji)."""
+    import re
+    return bool(re.search(r'[\u3000-\u9fff\uf900-\ufaff]', text))
+
+
 def build_search_terms(product: Product) -> ProductSearchTerms:
-    """Build searchable terms from a Product and its relations."""
-    all_names = [product.canonical_name]
+    """Build searchable terms from a Product and its relations.
+
+    Japanese-only names are excluded from search terms since we search
+    English-language literature. They remain as aliases for display.
+    """
+    all_names = []
+    if not _is_japanese(product.canonical_name):
+        all_names.append(product.canonical_name)
+
     family_names = []
-    manufacturer_names = [product.manufacturer_name]
+    manufacturer_names = []
+    if not _is_japanese(product.manufacturer_name):
+        manufacturer_names.append(product.manufacturer_name)
     regulatory_ids = []
 
     for alias in product.aliases:
+        # Skip Japanese-only aliases for literature search
+        if _is_japanese(alias.alias_name) and alias.language == "ja":
+            continue
         if alias.alias_type.value == "product_family":
             family_names.append(alias.alias_name)
-        elif alias.language == "en" or alias.alias_type.value in (
+        elif alias.alias_type.value in (
             "trade_name", "abbreviation", "former_name",
         ):
             all_names.append(alias.alias_name)
 
     for mfg_alias in product.manufacturer_aliases:
-        manufacturer_names.append(mfg_alias.alias_name)
+        if not _is_japanese(mfg_alias.alias_name):
+            manufacturer_names.append(mfg_alias.alias_name)
 
     for entry in product.regulatory_entries:
         if entry.regulatory_id:
