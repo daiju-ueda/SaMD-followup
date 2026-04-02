@@ -62,6 +62,7 @@ class Paper(BaseModel):
     pages: Optional[str] = None
     language: str = "en"
     is_open_access: Optional[bool] = None
+    fulltext: Optional[str] = None
     fulltext_available: bool = False
     citation_count: Optional[int] = None
     source: Optional[str] = None

@@ -26,6 +26,7 @@ from src.ingestion.pmda import load_pmda_csv_file
 from src.ingestion.pmda_scraper import fetch_all_pmda_products
 from src.linking.deduplicator import deduplicate_papers
 from src.linking.scorer import classify_study_type, is_generic_product_name, score_and_link
+from src.literature.fulltext import fetch_fulltext
 from src.literature.query_generator import generate_all_queries
 from src.literature.pubmed import fetch_pubmed_details, search_pubmed
 from src.literature.openalex import search_openalex
@@ -230,6 +231,39 @@ async def search_papers_for_product(
     return unique
 
 
+async def enrich_with_fulltext(
+    client: httpx.AsyncClient,
+    papers: list[Paper],
+    max_fetch: int = 20,
+) -> list[Paper]:
+    """Fetch full text for papers that have DOI/PMID/PMCID.
+
+    Only fetches for papers without existing fulltext, up to max_fetch.
+    This enables fulltext-based scoring in the linking step.
+    """
+    import asyncio
+    fetched = 0
+    for paper in papers:
+        if paper.fulltext or fetched >= max_fetch:
+            continue
+        if not (paper.doi or paper.pmid or paper.pmcid):
+            continue
+        try:
+            text, source = await fetch_fulltext(
+                client, doi=paper.doi, pmid=paper.pmid, pmcid=paper.pmcid,
+            )
+            if text:
+                paper.fulltext = text
+                paper.fulltext_available = True
+                fetched += 1
+        except Exception:
+            pass
+        await asyncio.sleep(0.3)
+    if fetched:
+        logger.debug("Fetched fulltext for %d/%d papers", fetched, len(papers))
+    return papers
+
+
 # ---------------------------------------------------------------------------
 # Linking
 # ---------------------------------------------------------------------------
@@ -260,6 +294,10 @@ async def process_product(
     """Run literature search and linking for a single product. Returns summary dict."""
     terms = build_search_terms(product)
     papers = await search_papers_for_product(client, terms)
+
+    # Enrich top candidates with fulltext for better scoring
+    papers = await enrich_with_fulltext(client, papers, max_fetch=10)
+
     links = link_papers_to_product(papers, terms)
 
     papers_by_id = {str(p.paper_id): p for p in papers}

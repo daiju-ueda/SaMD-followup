@@ -84,6 +84,10 @@ $PYTHON scripts/load_to_db.py
 echo "--- Step 4: Fetching full text ---"
 $PYTHON scripts/fetch_fulltext.py
 
+# Step 5: Re-score using full text
+echo "--- Step 5: Re-scoring with full text ---"
+$PYTHON scripts/rescore_fulltext.py
+
 # Summary
 echo "--- Summary ---"
 psql -d samd_evidence -c "

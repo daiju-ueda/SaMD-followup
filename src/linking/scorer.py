@@ -64,7 +64,9 @@ def compute_features(
 
     title = paper.title or ""
     abstract = paper.abstract or ""
-    full_text = title + " " + abstract  # expand if fulltext available
+    body = paper.fulltext or ""
+    # full_text = all searchable text combined (for manufacturer, indication matching)
+    full_text = title + " " + abstract + (" " + body if body else "")
 
     # ---- Product name features ----
     # Title
@@ -86,6 +88,17 @@ def compute_features(
         weighted_score=weights["product_name_in_abstract"] if found_abs else 0.0,
         evidence=", ".join(matched_abs) if matched_abs else None,
     ))
+
+    # Full text (body only — not title/abstract, to avoid double counting)
+    if body:
+        found_ft, matched_ft = _any_term_in_text(body, terms.all_names)
+        features.append(LinkScoreDetail(
+            feature_name="product_name_in_fulltext",
+            feature_value=1.0 if found_ft else 0.0,
+            weight=weights["product_name_in_fulltext"],
+            weighted_score=weights["product_name_in_fulltext"] if found_ft else 0.0,
+            evidence=", ".join(matched_ft) if matched_ft else None,
+        ))
 
     # ---- Product alias features ----
     alias_names = [n for n in terms.all_names if n != terms.canonical_name]
@@ -224,7 +237,7 @@ def classify_link(
     product_name_hit = any(
         f.feature_value > 0
         for f in features
-        if f.feature_name in ("product_name_in_title", "product_name_in_abstract")
+        if f.feature_name in ("product_name_in_title", "product_name_in_abstract", "product_name_in_fulltext")
     )
     product_alias_hit = any(
         f.feature_value > 0
