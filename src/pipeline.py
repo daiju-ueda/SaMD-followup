@@ -25,7 +25,7 @@ from src.ingestion.normalizer import enrich_product
 from src.ingestion.pmda import load_pmda_csv_file
 from src.ingestion.pmda_scraper import fetch_all_pmda_products
 from src.linking.deduplicator import deduplicate_papers
-from src.linking.scorer import classify_study_type, score_and_link
+from src.linking.scorer import classify_study_type, is_generic_product_name, score_and_link
 from src.literature.query_generator import generate_all_queries
 from src.literature.pubmed import fetch_pubmed_details, search_pubmed
 from src.literature.openalex import search_openalex
@@ -33,6 +33,7 @@ from src.literature.europe_pmc import search_europe_pmc
 from src.models.linking import ProductPaperLink
 from src.models.paper import Paper
 from src.models.product import Product, ProductSearchTerms, RegulatoryEntry
+from src.utils import extract_latin_from_mixed, is_japanese
 
 logger = logging.getLogger(__name__)
 
@@ -105,87 +106,36 @@ def merge_products(
 # Search terms
 # ---------------------------------------------------------------------------
 
-def _is_japanese(text: str) -> bool:
-    """Check if text contains Japanese characters (hiragana, katakana, kanji)."""
-    import re
-    return bool(re.search(r'[\u3000-\u9fff\uf900-\ufaff]', text))
+def build_search_terms(product: Product) -> ProductSearchTerms:
+    """Build searchable terms from a Product for English literature search.
 
-
-def _extract_latin_from_japanese(text: str) -> Optional[str]:
-    """Extract Latin (ASCII/halfwidth) tokens from a mixed JP/EN string.
-
-    Only extracts tokens that look like product-specific proper nouns:
-    - Contains mixed case (EndoBRAIN, IDx-DR) or all-upper acronyms (EIRL)
-    - Multi-word phrases with at least one proper-noun-like token
-    - Excludes common English/medical words (Holter, Eclipse, Velocity, etc.)
-
-    Example: '内視鏡画像診断支援ソフトウェア EndoBRAIN' → 'EndoBRAIN'
-    Example: 'パッチ型心電計 ＥＧ Ｈｏｌｔｅｒ 解析システム' → None (Holter is generic)
+    Japanese-only names are excluded. Latin tokens are extracted from
+    mixed JP/EN names and filtered for generic words.
     """
-    import re
-    import unicodedata
-    text = unicodedata.normalize("NFKC", text)
-    tokens = re.findall(r'[A-Za-z][A-Za-z0-9\-\.]{2,}', text)
-    if not tokens:
+    def _add_name(name: str) -> Optional[str]:
+        """Return a searchable name, or None if it should be skipped."""
+        if not is_japanese(name):
+            return name
+        latin = extract_latin_from_mixed(name)
+        if latin and not is_generic_product_name(latin):
+            return latin
         return None
 
-    # Filter: keep only tokens that look like product names, not generic words
-    # A token is "product-like" if:
-    # 1. Contains mixed case within word (EndoBRAIN, IDx, CureApp) OR
-    # 2. Is all-uppercase and >= 4 chars (EIRL, QSPECT) OR
-    # 3. Contains digits (Pinnacle3, 4D) OR
-    # 4. Contains hyphens/dots (IDx-DR, syngo.via)
-    product_tokens = []
-    for t in tokens:
-        has_mixed_case = any(c.isupper() for c in t[1:]) and any(c.islower() for c in t)
-        is_acronym = t.isupper() and len(t) >= 4
-        has_special = '-' in t or '.' in t
-        has_digit = any(c.isdigit() for c in t)
-        if has_mixed_case or is_acronym or has_special or has_digit:
-            product_tokens.append(t)
-
-    if product_tokens:
-        return " ".join(product_tokens)
-
-    # Fallback: check against known SaMD product names
-    # (products that are all-lowercase or standard capitalization)
-    known_names = {
-        "nodoca", "fitbit", "garmin", "exocad", "medicad",
-    }
-    for t in tokens:
-        if t.lower() in known_names:
-            return t
-
-    return None
-
-
-def build_search_terms(product: Product) -> ProductSearchTerms:
-    """Build searchable terms from a Product and its relations.
-
-    Japanese-only names are excluded from search terms since we search
-    English-language literature. They remain as aliases for display.
-    """
-    from src.linking.scorer import _is_generic_product_name
-
     all_names = []
-    if not _is_japanese(product.canonical_name):
-        all_names.append(product.canonical_name)
-    else:
-        # Try to extract Latin text from Japanese name
-        latin = _extract_latin_from_japanese(product.canonical_name)
-        if latin and not _is_generic_product_name(latin):
-            all_names.append(latin)
+    canonical_latin = _add_name(product.canonical_name)
+    if canonical_latin:
+        all_names.append(canonical_latin)
 
     family_names = []
     manufacturer_names = []
-    if not _is_japanese(product.manufacturer_name):
+    if not is_japanese(product.manufacturer_name):
         manufacturer_names.append(product.manufacturer_name)
     regulatory_ids = []
 
     for alias in product.aliases:
-        if _is_japanese(alias.alias_name):
-            latin = _extract_latin_from_japanese(alias.alias_name)
-            if latin and latin not in all_names and not _is_generic_product_name(latin):
+        if is_japanese(alias.alias_name):
+            latin = extract_latin_from_mixed(alias.alias_name)
+            if latin and latin not in all_names and not is_generic_product_name(latin):
                 all_names.append(latin)
             continue
         if alias.alias_type.value == "product_family":
@@ -196,7 +146,7 @@ def build_search_terms(product: Product) -> ProductSearchTerms:
             all_names.append(alias.alias_name)
 
     for mfg_alias in product.manufacturer_aliases:
-        if not _is_japanese(mfg_alias.alias_name):
+        if not is_japanese(mfg_alias.alias_name):
             manufacturer_names.append(mfg_alias.alias_name)
 
     for entry in product.regulatory_entries:

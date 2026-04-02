@@ -247,7 +247,7 @@ def classify_link(
     # --- Generic name detection ---
     # Short or common English words produce massive false positives.
     # Require additional corroboration (manufacturer or regulatory ID) for these.
-    is_generic_name = _is_generic_product_name(terms.canonical_name)
+    is_generic_name = is_generic_product_name(terms.canonical_name)
 
     reg_id_hit = any(
         f.feature_value > 0 for f in features
@@ -313,17 +313,25 @@ _GENERIC_WORDS = {
     "system", "suite", "studio", "navigator", "planner",
     "monitor", "analyzer", "tracker", "manager", "assist",
     "select", "guide", "scan", "view", "image",
+    # Medical/technical terms commonly in JP product names
+    "holter", "eclipse", "velocity", "harmony", "central",
+    "synthetic", "imagine", "kidney", "reveal", "clarus",
+    "athena", "eureka", "mosaic", "simple", "neutral",
+    "customize", "parallel", "natural", "cycles",
 }
 
 
-def _is_generic_product_name(name: str) -> bool:
+_MIN_SPECIFIC_NAME_LENGTH = 6  # Single words shorter than this are likely generic
+
+
+def is_generic_product_name(name: str) -> bool:
     """Check if a product name is a common English word (high FP risk)."""
     name_lower = name.lower().strip()
-    # Check against known generic words
     if name_lower in _GENERIC_WORDS:
         return True
-    # Single word, <= 5 chars — very likely to be a common word
-    if " " not in name_lower and len(name_lower) <= 5:
+    # Check each word in multi-word names
+    words = name_lower.split()
+    if len(words) == 1 and len(name_lower) < _MIN_SPECIFIC_NAME_LENGTH:
         return True
     return False
 
