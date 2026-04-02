@@ -26,6 +26,7 @@ if env_file.exists():
 from src.config import settings
 from src.pipeline import (
     ingest_fda_from_csv,
+    ingest_fda_from_web,
     ingest_pmda_from_csv,
     ingest_pmda_from_web,
     process_product,
@@ -42,6 +43,7 @@ logger = logging.getLogger("pipeline")
 async def main():
     parser = argparse.ArgumentParser(description="SaMD Evidence Tracker Pipeline")
     parser.add_argument("--fda-csv", default=str(PROJECT_ROOT / "ai-ml-enabled-devices.csv"))
+    parser.add_argument("--fda-web", action="store_true", help="Fetch FDA from web instead of CSV")
     parser.add_argument("--pmda-csv", default=str(PROJECT_ROOT / "data/seed/pmda_devices.csv"))
     parser.add_argument("--pmda-web", action="store_true", help="Fetch PMDA from web instead of CSV")
     parser.add_argument("--output", default=str(PROJECT_ROOT / "data/pipeline_results.json"))
@@ -56,8 +58,11 @@ async def main():
 
     # Step 1: Ingest products
     all_products = []
-    if not args.skip_fda and Path(args.fda_csv).exists():
-        all_products.extend(ingest_fda_from_csv(args.fda_csv))
+    if not args.skip_fda:
+        if args.fda_web:
+            all_products.extend(ingest_fda_from_web())
+        elif Path(args.fda_csv).exists():
+            all_products.extend(ingest_fda_from_csv(args.fda_csv))
     if not args.skip_pmda:
         if args.pmda_web:
             all_products.extend(ingest_pmda_from_web())
