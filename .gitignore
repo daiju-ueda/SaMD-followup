@@ -6,6 +6,8 @@ __pycache__/
 data/*.log
 data/fda_raw/
 data/pmda_raw/
-data/fda_results_b*.json
+data/*.json
+data/fda_raw/
+data/pmda_raw/
 ai-ml-enabled-devices.csv
 data/seed/
