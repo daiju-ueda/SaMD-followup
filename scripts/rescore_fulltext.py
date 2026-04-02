@@ -19,7 +19,7 @@ import src.bootstrap  # noqa: F401,E402
 import psycopg2.extras
 
 from src.db.connection import get_connection
-from src.linking.scorer import _text_contains
+from src.linking.scorer import _text_contains, is_generic_product_name
 from src.utils import setup_logging
 
 setup_logging()
@@ -81,11 +81,12 @@ def main():
         if product.get("aliases"):
             names.extend(product["aliases"])
 
-        # Check fulltext for product name
+        # Check fulltext for product name (skip generic names)
         fulltext = cand["fulltext"]
         for name in names:
-            if name and len(name) > 3 and _text_contains(fulltext, name):
-                # Upgrade to exact_product
+            if not name or len(name) <= 3 or is_generic_product_name(name):
+                continue
+            if _text_contains(fulltext, name):
                 cur.execute("""
                     UPDATE product_paper_links
                     SET link_classification = 'exact_product',
@@ -105,7 +106,9 @@ def main():
                 names.extend(product["aliases"])
 
             for name in names:
-                if name and len(name) > 5 and _text_contains(fulltext, name):
+                if not name or len(name) <= 5 or is_generic_product_name(name):
+                    continue
+                if _text_contains(fulltext, name):
                     # Check if link already exists
                     cur.execute("""
                         SELECT 1 FROM product_paper_links

@@ -126,13 +126,15 @@ def build_search_terms(product: Product) -> ProductSearchTerms:
     mixed JP/EN names and filtered for generic words.
     """
     def _add_name(name: str) -> Optional[str]:
-        """Return a searchable name, or None if it should be skipped."""
-        if not is_japanese(name):
-            return name
-        latin = extract_latin_from_mixed(name)
-        if latin and not is_generic_product_name(latin):
-            return latin
-        return None
+        """Return a searchable name, or None if it should be skipped.
+
+        Generic names (common English words) are still searched but
+        flagged — the scorer will require manufacturer co-occurrence.
+        """
+        if is_japanese(name):
+            latin = extract_latin_from_mixed(name)
+            return latin if latin and not is_generic_product_name(latin) else None
+        return name  # English names always included (scorer handles generic flag)
 
     all_names = []
     canonical_latin = _add_name(product.canonical_name)
