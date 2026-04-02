@@ -21,6 +21,7 @@ import httpx
 from src.ingestion.fda import deduplicate_fda_products, parse_fda_aiml_list
 from src.ingestion.normalizer import enrich_product
 from src.ingestion.pmda import load_pmda_csv_file
+from src.ingestion.pmda_scraper import fetch_all_pmda_products
 from src.linking.deduplicator import deduplicate_papers
 from src.linking.scorer import classify_study_type, score_and_link
 from src.literature.query_generator import generate_all_queries
@@ -60,8 +61,8 @@ def ingest_fda_from_csv(csv_path: str | Path) -> list[tuple[Product, list[Regula
 
 
 def ingest_pmda_from_csv(csv_path: str | Path) -> list[tuple[Product, list[RegulatoryEntry]]]:
-    """Load PMDA products from curated CSV."""
-    logger.info("Ingesting PMDA products from %s", csv_path)
+    """Load PMDA products from curated CSV (fallback)."""
+    logger.info("Ingesting PMDA products from CSV: %s", csv_path)
     raw = load_pmda_csv_file(csv_path)
     results = []
     for product, entry, aliases in raw:
@@ -71,8 +72,14 @@ def ingest_pmda_from_csv(csv_path: str | Path) -> list[tuple[Product, list[Regul
         product.regulatory_entries = [entry]
         results.append((product, [entry]))
 
-    logger.info("PMDA: %d products", len(results))
+    logger.info("PMDA (CSV): %d products", len(results))
     return results
+
+
+def ingest_pmda_from_web() -> list[tuple[Product, list[RegulatoryEntry]]]:
+    """Fetch PMDA products directly from PMDA website Excel lists."""
+    logger.info("Ingesting PMDA products from web (approval + certification)")
+    return fetch_all_pmda_products()
 
 
 # ---------------------------------------------------------------------------

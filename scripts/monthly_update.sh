@@ -35,8 +35,10 @@ BATCH_SIZE=300
 FDA_COUNT=$($PYTHON -c "import csv; print(sum(1 for _ in csv.DictReader(open('ai-ml-enabled-devices.csv'))))")
 echo "FDA products: $FDA_COUNT"
 
-# PMDA first
-$PYTHON scripts/run_pipeline.py --skip-fda --output data/pmda_results.json
+# PMDA: fetch from web (PMDA Excel lists), fallback to CSV
+echo "--- PMDA: fetching from web ---"
+$PYTHON scripts/run_pipeline.py --skip-fda --pmda-web --output data/pmda_results.json || \
+    $PYTHON scripts/run_pipeline.py --skip-fda --output data/pmda_results.json
 
 # FDA in batches
 OFFSET=0
