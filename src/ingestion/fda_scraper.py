@@ -1,25 +1,31 @@
-"""FDA AI/ML SaMD product ingestion via openFDA API.
+"""FDA SaMD product ingestion via accessdata.fda.gov bulk files.
 
-Uses the openFDA REST API to fetch 510(k), PMA, and De Novo records
-filtered by product codes known to contain AI/ML SaMD devices.
+Uses official FDA FTP-area bulk data (no bot detection, no API rate limits):
+- foiclass.zip: Product Classification → derive SaMD product codes
+- pma.zip: PMA approvals (pipe-delimited)
+- pmnlstmn.zip: 510(k) clearances (pipe-delimited)
+- De Novo: HTML scraping of De Novo search/detail pages
 
-No web scraping or CSV download needed — openFDA has no bot detection.
+Based on FDA SaMD Monitor script.
 """
 
 from __future__ import annotations
 
-import asyncio
+import hashlib
+import io
 import logging
-from typing import Any
+import re
+import zipfile
+from dataclasses import dataclass
+from datetime import date, datetime, timezone
+from pathlib import Path
+from typing import Any, Iterable, Optional
 
-import httpx
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
-from src.config import settings
-from src.ingestion.fda import (
-    SAMD_KEYWORDS_IN_DESCRIPTION,
-    _infer_pathway_from_submission_number,
-    deduplicate_fda_products,
-)
+from src.ingestion.fda import deduplicate_fda_products
 from src.ingestion.normalizer import enrich_product
 from src.models.product import (
     AliasType,
@@ -35,190 +41,464 @@ from src.utils import parse_date
 
 logger = logging.getLogger(__name__)
 
-# Product codes found in the FDA AI/ML-Enabled Medical Devices list.
-# These are the top codes covering ~95% of all AI/ML SaMD.
-# Full list has 168 codes but the long tail has 1 device each.
-AIML_PRODUCT_CODES = [
-    "QIH", "LLZ", "IYN", "LNH", "JAK", "QAS", "QKB", "QFM",
-    "MYN", "MUJ", "QDQ", "DQK", "KPS", "POK", "QNP", "DQD",
-    "OWB", "JOY", "MNR", "OEB", "QBS", "DPS", "OEI", "QMT",
-    "DTB", "QKQ", "NVD", "PHI", "LMD", "QPN", "NQI", "QRZ",
-    "PSY", "DXA", "DPL", "DPM", "IYO", "OQG", "PIB", "MMO",
+# ---------------------------------------------------------------------------
+# Config
+# ---------------------------------------------------------------------------
+
+UA = "Mozilla/5.0 (compatible; SaMD-Evidence-Tracker/1.0)"
+
+FOICLASS_ZIP_URL = "https://www.accessdata.fda.gov/premarket/ftparea/foiclass.zip"
+PMA_ZIP_URL = "https://www.accessdata.fda.gov/premarket/ftparea/pma.zip"
+PMNLSTMN_ZIP_URL = "https://www.accessdata.fda.gov/premarket/ftparea/pmnlstmn.zip"
+DENOVO_SEARCH_URL = "https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/denovo.cfm"
+
+DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "fda_raw"
+STATE_DIR = DATA_DIR / "state"
+
+# Keywords to identify SaMD product codes from foiclass
+SOFTWARE_KEYWORDS = [
+    "software", "software as a medical device",
+    "mobile medical application", "mobile medical app",
+    "artificial intelligence", "machine learning", "algorithm",
+    "computer-aided", "computer assisted", "decision support",
+    "image processing", "analysis software", "triage software",
+    "notification software", "cloud", "app", "application", "program",
 ]
 
-# Additional AI/ML-specific keywords beyond SAMD_KEYWORDS_IN_DESCRIPTION
-AIML_KEYWORDS = SAMD_KEYWORDS_IN_DESCRIPTION + [
-    "ai-based", "ai based", "ai-powered", "ai powered",
-    "convolutional", "classification", "segmentation",
-    "computer-assisted", "computer assisted",
-    "cad", "detection software", "diagnostic software",
+# Manual allowlist for product codes known to be SaMD/AI
+MANUAL_PRODUCT_CODE_ALLOWLIST: set[str] = set()
+
+TIMEOUT = 60
+
+
+# ---------------------------------------------------------------------------
+# Utilities
+# ---------------------------------------------------------------------------
+
+def _session() -> requests.Session:
+    s = requests.Session()
+    s.headers.update({"User-Agent": UA})
+    return s
+
+
+def _normalize(x: object) -> str:
+    if x is None:
+        return ""
+    s = str(x).replace("\xa0", " ")
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _parse_mmddyyyy(s: str) -> Optional[date]:
+    s = _normalize(s)
+    if not s:
+        return None
+    for fmt in ("%m/%d/%Y", "%m-%d-%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(s, fmt).date()
+        except ValueError:
+            pass
+    return None
+
+
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _read_zip_first_member(data: bytes, encoding: str = "latin-1") -> str:
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        members = [n for n in zf.namelist() if not n.endswith("/")]
+        if not members:
+            raise RuntimeError("zip is empty")
+        with zf.open(members[0]) as f:
+            return f.read().decode(encoding, errors="replace")
+
+
+def _ensure_dirs() -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _save_raw(name: str, data: bytes, suffix: str = ".zip") -> Path:
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    path = DATA_DIR / f"{name}_{ts}{suffix}"
+    path.write_bytes(data)
+    return path
+
+
+def _load_hash(name: str) -> Optional[str]:
+    p = STATE_DIR / f"{name}.sha256"
+    return p.read_text(encoding="utf-8").strip() if p.exists() else None
+
+
+def _save_hash(name: str, digest: str) -> None:
+    (STATE_DIR / f"{name}.sha256").write_text(digest, encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# 1. Product Classification (foiclass.zip) → SaMD product codes
+# ---------------------------------------------------------------------------
+
+FOICLASS_COLUMNS = [
+    "review_panel", "medical_specialty", "product_code", "device_name",
+    "device_class", "unclassified_reason_code", "gmp_exempt_flag",
+    "third_party_review_eligible", "third_party_review_code",
+    "regulation_number", "submission_type_id", "definition",
+    "physical_state", "technical_method", "target_area", "implant_flag",
+    "life_sustain_support_flag", "summary_malfunction_reporting",
 ]
 
-OPENFDA_BASE = "https://api.fda.gov/device"
+
+def _parse_foiclass(data: bytes) -> pd.DataFrame:
+    text = _read_zip_first_member(data, encoding="latin-1")
+    rows = []
+    for line in text.splitlines():
+        line = line.rstrip("\r\n")
+        if not line.strip():
+            continue
+        parts = line.split("|")
+        if len(parts) < len(FOICLASS_COLUMNS):
+            parts += [""] * (len(FOICLASS_COLUMNS) - len(parts))
+        rows.append(parts[:len(FOICLASS_COLUMNS)])
+    df = pd.DataFrame(rows, columns=FOICLASS_COLUMNS)
+    for col in df.columns:
+        df.loc[:, col] = df[col].map(_normalize)
+    return df
 
 
-def _is_aiml_candidate(record: dict[str, Any]) -> bool:
-    """Check if an openFDA record is likely an AI/ML SaMD.
+def derive_samd_product_codes(foiclass_df: pd.DataFrame) -> list[str]:
+    """Extract product codes likely to contain SaMD devices."""
+    text_cols = ["device_name", "definition", "technical_method", "target_area"]
+    pattern = re.compile("|".join(re.escape(k) for k in SOFTWARE_KEYWORDS), re.IGNORECASE)
 
-    Uses device_name + statement_or_summary for keyword matching.
-    Also checks if the device name itself suggests software/AI.
-    """
-    description = " ".join(filter(None, [
-        record.get("device_name", ""),
-        record.get("statement_or_summary", ""),
-    ])).lower()
+    mask = pd.Series(False, index=foiclass_df.index)
+    for col in text_cols:
+        mask |= foiclass_df[col].fillna("").str.contains(pattern, na=False)
 
-    # Primary: AI/ML keywords in description
-    if any(kw in description for kw in AIML_KEYWORDS):
-        return True
-
-    # Secondary: device name contains software-related terms
-    # (many AI/ML devices just say "software" in the name)
-    name = (record.get("device_name") or "").lower()
-    software_terms = ["software", "program", "platform", "app ", "system"]
-    if any(t in name for t in software_terms):
-        return True
-
-    return False
-
-
-# ---------------------------------------------------------------------------
-# openFDA query helpers
-# ---------------------------------------------------------------------------
-
-def _api_params(search: str, limit: int = 100, skip: int = 0) -> dict[str, str]:
-    params = {"search": search, "limit": str(limit), "skip": str(skip)}
-    if settings.openfda_api_key:
-        params["api_key"] = settings.openfda_api_key
-    return params
-
-
-async def _fetch_all_from_endpoint(
-    client: httpx.AsyncClient,
-    endpoint: str,
-    search: str,
-    max_records: int = 10000,
-) -> list[dict[str, Any]]:
-    """Page through openFDA results."""
-    all_results: list[dict] = []
-    skip = 0
-    limit = 100
-    while skip < max_records:
-        params = _api_params(search, limit=limit, skip=skip)
-        url = f"{OPENFDA_BASE}/{endpoint}.json"
-        resp = await client.get(url, params=params, timeout=30)
-        if resp.status_code == 404:
-            break
-        resp.raise_for_status()
-        body = resp.json()
-        results = body.get("results", [])
-        if not results:
-            break
-        all_results.extend(results)
-        total = body.get("meta", {}).get("results", {}).get("total", 0)
-        skip += limit
-        if skip >= total:
-            break
-        await asyncio.sleep(1.0 / settings.openfda_requests_per_second)
-    return all_results
+    mask |= foiclass_df["product_code"].isin(MANUAL_PRODUCT_CODE_ALLOWLIST)
+    codes = foiclass_df.loc[mask, "product_code"].dropna().unique().tolist()
+    logger.info("Derived %d SaMD product codes from foiclass", len(codes))
+    return sorted(codes)
 
 
 # ---------------------------------------------------------------------------
-# Record normalization
+# 2. PMA (pma.zip)
 # ---------------------------------------------------------------------------
 
-def _normalize_record(record: dict[str, Any]) -> tuple[Product, RegulatoryEntry]:
-    """Convert an openFDA 510k/PMA record into Product + RegulatoryEntry."""
-    device_name = (record.get("device_name") or "").strip()
-    applicant = (record.get("applicant") or "").strip()
-    product_code = record.get("product_code", "")
+PMA_COLUMNS = [
+    "pma_number", "supplement_number", "applicant", "street_1", "street_2",
+    "city", "state", "zip", "zip_ext", "generic_name", "trade_name",
+    "product_code", "advisory_committee", "supplement_type", "supplement_reason",
+    "expedited_review_granted", "date_received", "date_decision", "docket_number",
+    "date_federal_register_notice", "decision_code", "approval_order_statement",
+]
 
-    # Determine submission number and pathway
-    k_number = record.get("k_number", "")
-    pma_number = record.get("pma_number", "")
-    submission_number = k_number or pma_number or ""
 
-    pathway, status = _infer_pathway_from_submission_number(submission_number)
+def _parse_pma(data: bytes) -> pd.DataFrame:
+    text = _read_zip_first_member(data, encoding="latin-1")
+    rows = []
+    for line in text.splitlines():
+        line = line.rstrip("\r\n")
+        if not line.strip():
+            continue
+        parts = line.split("|")
+        if len(parts) < len(PMA_COLUMNS):
+            parts += [""] * (len(PMA_COLUMNS) - len(parts))
+        rows.append(parts[:len(PMA_COLUMNS)])
+    df = pd.DataFrame(rows, columns=PMA_COLUMNS)
+    for col in df.columns:
+        df.loc[:, col] = df[col].map(_normalize)
+    df.loc[:, "decision_date"] = df["date_decision"].map(_parse_mmddyyyy)
+    return df
 
-    # Split semicolon-separated device names
-    name_parts = [n.strip() for n in device_name.split(";") if n.strip()]
-    canonical = name_parts[0] if name_parts else device_name
-    aliases = [
-        ProductAlias(
-            product_id="00000000-0000-0000-0000-000000000000",
-            alias_name=name,
-            alias_type=AliasType.TRADE_NAME,
-            source="openfda",
+
+def _pma_to_products(
+    df: pd.DataFrame,
+    samd_codes: list[str],
+) -> list[tuple[Product, RegulatoryEntry]]:
+    hits = df[df["product_code"].isin(samd_codes)].copy()
+    results = []
+    for _, row in hits.iterrows():
+        trade_name = row.get("trade_name", "")
+        if not trade_name:
+            continue
+        product = Product(
+            canonical_name=trade_name,
+            manufacturer_name=row.get("applicant", ""),
+            standalone_samd=True,
         )
-        for name in name_parts[1:]
-    ]
+        entry = RegulatoryEntry(
+            product_id=product.product_id,
+            region=RegionCode.US,
+            regulatory_pathway=RegulatoryPathway.PMA,
+            regulatory_status_raw="approved",
+            regulatory_status=RegulatoryStatusNormalized.APPROVED,
+            regulatory_id=row.get("pma_number"),
+            clearance_date=row.get("decision_date"),
+            product_code=row.get("product_code"),
+            review_panel=row.get("advisory_committee"),
+            applicant=row.get("applicant"),
+            evidence_tier=EvidenceTier.TIER_1,
+        )
+        results.append((product, entry))
+    logger.info("PMA: %d SaMD products", len(results))
+    return results
 
-    product = Product(
-        canonical_name=canonical,
-        manufacturer_name=applicant,
-        standalone_samd=True,
-        aliases=aliases,
-    )
 
-    # Fix alias product_id
-    for alias in product.aliases:
-        alias.product_id = product.product_id
+# ---------------------------------------------------------------------------
+# 3. 510(k) (pmnlstmn.zip) — pipe-delimited
+# ---------------------------------------------------------------------------
 
-    date_str = record.get("decision_date") or record.get("date_received") or ""
-    entry = RegulatoryEntry(
-        product_id=product.product_id,
-        region=RegionCode.US,
-        regulatory_pathway=pathway,
-        regulatory_status_raw=record.get("decision_description", ""),
-        regulatory_status=status,
-        regulatory_id=submission_number or None,
-        clearance_date=parse_date(date_str),
-        device_class=record.get("device_class"),
-        product_code=product_code,
-        review_panel=record.get("advisory_committee_description"),
-        applicant=applicant,
-        source_url=f"https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/pmn.cfm?ID={submission_number}" if submission_number else None,
-        evidence_tier=EvidenceTier.TIER_1,
-        raw_data=record,
-    )
-    return product, entry
+def _parse_510k(data: bytes) -> pd.DataFrame:
+    """Parse pmnlstmn.zip — uses header row for column names."""
+    text = _read_zip_first_member(data, encoding="latin-1")
+    lines = [l.rstrip("\r\n") for l in text.splitlines() if l.strip()]
+    if not lines:
+        return pd.DataFrame()
+
+    # First line is header
+    header = [h.strip().lower() for h in lines[0].split("|")]
+    rows = []
+    for line in lines[1:]:
+        parts = line.split("|")
+        if len(parts) < len(header):
+            parts += [""] * (len(header) - len(parts))
+        rows.append(parts[:len(header)])
+
+    df = pd.DataFrame(rows, columns=header)
+    for col in df.columns:
+        df.loc[:, col] = df[col].map(_normalize)
+
+    # Normalize column names to match our code
+    col_map = {
+        "knumber": "k_number", "applicant": "applicant",
+        "devicename": "device_name", "productcode": "product_code",
+        "decisiondate": "decision_date", "decision": "decision_description",
+        "datereceived": "date_received", "stateorsumm": "statement_or_summary",
+    }
+    df = df.rename(columns={k: v for k, v in col_map.items() if k in df.columns})
+    if "decision_date" in df.columns:
+        df["decision_date_parsed"] = df["decision_date"].map(_parse_mmddyyyy)
+    return df
+
+
+def _510k_to_products(
+    df: pd.DataFrame,
+    samd_codes: list[str],
+) -> list[tuple[Product, RegulatoryEntry]]:
+    if "product_code" not in df.columns:
+        logger.warning("510(k) data missing product_code column")
+        return []
+
+    hits = df[df["product_code"].isin(samd_codes)].copy()
+    results = []
+    for _, row in hits.iterrows():
+        device_name = str(row.get("device_name", "")).strip()
+        if not device_name:
+            continue
+
+        name_parts = [n.strip() for n in device_name.split(";") if n.strip()]
+        canonical = name_parts[0]
+        aliases = [
+            ProductAlias(
+                product_id="00000000-0000-0000-0000-000000000000",
+                alias_name=n, alias_type=AliasType.TRADE_NAME, source="fda_510k_zip",
+            )
+            for n in name_parts[1:]
+        ]
+
+        k_number = str(row.get("k_number", ""))
+        if k_number.upper().startswith("DEN"):
+            pathway = RegulatoryPathway.DE_NOVO
+            status = RegulatoryStatusNormalized.AUTHORIZED
+        else:
+            pathway = RegulatoryPathway.K510
+            status = RegulatoryStatusNormalized.CLEARED
+
+        product = Product(
+            canonical_name=canonical,
+            manufacturer_name=str(row.get("applicant", "")),
+            standalone_samd=True,
+            aliases=aliases,
+        )
+        for a in product.aliases:
+            a.product_id = product.product_id
+
+        entry = RegulatoryEntry(
+            product_id=product.product_id,
+            region=RegionCode.US,
+            regulatory_pathway=pathway,
+            regulatory_status_raw=str(row.get("decision_description", "")),
+            regulatory_status=status,
+            regulatory_id=k_number or None,
+            clearance_date=row.get("decision_date_parsed"),
+            product_code=str(row.get("product_code", "")),
+            applicant=str(row.get("applicant", "")),
+            evidence_tier=EvidenceTier.TIER_1,
+        )
+        results.append((product, entry))
+    logger.info("510(k): %d SaMD products", len(results))
+    return results
+
+
+# ---------------------------------------------------------------------------
+# 4. De Novo (HTML scraping)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class _DeNovoRecord:
+    denovo_number: str
+    device_name: str
+    requester: str
+    product_code: str
+    decision_date: str
+    decision: str
+
+
+_LABEL_PATTERNS = {
+    "denovo_number": r"De Novo Number\s+([A-Z0-9]+)",
+    "device_name": r"Device Name\s+(.+?)\s+Requester",
+    "requester": r"Requester\s+(.+?)\s+Contact",
+    "product_code": r"Classification Product Code\s+([A-Z0-9]+)",
+    "decision_date": r"Decision Date\s+([0-9/]+)",
+    "decision": r"Decision\s+(.+?)\s+(?:Classification Advisory|Review Advisory|Page Last)",
+}
+
+
+def _fetch_denovo_ids(product_codes: Iterable[str]) -> list[str]:
+    """Search De Novo database for all SaMD product codes."""
+    seen: set[str] = set()
+    sess = _session()
+    for code in sorted(set(product_codes)):
+        params = {
+            "productcode": code,
+            "sortcolumn": "decisiondatedesc",
+            "start_search": "1",
+            "pagenum": "500",
+        }
+        try:
+            r = sess.get(DENOVO_SEARCH_URL, params=params, timeout=TIMEOUT)
+            r.raise_for_status()
+            soup = BeautifulSoup(r.text, "html.parser")
+            for a in soup.select('a[href*="denovo.cfm?id="], a[href*="denovo.cfm?ID="]'):
+                href = a.get("href", "")
+                m = re.search(r"id=([A-Za-z0-9]+)", href, flags=re.IGNORECASE)
+                if m:
+                    den = m.group(1).upper()
+                    if den.startswith("DEN"):
+                        seen.add(den)
+        except Exception as e:
+            logger.warning("De Novo search failed for code %s: %s", code, e)
+    return sorted(seen)
+
+
+def _fetch_denovo_detail(denovo_id: str) -> Optional[_DeNovoRecord]:
+    try:
+        r = _session().get(DENOVO_SEARCH_URL, params={"id": denovo_id}, timeout=TIMEOUT)
+        r.raise_for_status()
+        text = _normalize(BeautifulSoup(r.text, "html.parser").get_text("\n", strip=True))
+        values: dict[str, str] = {}
+        for key, pattern in _LABEL_PATTERNS.items():
+            m = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
+            values[key] = _normalize(m.group(1)) if m else ""
+        return _DeNovoRecord(
+            denovo_number=values.get("denovo_number") or denovo_id,
+            device_name=values.get("device_name", ""),
+            requester=values.get("requester", ""),
+            product_code=values.get("product_code", ""),
+            decision_date=values.get("decision_date", ""),
+            decision=values.get("decision", ""),
+        )
+    except Exception as e:
+        logger.warning("De Novo detail failed for %s: %s", denovo_id, e)
+        return None
+
+
+def _denovo_to_products(
+    samd_codes: list[str],
+) -> list[tuple[Product, RegulatoryEntry]]:
+    ids = _fetch_denovo_ids(samd_codes)
+    logger.info("De Novo: found %d IDs", len(ids))
+
+    results = []
+    for den_id in ids:
+        rec = _fetch_denovo_detail(den_id)
+        if not rec or not rec.device_name:
+            continue
+        product = Product(
+            canonical_name=rec.device_name,
+            manufacturer_name=rec.requester,
+            standalone_samd=True,
+        )
+        entry = RegulatoryEntry(
+            product_id=product.product_id,
+            region=RegionCode.US,
+            regulatory_pathway=RegulatoryPathway.DE_NOVO,
+            regulatory_status_raw=rec.decision,
+            regulatory_status=RegulatoryStatusNormalized.AUTHORIZED,
+            regulatory_id=rec.denovo_number,
+            clearance_date=_parse_mmddyyyy(rec.decision_date),
+            product_code=rec.product_code,
+            applicant=rec.requester,
+            evidence_tier=EvidenceTier.TIER_1,
+        )
+        results.append((product, entry))
+    logger.info("De Novo: %d SaMD products", len(results))
+    return results
 
 
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
-async def fetch_fda_aiml_products() -> list[tuple[Product, list[RegulatoryEntry]]]:
-    """Fetch AI/ML SaMD products from openFDA API.
+def fetch_fda_samd_products() -> list[tuple[Product, list[RegulatoryEntry]]]:
+    """Fetch all FDA SaMD products from bulk data files.
 
-    Queries 510(k) and PMA endpoints filtered by AI/ML product codes.
-    Returns enriched, deduplicated products.
+    Steps:
+    1. Download foiclass.zip → derive SaMD product codes
+    2. Download pma.zip → filter by SaMD codes
+    3. Download pmnlstmn.zip → filter by SaMD codes (510k + De Novo in bulk)
+    4. Scrape De Novo search pages for additional records
+    5. Deduplicate and enrich
     """
-    code_clause = " OR ".join(f'"{c}"' for c in AIML_PRODUCT_CODES)
-    search = f"product_code:({code_clause})"
+    _ensure_dirs()
+    sess = _session()
 
-    async with httpx.AsyncClient() as client:
-        logger.info("Fetching FDA 510(k) AI/ML devices via openFDA API...")
-        records_510k = await _fetch_all_from_endpoint(client, "510k", search)
-        logger.info("  510(k): %d records", len(records_510k))
+    # 1. Product Classification → SaMD codes
+    logger.info("Downloading foiclass.zip...")
+    r = sess.get(FOICLASS_ZIP_URL, timeout=TIMEOUT)
+    r.raise_for_status()
+    foiclass_data = r.content
+    _save_raw("foiclass", foiclass_data)
 
-        logger.info("Fetching FDA PMA AI/ML devices via openFDA API...")
-        records_pma = await _fetch_all_from_endpoint(client, "pma", search)
-        logger.info("  PMA: %d records", len(records_pma))
+    foiclass_df = _parse_foiclass(foiclass_data)
+    samd_codes = derive_samd_product_codes(foiclass_df)
 
-    # Filter for AI/ML SaMD candidates and normalize
-    all_raw = []
-    for r in records_510k + records_pma:
-        if not _is_aiml_candidate(r):
-            continue
-        product, entry = _normalize_record(r)
-        all_raw.append((product, entry))
-    logger.info("After AI/ML keyword filter: %d records", len(all_raw))
+    # 2. PMA
+    logger.info("Downloading pma.zip...")
+    r = sess.get(PMA_ZIP_URL, timeout=TIMEOUT)
+    r.raise_for_status()
+    _save_raw("pma", r.content)
+    pma_df = _parse_pma(r.content)
+    pma_products = _pma_to_products(pma_df, samd_codes)
 
-    # Deduplicate
+    # 3. 510(k)
+    logger.info("Downloading pmnlstmn.zip...")
+    r = sess.get(PMNLSTMN_ZIP_URL, timeout=TIMEOUT)
+    r.raise_for_status()
+    _save_raw("pmnlstmn", r.content)
+    k510_df = _parse_510k(r.content)
+    k510_products = _510k_to_products(k510_df, samd_codes)
+
+    # 4. De Novo (scrape top codes only to avoid excessive requests)
+    top_codes = samd_codes[:50]  # limit to top 50 codes
+    denovo_products = _denovo_to_products(top_codes)
+
+    # 5. Combine, deduplicate, enrich
+    all_raw = pma_products + k510_products + denovo_products
+    logger.info("FDA raw total: %d (PMA=%d, 510k=%d, De Novo=%d)",
+                len(all_raw), len(pma_products), len(k510_products), len(denovo_products))
+
     deduped = deduplicate_fda_products(all_raw)
-
-    # Enrich
     enriched = []
     for product, entries in deduped:
         product = enrich_product(product)
@@ -227,5 +507,5 @@ async def fetch_fda_aiml_products() -> list[tuple[Product, list[RegulatoryEntry]
         product.regulatory_entries = entries
         enriched.append((product, entries))
 
-    logger.info("FDA (openFDA API): %d unique AI/ML products", len(enriched))
+    logger.info("FDA (bulk files): %d unique SaMD products", len(enriched))
     return enriched

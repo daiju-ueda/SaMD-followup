@@ -27,18 +27,18 @@ $PYTHON scripts/run_pipeline.py --skip-fda --pmda-web \
 $PYTHON scripts/run_pipeline.py --skip-fda \
     --output data/pmda_results.json
 
-# Step 2: FDA (openFDA API, fallback to local CSV)
-echo "--- Step 2: FDA via openFDA API ---"
+# Step 2: FDA (bulk files from accessdata.fda.gov, fallback to local CSV)
+echo "--- Step 2: FDA via bulk files ---"
 BATCH_SIZE=300
 FDA_COUNT=$($PYTHON -c "
-import asyncio, sys; sys.path.insert(0,'.')
-from src.ingestion.fda_scraper import fetch_fda_aiml_products
-products = asyncio.run(fetch_fda_aiml_products())
+import sys; sys.path.insert(0,'.')
+from src.ingestion.fda_scraper import fetch_fda_samd_products
+products = fetch_fda_samd_products()
 print(len(products))
 " 2>/dev/null || echo "0")
 
 if [ "$FDA_COUNT" -eq "0" ]; then
-    echo "openFDA API failed, falling back to local CSV"
+    echo "FDA bulk download failed, falling back to local CSV"
     if [ -f "ai-ml-enabled-devices.csv" ]; then
         FDA_COUNT=$($PYTHON -c "import csv; print(sum(1 for _ in csv.DictReader(open('ai-ml-enabled-devices.csv'))))")
         FDA_FLAG=""
@@ -47,8 +47,8 @@ if [ "$FDA_COUNT" -eq "0" ]; then
         FDA_COUNT=0
     fi
 else
-    echo "FDA products from API: $FDA_COUNT"
-    FDA_FLAG="--fda-api"
+    echo "FDA products from bulk files: $FDA_COUNT"
+    FDA_FLAG="--fda-web"
 fi
 
 if [ "$FDA_COUNT" -gt "0" ]; then
