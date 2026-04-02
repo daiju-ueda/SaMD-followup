@@ -362,13 +362,31 @@ def fetch_pmda_approval_list(
     df = _read_excel_all_sheets(data)
     df = _normalize_columns(df)
 
-    # Filter by AI flag if requested
+    # Filter for AI/ML devices
     if ai_only:
         ai_col = _find_column(df, ["AI活用医療機器", "AI"])
+        before = len(df)
+
+        # Primary: official AI flag (○)
         if ai_col:
-            before = len(df)
-            df = df[df[ai_col].fillna("").astype(str).str.contains("○", na=False)].copy()
-            logger.info("PMDA approval AI filter: %d → %d (AI活用医療機器=○)", before, len(df))
+            ai_flag_mask = df[ai_col].fillna("").astype(str).str.contains("○", na=False)
+        else:
+            ai_flag_mask = pd.Series(False, index=df.index)
+
+        # Supplementary: keyword match in product name / generic name
+        # (PMDA note says the AI flag is NOT exhaustive)
+        text_cols = [c for c in df.columns if any(k in c for k in ["販売名", "一般的名称"])]
+        kw_mask = pd.Series(False, index=df.index)
+        for col in text_cols:
+            s = df[col].astype(str).fillna("")
+            for kw in AIML_INCLUDE_KEYWORDS:
+                kw_mask |= s.str.contains(kw, case=False, na=False)
+
+        df = df[ai_flag_mask | kw_mask].copy()
+        ai_count = ai_flag_mask.sum()
+        kw_extra = len(df) - ai_count
+        logger.info("PMDA approval AI filter: %d → %d (flag=%d, keyword supplement=%d)",
+                    before, len(df), ai_count, kw_extra)
 
     products = _df_to_products(df, RegulatoryPathway.APPROVAL, RegulatoryStatusNormalized.APPROVED)
     logger.info("PMDA approval: %d products from Excel (ai_only=%s)", len(products), ai_only)

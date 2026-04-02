@@ -27,27 +27,26 @@ $PYTHON scripts/run_pipeline.py --skip-fda --pmda-web \
 $PYTHON scripts/run_pipeline.py --skip-fda \
     --output data/pmda_results.json
 
-# Step 2: FDA (bulk files from accessdata.fda.gov, fallback to local CSV)
-echo "--- Step 2: FDA via bulk files ---"
+# Step 2: FDA
+# Primary: official AI/ML CSV (manually downloaded, 1,430+ products)
+# Fallback: bulk files from accessdata.fda.gov (~725 products, ~50% coverage)
+echo "--- Step 2: FDA ---"
 BATCH_SIZE=300
-FDA_COUNT=$($PYTHON -c "
+if [ -f "ai-ml-enabled-devices.csv" ]; then
+    FDA_COUNT=$($PYTHON -c "import csv; print(sum(1 for _ in csv.DictReader(open('ai-ml-enabled-devices.csv'))))")
+    echo "FDA from CSV (gold standard): $FDA_COUNT products"
+    FDA_FLAG=""
+else
+    echo "FDA CSV not found, trying bulk files (fallback, ~50% coverage)"
+    FDA_COUNT=$($PYTHON -c "
 import sys; sys.path.insert(0,'.')
 from src.ingestion.fda_scraper import fetch_fda_samd_products
 products = fetch_fda_samd_products()
 print(len(products))
 " 2>/dev/null || echo "0")
-
-if [ "$FDA_COUNT" -eq "0" ]; then
-    echo "FDA bulk download failed, falling back to local CSV"
-    if [ -f "ai-ml-enabled-devices.csv" ]; then
-        FDA_COUNT=$($PYTHON -c "import csv; print(sum(1 for _ in csv.DictReader(open('ai-ml-enabled-devices.csv'))))")
-        FDA_FLAG=""
-    else
+    if [ "$FDA_COUNT" -eq "0" ]; then
         echo "No FDA data available, skipping"
-        FDA_COUNT=0
     fi
-else
-    echo "FDA products from bulk files: $FDA_COUNT"
     FDA_FLAG="--fda-web"
 fi
 

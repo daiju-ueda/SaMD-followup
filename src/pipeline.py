@@ -43,7 +43,15 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 def ingest_fda_from_csv(csv_path: str | Path) -> list[tuple[Product, list[RegulatoryEntry]]]:
-    """Load FDA products from the official AI/ML-Enabled Devices CSV."""
+    """Load FDA products from the official AI/ML-Enabled Devices CSV.
+
+    This is the PREFERRED source — the CSV is FDA's curated list of 1,430+
+    AI/ML SaMD products. Bulk files (ingest_fda_from_web) only capture ~50%
+    because product code heuristics cannot replicate FDA's manual curation.
+
+    The CSV must be manually downloaded from:
+    https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-enabled-medical-devices
+    """
     logger.info("Ingesting FDA AI/ML list from %s", csv_path)
     with open(csv_path, encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
@@ -59,13 +67,17 @@ def ingest_fda_from_csv(csv_path: str | Path) -> list[tuple[Product, list[Regula
         product.regulatory_entries = entries
         enriched.append((product, entries))
 
-    logger.info("FDA (CSV): %d unique products", len(enriched))
+    logger.info("FDA (CSV, gold standard): %d unique products", len(enriched))
     return enriched
 
 
 def ingest_fda_from_web() -> list[tuple[Product, list[RegulatoryEntry]]]:
-    """Fetch FDA SaMD products from bulk data files (foiclass + PMA + 510k + De Novo)."""
-    logger.info("Ingesting FDA SaMD products from FDA bulk files")
+    """Fetch FDA SaMD products from bulk data files (foiclass + PMA + 510k + De Novo).
+
+    FALLBACK source — captures ~50% of FDA's official AI/ML list because
+    product code heuristics miss many devices. Use ingest_fda_from_csv() when possible.
+    """
+    logger.info("Ingesting FDA SaMD products from FDA bulk files (fallback)")
     return fetch_fda_samd_products()
 
 
