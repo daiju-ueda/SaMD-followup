@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Monthly SaMD Evidence Tracker update
-# Fetches latest data from FDA + PMDA websites, runs literature search, loads DB.
 #
-# All downloads happen inside Python (no curl), so FDA/PMDA URL changes
-# only need to be updated in src/ingestion/*_scraper.py.
+# Data sources:
+#   FDA  — openFDA REST API (no download, no bot detection)
+#   PMDA — direct Excel download from pmda.go.jp
 #
 # Cron: 0 3 1 * * /srv/projects/SaMD-followup/scripts/monthly_update.sh
 set -euo pipefail
@@ -20,49 +20,54 @@ cd "$PROJECT_DIR"
 exec >> "$LOG" 2>&1
 echo "=== Monthly update started: $(date) ==="
 
-# Step 1: PMDA (web scraping, fallback to CSV)
-echo "--- Step 1: PMDA ingestion + literature search ---"
-$PYTHON scripts/run_pipeline.py --skip-fda --pmda-web --output data/pmda_results.json || \
-    $PYTHON scripts/run_pipeline.py --skip-fda --output data/pmda_results.json
+# Step 1: PMDA (web scraping from PMDA Excel, fallback to CSV)
+echo "--- Step 1: PMDA ---"
+$PYTHON scripts/run_pipeline.py --skip-fda --pmda-web \
+    --output data/pmda_results.json || \
+$PYTHON scripts/run_pipeline.py --skip-fda \
+    --output data/pmda_results.json
 
-# Step 2: FDA (web download, fallback to local CSV)
-echo "--- Step 2: FDA ingestion + literature search ---"
-# Get product count from web download
+# Step 2: FDA (openFDA API, fallback to local CSV)
+echo "--- Step 2: FDA via openFDA API ---"
+BATCH_SIZE=300
 FDA_COUNT=$($PYTHON -c "
-from src.ingestion.fda_scraper import fetch_fda_aiml_csv
-import csv, io
-text = fetch_fda_aiml_csv()
-print(sum(1 for _ in csv.DictReader(io.StringIO(text))))
+import asyncio, sys; sys.path.insert(0,'.')
+from src.ingestion.fda_scraper import fetch_fda_aiml_products
+products = asyncio.run(fetch_fda_aiml_products())
+print(len(products))
 " 2>/dev/null || echo "0")
 
 if [ "$FDA_COUNT" -eq "0" ]; then
-    echo "FDA web download failed, using local CSV"
-    FDA_COUNT=$($PYTHON -c "import csv; print(sum(1 for _ in csv.DictReader(open('ai-ml-enabled-devices.csv'))))")
-    FDA_WEB_FLAG=""
+    echo "openFDA API failed, falling back to local CSV"
+    if [ -f "ai-ml-enabled-devices.csv" ]; then
+        FDA_COUNT=$($PYTHON -c "import csv; print(sum(1 for _ in csv.DictReader(open('ai-ml-enabled-devices.csv'))))")
+        FDA_FLAG=""
+    else
+        echo "No FDA data available, skipping"
+        FDA_COUNT=0
+    fi
 else
-    echo "FDA products from web: $FDA_COUNT"
-    FDA_WEB_FLAG="--fda-web"
+    echo "FDA products from API: $FDA_COUNT"
+    FDA_FLAG="--fda-api"
 fi
 
-BATCH_SIZE=300
-OFFSET=0
-BATCH=1
-while [ $OFFSET -lt $FDA_COUNT ]; do
-    END=$((OFFSET + BATCH_SIZE))
-    if [ $END -gt $FDA_COUNT ]; then
-        END=$FDA_COUNT
-    fi
-    echo "FDA batch $BATCH: $OFFSET - $END"
-    $PYTHON scripts/run_pipeline.py --skip-pmda $FDA_WEB_FLAG \
-        --resume $OFFSET --max-products $END \
-        --output "data/fda_results_b${BATCH}.json"
-    OFFSET=$END
-    BATCH=$((BATCH + 1))
-done
+if [ "$FDA_COUNT" -gt "0" ]; then
+    OFFSET=0
+    BATCH=1
+    while [ $OFFSET -lt $FDA_COUNT ]; do
+        END=$((OFFSET + BATCH_SIZE))
+        [ $END -gt $FDA_COUNT ] && END=$FDA_COUNT
+        echo "FDA batch $BATCH: $OFFSET - $END"
+        $PYTHON scripts/run_pipeline.py --skip-pmda ${FDA_FLAG:-} \
+            --resume $OFFSET --max-products $END \
+            --output "data/fda_results_b${BATCH}.json"
+        OFFSET=$END
+        BATCH=$((BATCH + 1))
+    done
 
-# Step 3: Merge FDA batches
-echo "--- Step 3: Merging results ---"
-$PYTHON -c "
+    # Merge batches
+    echo "--- Merging FDA batches ---"
+    $PYTHON -c "
 import json, glob
 all_results = []
 for f in sorted(glob.glob('data/fda_results_b*.json')):
@@ -70,9 +75,10 @@ for f in sorted(glob.glob('data/fda_results_b*.json')):
 json.dump(all_results, open('data/pipeline_results.json','w'), indent=2, ensure_ascii=False, default=str)
 print(f'Merged: {len(all_results)} products')
 "
+fi
 
-# Step 4: Reload DB
-echo "--- Step 4: Reloading database ---"
+# Step 3: Reload DB
+echo "--- Step 3: Reloading database ---"
 psql -d samd_evidence -c "
 TRUNCATE product_paper_links CASCADE;
 TRUNCATE papers CASCADE;
@@ -82,8 +88,8 @@ TRUNCATE products CASCADE;
 "
 $PYTHON scripts/load_to_db.py
 
-# Step 5: Fetch full text
-echo "--- Step 5: Fetching full text ---"
+# Step 4: Fetch full text
+echo "--- Step 4: Fetching full text ---"
 $PYTHON scripts/fetch_fulltext.py
 
 # Summary

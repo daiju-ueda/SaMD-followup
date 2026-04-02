@@ -19,7 +19,7 @@ from typing import Optional
 import httpx
 
 from src.ingestion.fda import deduplicate_fda_products, parse_fda_aiml_list
-from src.ingestion.fda_scraper import fetch_fda_aiml_products
+from src.ingestion.fda_scraper import fetch_fda_aiml_products as _fetch_fda_api
 from src.ingestion.normalizer import enrich_product
 from src.ingestion.pmda import load_pmda_csv_file
 from src.ingestion.pmda_scraper import fetch_all_pmda_products
@@ -61,10 +61,10 @@ def ingest_fda_from_csv(csv_path: str | Path) -> list[tuple[Product, list[Regula
     return enriched
 
 
-def ingest_fda_from_web() -> list[tuple[Product, list[RegulatoryEntry]]]:
-    """Download FDA AI/ML list directly from FDA website."""
-    logger.info("Ingesting FDA AI/ML list from web")
-    return fetch_fda_aiml_products()
+async def ingest_fda_from_api() -> list[tuple[Product, list[RegulatoryEntry]]]:
+    """Fetch FDA AI/ML products from openFDA API (no CSV needed)."""
+    logger.info("Ingesting FDA AI/ML products via openFDA API")
+    return await _fetch_fda_api()
 
 
 def ingest_pmda_from_csv(csv_path: str | Path) -> list[tuple[Product, list[RegulatoryEntry]]]:
