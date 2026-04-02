@@ -199,6 +199,7 @@ class PaperRepository:
         cur.execute(f"""
             SELECT pa.paper_id, pa.title, pa.journal, pa.publication_year,
                    pa.doi, pa.pmid, pa.citation_count,
+                   (pa.fulltext IS NOT NULL) AS has_fulltext,
                    COUNT(ppl.link_id) AS linked_products
             FROM papers pa
             LEFT JOIN product_paper_links ppl ON pa.paper_id = ppl.paper_id
@@ -224,6 +225,23 @@ class PaperRepository:
             WHERE ppl.product_id = %s
             ORDER BY ppl.link_classification, ppl.confidence_score DESC
         """, (product_id,))
+        return cur.fetchall()
+
+    def get_by_id(self, paper_id: str) -> Optional[dict]:
+        cur = self._cur()
+        cur.execute("SELECT * FROM papers WHERE paper_id = %s", (paper_id,))
+        return cur.fetchone()
+
+    def get_linked_products(self, paper_id: str) -> list[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT p.product_id, p.canonical_name, p.manufacturer_name,
+                   ppl.link_classification, ppl.confidence_score, ppl.matched_terms
+            FROM product_paper_links ppl
+            JOIN products p ON p.product_id = ppl.product_id
+            WHERE ppl.paper_id = %s
+            ORDER BY ppl.confidence_score DESC
+        """, (paper_id,))
         return cur.fetchall()
 
     def find_by_doi(self, doi: str) -> Optional[dict]:

@@ -6,23 +6,10 @@ All DB access goes through src.db.repositories.
 
 from __future__ import annotations
 
-import os
-import sys
 from pathlib import Path
 from typing import Optional
 
-# Ensure project root is on path for imports
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
-
-# Load .env
-env_file = PROJECT_ROOT / ".env"
-if env_file.exists():
-    for line in env_file.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            k, _, v = line.partition("=")
-            os.environ.setdefault(k.strip(), v.strip())
+import src.bootstrap  # noqa: F401 — path + .env setup
 
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
@@ -147,6 +134,29 @@ async def paper_list(
         "papers": papers, "total": total,
         "page": page, "per_page": per_page, "total_pages": total_pages,
         "q": q or "",
+    })
+
+
+# ---------------------------------------------------------------------------
+# Paper detail
+# ---------------------------------------------------------------------------
+
+@app.get("/papers/{paper_id}", response_class=HTMLResponse)
+async def paper_detail(request: Request, paper_id: str):
+    conn = get_connection()
+    repo = PaperRepository(conn)
+
+    paper = repo.get_by_id(paper_id)
+    if not paper:
+        conn.close()
+        return HTMLResponse("<h1>Paper not found</h1>", status_code=404)
+
+    linked_products = repo.get_linked_products(paper_id)
+    conn.close()
+
+    return _render(request, "paper_detail.html", {
+        "paper": paper,
+        "linked_products": linked_products,
     })
 
 

@@ -24,6 +24,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+from src.ingestion.jp_mappings import map_manufacturer
 from src.ingestion.normalizer import enrich_product
 from src.models.product import (
     AliasType,
@@ -60,23 +61,7 @@ SAMD_NAME_KEYWORDS = [
     "アプリ",
 ]
 
-# Known manufacturer JP→EN mappings (extends the base in pmda.py)
-MANUFACTURER_JP_EN = {
-    "オリンパス": "Olympus Corporation",
-    "キヤノンメディカルシステムズ": "Canon Medical Systems",
-    "富士フイルム": "Fujifilm Corporation",
-    "シーメンスヘルスケア": "Siemens Healthineers",
-    "フィリップス": "Philips",
-    "GEヘルスケア": "GE HealthCare",
-    "テルモ": "Terumo Corporation",
-    "島津製作所": "Shimadzu Corporation",
-    "エムスリー": "M3 Inc.",
-    "アイリス": "Aillis Inc.",
-    "エルピクセル": "LPIXEL Inc.",
-    "サイバネットシステム": "Cybernet Systems",
-    "アップル": "Apple Inc.",
-    "ファーウェイ": "Huawei",
-}
+# Manufacturer JP→EN mappings: shared from src.ingestion.jp_mappings
 
 # Data directory for caching raw files and snapshots
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "pmda_raw"
@@ -188,10 +173,8 @@ def _filter_samd(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 def _map_manufacturer(jp_name: str) -> str:
-    for jp, en in MANUFACTURER_JP_EN.items():
-        if jp in jp_name:
-            return en
-    return jp_name
+    en, _ = map_manufacturer(jp_name)
+    return en
 
 
 # ---------------------------------------------------------------------------

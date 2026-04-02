@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 from typing import Any, Generator, Optional
 
+from src.literature.parsers import reconstruct_abstract
 from src.models.paper import Paper, PaperAuthor
 
 logger = logging.getLogger(__name__)
@@ -86,7 +87,7 @@ def search_local_openalex(
 
             # Reconstruct abstract for matching
             abstract_idx = work.get("abstract_inverted_index")
-            abstract = _reconstruct_abstract(abstract_idx).lower() if abstract_idx else ""
+            abstract = reconstruct_abstract(abstract_idx).lower() if abstract_idx else ""
 
             searchable = title + " " + abstract
             if any(term in searchable for term in terms_lower):
@@ -99,16 +100,6 @@ def search_local_openalex(
     logger.info("Local OpenAlex scan found %d papers", len(results))
     return results
 
-
-def _reconstruct_abstract(inverted_index: Optional[dict[str, list[int]]]) -> str:
-    if not inverted_index:
-        return ""
-    word_positions: list[tuple[int, str]] = []
-    for word, positions in inverted_index.items():
-        for pos in positions:
-            word_positions.append((pos, word))
-    word_positions.sort()
-    return " ".join(word for _, word in word_positions)
 
 
 def _parse_work(work: dict[str, Any]) -> Optional[Paper]:
@@ -148,7 +139,7 @@ def _parse_work(work: dict[str, Any]) -> Optional[Paper]:
                 author_position=idx,
             ))
 
-    abstract = _reconstruct_abstract(work.get("abstract_inverted_index"))
+    abstract = reconstruct_abstract(work.get("abstract_inverted_index"))
 
     paper = Paper(
         title=title,

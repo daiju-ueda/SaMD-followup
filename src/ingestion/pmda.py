@@ -13,13 +13,8 @@ from __future__ import annotations
 import csv
 import io
 import logging
-import re
-from datetime import date, datetime
 from pathlib import Path
-from typing import Any, Optional
-
-import httpx
-
+from src.ingestion.jp_mappings import map_manufacturer as _map_manufacturer
 from src.utils import parse_date
 from src.models.product import (
     AliasType,
@@ -36,34 +31,7 @@ from src.models.product import (
 logger = logging.getLogger(__name__)
 
 
-# ---- Japanese → English mapping helpers ------------------------------------
-
-# Common manufacturer name mappings (JP corporate name → English)
-MANUFACTURER_JP_EN_MAP: dict[str, str] = {
-    "オリンパス": "Olympus Corporation",
-    "キヤノンメディカルシステムズ": "Canon Medical Systems",
-    "富士フイルム": "Fujifilm Corporation",
-    "シーメンスヘルスケア": "Siemens Healthineers",
-    "フィリップス": "Philips",
-    "GEヘルスケア": "GE HealthCare",
-    "テルモ": "Terumo Corporation",
-    "島津製作所": "Shimadzu Corporation",
-    "エムスリー": "M3 Inc.",
-    "アイリス": "Aillis Inc.",
-    # Extended as needed during curation
-}
-
-
-def _map_manufacturer(jp_name: str) -> tuple[str, Optional[str]]:
-    """Return (english_name, japanese_name) for a manufacturer.
-
-    If no mapping is found, the original name is returned as-is (assumed
-    to already be in English or transliterated).
-    """
-    for jp, en in MANUFACTURER_JP_EN_MAP.items():
-        if jp in jp_name:
-            return en, jp_name
-    return jp_name, None
+# _map_manufacturer is imported from src.ingestion.jp_mappings
 
 
 _parse_jp_date = parse_date  # unified parser handles JP era formats

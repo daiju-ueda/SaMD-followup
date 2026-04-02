@@ -4,3 +4,6 @@ __pycache__/
 .venv/
 *.egg-info/
 data/*.log
+data/fda_raw/
+data/pmda_raw/
+data/fda_results_b*.json

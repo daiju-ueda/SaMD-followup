@@ -16,6 +16,7 @@ from typing import Any, Optional
 import httpx
 
 from src.config import settings
+from src.literature.parsers import reconstruct_abstract
 from src.models.paper import Paper, PaperAuthor
 
 logger = logging.getLogger(__name__)
@@ -159,7 +160,7 @@ def _parse_openalex_work(work: dict[str, Any]) -> Optional[Paper]:
             ))
 
     # Abstract (OpenAlex provides inverted index — reconstruct)
-    abstract = _reconstruct_abstract(work.get("abstract_inverted_index"))
+    abstract = reconstruct_abstract(work.get("abstract_inverted_index"))
 
     paper = Paper(
         title=title,
@@ -183,13 +184,3 @@ def _parse_openalex_work(work: dict[str, Any]) -> Optional[Paper]:
     return paper
 
 
-def _reconstruct_abstract(inverted_index: Optional[dict[str, list[int]]]) -> Optional[str]:
-    """Reconstruct abstract from OpenAlex inverted index format."""
-    if not inverted_index:
-        return None
-    word_positions: list[tuple[int, str]] = []
-    for word, positions in inverted_index.items():
-        for pos in positions:
-            word_positions.append((pos, word))
-    word_positions.sort()
-    return " ".join(word for _, word in word_positions)

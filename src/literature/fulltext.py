@@ -11,14 +11,13 @@ Stores plain text (HTML/XML tags stripped).
 from __future__ import annotations
 
 import logging
-import re
-import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Optional
 
 import httpx
 
 from src.config import settings
+from src.literature.parsers import extract_text_from_jats_xml
 
 logger = logging.getLogger(__name__)
 
@@ -26,52 +25,8 @@ logger = logging.getLogger(__name__)
 LOCAL_PMC_DIR = Path(__file__).resolve().parents[2] / ".." / "datasets" / "raw" / "pmc" / "extracted"
 
 
-# ---------------------------------------------------------------------------
-# Text extraction helpers
-# ---------------------------------------------------------------------------
 
-def _strip_tags(text: str) -> str:
-    """Remove XML/HTML tags and collapse whitespace."""
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = re.sub(r"\s+", " ", text)
-    return text.strip()
-
-
-def _extract_text_from_jats_xml(xml_str: str) -> Optional[str]:
-    """Extract plain text from JATS/NLM XML (PMC format)."""
-    try:
-        root = ET.fromstring(xml_str)
-    except ET.ParseError:
-        return None
-
-    parts: list[str] = []
-
-    # Title
-    for el in root.findall(".//{http://www.ncbi.nlm.nih.gov/pmc}article-title") or root.findall(".//article-title"):
-        text = "".join(el.itertext()).strip()
-        if text:
-            parts.append(text)
-
-    # Abstract
-    for el in root.findall(".//{http://www.ncbi.nlm.nih.gov/pmc}abstract") or root.findall(".//abstract"):
-        text = "".join(el.itertext()).strip()
-        if text:
-            parts.append(text)
-
-    # Body
-    for el in root.findall(".//{http://www.ncbi.nlm.nih.gov/pmc}body") or root.findall(".//body"):
-        text = "".join(el.itertext()).strip()
-        if text:
-            parts.append(text)
-
-    if not parts:
-        # Fallback: try to get all text
-        text = "".join(root.itertext()).strip()
-        if text and len(text) > 200:
-            return text
-
-    return " ".join(parts) if parts else None
-
+# _extract_text_from_jats_xml and reconstruct_abstract are in src.literature.parsers
 
 # ---------------------------------------------------------------------------
 # Source 1: Local PMC XML
@@ -96,7 +51,7 @@ def fetch_from_local_pmc(pmcid: str, pmc_dir: Path = LOCAL_PMC_DIR) -> Optional[
             if matches:
                 try:
                     xml_content = matches[0].read_text(encoding="utf-8")
-                    text = _extract_text_from_jats_xml(xml_content)
+                    text = extract_text_from_jats_xml(xml_content)
                     if text and len(text) > 100:
                         logger.debug("Local PMC hit: %s -> %d chars", pmcid, len(text))
                         return text
@@ -131,7 +86,7 @@ async def fetch_from_europepmc(
         try:
             resp = await client.get(url, timeout=30)
             if resp.status_code == 200:
-                text = _extract_text_from_jats_xml(resp.text)
+                text = extract_text_from_jats_xml(resp.text)
                 if text and len(text) > 100:
                     logger.debug("Europe PMC XML hit: PMC%s -> %d chars", pmcid_clean, len(text))
                     return text
@@ -199,7 +154,7 @@ async def fetch_from_pmc_oa(
     try:
         resp = await client.get(url, params=params, timeout=30)
         if resp.status_code == 200:
-            text = _extract_text_from_jats_xml(resp.text)
+            text = extract_text_from_jats_xml(resp.text)
             if text and len(text) > 100:
                 logger.debug("PMC OA hit: PMC%s -> %d chars", pmcid_clean, len(text))
                 return text

@@ -7,21 +7,12 @@ Thin wrapper around src.pipeline — all logic lives there.
 import argparse
 import asyncio
 import json
-import os
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
-
-# Load .env
-env_file = PROJECT_ROOT / ".env"
-if env_file.exists():
-    for line in env_file.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            k, _, v = line.partition("=")
-            os.environ.setdefault(k.strip(), v.strip())
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import src.bootstrap  # noqa: F401,E402
+from src.bootstrap import PROJECT_ROOT
 
 from src.config import settings
 from src.pipeline import (

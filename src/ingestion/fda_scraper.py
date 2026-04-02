@@ -25,7 +25,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from src.ingestion.fda import deduplicate_fda_products
+from src.ingestion.fda import SAMD_KEYWORDS, deduplicate_fda_products, infer_pathway
 from src.ingestion.normalizer import enrich_product
 from src.models.product import (
     AliasType,

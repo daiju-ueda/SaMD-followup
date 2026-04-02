@@ -104,7 +104,7 @@
     </div>
     {% for p in papers %}
     <div class="paper-item">
-        <div class="paper-title">{{ p.title }}</div>
+        <div class="paper-title"><a href="/papers/{{ p.paper_id }}">{{ p.title }}</a></div>
         <div class="paper-meta">
             {% if p.journal %}{{ p.journal }}{% endif %}
             {% if p.publication_year %} ({{ p.publication_year }}){% endif %}
