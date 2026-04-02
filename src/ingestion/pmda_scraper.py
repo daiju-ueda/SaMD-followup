@@ -53,17 +53,16 @@ APPROVAL_LINK_TEXT = "製造販売承認品目の一覧情報はこちら"
 CERT_LINK_TEXT = "認証品目リスト"
 CERT_EXCEL_HINT = "エクセル版"
 
-# Keywords to INCLUDE SaMD candidates from the full certification list
-SAMD_INCLUDE_KEYWORDS = [
+# Step 1: Keywords to find software medical devices in the certification list
+SOFTWARE_INCLUDE_KEYWORDS = [
     "プログラム",
     "software",
     "SaMD",
     "アプリ",
 ]
 
-# Keywords to EXCLUDE non-SaMD devices that match the include keywords
-# (e.g., "プログラム式補聴器" is a hearing aid, not SaMD)
-SAMD_EXCLUDE_KEYWORDS = [
+# Step 2: Exclude non-software devices that false-match step 1
+SOFTWARE_EXCLUDE_KEYWORDS = [
     "プログラム式補聴器",
     "プログラム式洗浄",
     "プログラム式消毒",
@@ -72,6 +71,27 @@ SAMD_EXCLUDE_KEYWORDS = [
     "プログラム式電解水",
     "プログラム式電位治療",
     "電解水生成器",
+]
+
+# Step 3: From software devices, keep only AI/ML SaMD
+# Must match at least one of these in product name or generic name
+AIML_INCLUDE_KEYWORDS = [
+    "AI", "ＡＩ",
+    "解析",          # analysis
+    "検出",          # detection
+    "診断支援",      # diagnostic support
+    "検知",          # detection/sensing
+    "定量",          # quantification
+    "分類",          # classification
+    "予測",          # prediction
+    "アルゴリズム",  # algorithm
+    "ディープ",      # deep (learning)
+    "ニューラル",    # neural
+    "セグメンテーション",  # segmentation
+    "スコアリング",  # scoring
+    "トリアージ",    # triage
+    "計測",          # measurement (automated)
+    "自動",          # automatic
 ]
 
 # Manufacturer JP→EN mappings: shared from src.ingestion.jp_mappings
@@ -166,10 +186,12 @@ def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _filter_samd(df: pd.DataFrame) -> pd.DataFrame:
-    """Filter certification list for SaMD candidates.
+    """Filter certification list for AI/ML SaMD only.
 
-    Include rows with SaMD keywords, then exclude known non-SaMD
-    (e.g., programmable hearing aids, sterilizers).
+    3-step filter:
+    1. Include rows with software keywords (プログラム, software, etc.)
+    2. Exclude known non-software devices (programmable hearing aids, etc.)
+    3. Keep only AI/ML devices (解析, 検出, 診断支援, AI, etc.)
     """
     df = _normalize_columns(df)
     text_cols = [c for c in df.columns
@@ -177,23 +199,24 @@ def _filter_samd(df: pd.DataFrame) -> pd.DataFrame:
     if not text_cols:
         return df.iloc[0:0].copy()
 
-    # Include: SaMD keywords
-    include_mask = pd.Series(False, index=df.index)
-    for col in text_cols:
-        s = df[col].astype(str).fillna("")
-        for kw in SAMD_INCLUDE_KEYWORDS:
-            include_mask |= s.str.contains(kw, case=False, na=False)
+    def _match(keywords):
+        mask = pd.Series(False, index=df.index)
+        for col in text_cols:
+            s = df[col].astype(str).fillna("")
+            for kw in keywords:
+                mask |= s.str.contains(kw, case=False, na=False)
+        return mask
 
-    # Exclude: non-SaMD devices
-    exclude_mask = pd.Series(False, index=df.index)
-    for col in text_cols:
-        s = df[col].astype(str).fillna("")
-        for kw in SAMD_EXCLUDE_KEYWORDS:
-            exclude_mask |= s.str.contains(kw, case=False, na=False)
+    # Step 1: software devices
+    software_mask = _match(SOFTWARE_INCLUDE_KEYWORDS)
+    # Step 2: exclude non-software
+    exclude_mask = _match(SOFTWARE_EXCLUDE_KEYWORDS)
+    # Step 3: AI/ML only
+    aiml_mask = _match(AIML_INCLUDE_KEYWORDS)
 
-    result = df.loc[include_mask & ~exclude_mask].copy()
-    logger.info("PMDA certification filter: %d included, %d excluded → %d",
-                include_mask.sum(), exclude_mask.sum(), len(result))
+    result = df.loc[software_mask & ~exclude_mask & aiml_mask].copy()
+    logger.info("PMDA certification filter: software=%d, excluded=%d, AI/ML=%d → %d",
+                software_mask.sum(), exclude_mask.sum(), aiml_mask.sum(), len(result))
     return result
 
 
@@ -316,23 +339,39 @@ def _df_to_products(
 # Public API
 # ---------------------------------------------------------------------------
 
-def fetch_pmda_approval_list() -> list[tuple[Product, RegulatoryEntry, list[ProductAlias]]]:
-    """Fetch the PMDA approved SaMD products Excel list."""
+def fetch_pmda_approval_list(
+    ai_only: bool = True,
+) -> list[tuple[Product, RegulatoryEntry, list[ProductAlias]]]:
+    """Fetch the PMDA approved SaMD products Excel list.
+
+    The approval Excel has an 'AI活用医療機器' column with ○ for AI devices.
+    If ai_only=True, only products with this flag are returned.
+    If ai_only=False, all program medical devices are returned.
+    """
     logger.info("Fetching PMDA approval page: %s", APPROVAL_PAGE)
     html = _fetch_html(APPROVAL_PAGE)
     file_url = _find_link(APPROVAL_PAGE, html, APPROVAL_LINK_TEXT)
     logger.info("Downloading approval Excel: %s", file_url)
     data = _download(file_url)
 
-    # Cache raw file
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d")
     raw_path = DATA_DIR / f"approval_{ts}.xlsx"
     raw_path.write_bytes(data)
 
     df = _read_excel_all_sheets(data)
+    df = _normalize_columns(df)
+
+    # Filter by AI flag if requested
+    if ai_only:
+        ai_col = _find_column(df, ["AI活用医療機器", "AI"])
+        if ai_col:
+            before = len(df)
+            df = df[df[ai_col].fillna("").astype(str).str.contains("○", na=False)].copy()
+            logger.info("PMDA approval AI filter: %d → %d (AI活用医療機器=○)", before, len(df))
+
     products = _df_to_products(df, RegulatoryPathway.APPROVAL, RegulatoryStatusNormalized.APPROVED)
-    logger.info("PMDA approval: %d products from Excel", len(products))
+    logger.info("PMDA approval: %d products from Excel (ai_only=%s)", len(products), ai_only)
     return products
 
 

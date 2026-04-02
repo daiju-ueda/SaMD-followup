@@ -80,6 +80,9 @@ AIML_KEYWORDS = [
 # Manual allowlist for product codes known to be AI/ML SaMD
 MANUAL_PRODUCT_CODE_ALLOWLIST: set[str] = set()
 
+# Product codes known to be non-SaMD (false positives from broad filter)
+PRODUCT_CODE_BLOCKLIST = {"NUC", "SDB"}  # NUC=lubricant, SDB=stent
+
 TIMEOUT = 60
 
 
@@ -244,7 +247,8 @@ def _pma_to_products(
 ) -> list[tuple[Product, RegulatoryEntry]]:
     """Filter PMA records: strict codes pass directly, broad codes need AI/ML keywords in name."""
     ai_pattern = re.compile("|".join(re.escape(k) for k in AIML_KEYWORDS), re.IGNORECASE)
-    strict_mask = df["product_code"].isin(strict_codes)
+    blocked = df["product_code"].isin(PRODUCT_CODE_BLOCKLIST)
+    strict_mask = df["product_code"].isin(strict_codes) & ~blocked
     broad_mask = df["product_code"].isin(broad_codes) & df["trade_name"].fillna("").str.contains(ai_pattern, na=False)
     hits = df[strict_mask | broad_mask].copy()
     results = []
@@ -323,7 +327,8 @@ def _510k_to_products(
         return []
 
     ai_pattern = re.compile("|".join(re.escape(k) for k in AIML_KEYWORDS), re.IGNORECASE)
-    strict_mask = df["product_code"].isin(strict_codes)
+    blocked = df["product_code"].isin(PRODUCT_CODE_BLOCKLIST)
+    strict_mask = df["product_code"].isin(strict_codes) & ~blocked
     broad_mask = df["product_code"].isin(broad_codes) & df.get("device_name", pd.Series()).fillna("").str.contains(ai_pattern, na=False)
     hits = df[strict_mask | broad_mask].copy()
     results = []
