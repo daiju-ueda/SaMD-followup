@@ -127,15 +127,37 @@
         textarea { width: 100%; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 0.85rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
         textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
         .section-gap { margin-top: 1.5rem; }
+
+        /* Nav dropdown */
+        .nav-dropdown { position: relative; }
+        .nav-dropdown > a { display: flex; align-items: center; gap: 0.3rem; }
+        .nav-dropdown > a::after { content: '▾'; font-size: 0.6rem; opacity: 0.6; }
+        .nav-dropdown .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #1e293b; border-radius: 0 0 8px 8px; min-width: 160px; box-shadow: var(--shadow-md); padding: 0.25rem 0; z-index: 200; }
+        .nav-dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu a { display: block; padding: 0.45rem 1rem; color: #94a3b8; font-size: 0.83rem; border-radius: 0; }
+        .dropdown-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .dropdown-menu .divider { border-top: 1px solid rgba(255,255,255,0.08); margin: 0.25rem 0; }
     </style>
 </head>
 <body>
     <nav>
         <div class="brand">SaMD Evidence Tracker <span>BETA</span></div>
         <a href="/" {% if request.url.path == '/' %}class="active"{% endif %}>Dashboard</a>
-        <a href="/products" {% if '/products' in request.url.path and request.url.path != '/' %}class="active"{% endif %}>Products</a>
-        <a href="/products?region=us">US</a>
-        <a href="/products?region=jp">JP</a>
+        <div class="nav-dropdown">
+            <a href="/products" {% if '/products' in request.url.path %}class="active"{% endif %}>Products</a>
+            <div class="dropdown-menu">
+                <a href="/products">All Products</a>
+                <div class="divider"></div>
+                <a href="/products?region=us">US (FDA)</a>
+                <a href="/products?region=us&pathway=510k">&nbsp;&nbsp;510(k)</a>
+                <a href="/products?region=us&pathway=de_novo">&nbsp;&nbsp;De Novo</a>
+                <a href="/products?region=us&pathway=pma">&nbsp;&nbsp;PMA</a>
+                <div class="divider"></div>
+                <a href="/products?region=jp">JP (PMDA)</a>
+                <a href="/products?region=jp&pathway=approval">&nbsp;&nbsp;Approved</a>
+                <a href="/products?region=jp&pathway=certification">&nbsp;&nbsp;Certified</a>
+            </div>
+        </div>
         <a href="/papers" {% if '/papers' in request.url.path %}class="active"{% endif %}>Papers</a>
         <div class="spacer"></div>
         <a href="/sql">SQL</a>
