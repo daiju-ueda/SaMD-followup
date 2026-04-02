@@ -332,12 +332,22 @@ _MIN_SPECIFIC_NAME_LENGTH = 6  # Single words shorter than this are likely gener
 
 
 def is_generic_product_name(name: str) -> bool:
-    """Check if a product name is a common English word (high FP risk)."""
+    """Check if a product name is a common English word/phrase (high FP risk).
+
+    Checks:
+    1. Full name against generic word/phrase list
+    2. Each individual word against the list
+    3. Single short words (< 6 chars)
+    """
     name_lower = name.lower().strip()
+    # Full name match
     if name_lower in _GENERIC_WORDS:
         return True
-    # Check each word in multi-word names
+    # Each word match — if ALL words are generic, the name is generic
     words = name_lower.split()
+    if words and all(w in _GENERIC_WORDS or len(w) < _MIN_SPECIFIC_NAME_LENGTH for w in words):
+        return True
+    # Single short word
     if len(words) == 1 and len(name_lower) < _MIN_SPECIFIC_NAME_LENGTH:
         return True
     return False
