@@ -34,11 +34,14 @@ CLINICAL_TERMS = {
 
 
 def _text_contains(text: str, term: str) -> bool:
-    """Case-insensitive whole-word check."""
+    """Case-insensitive whole-word boundary check.
+
+    'EndoBRAIN' matches 'EndoBRAIN system' but not 'EndoBRAINing'.
+    'syngo.via' matches 'using syngo.via for' but not 'asyncgo.via'.
+    """
     if not text or not term:
         return False
-    # Use word boundary regex for multi-word terms
-    pattern = re.escape(term)
+    pattern = r'\b' + re.escape(term) + r'\b'
     return bool(re.search(pattern, text, re.IGNORECASE))
 
 
@@ -318,6 +321,10 @@ _GENERIC_WORDS = {
     "synthetic", "imagine", "kidney", "reveal", "clarus",
     "athena", "eureka", "mosaic", "simple", "neutral",
     "customize", "parallel", "natural", "cycles",
+    # False positives found during validation
+    "falcon", "lumi", "kosmos", "cosmos", "precise",
+    "second opinion", "red dot", "loop", "vital signs",
+    "automatic registration", "precise position",
 }
 
 
