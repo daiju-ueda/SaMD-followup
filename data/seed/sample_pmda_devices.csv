@@ -1,8 +1,0 @@
-販売名,英語名,製造販売業者,クラス,承認/認証区分,承認番号,承認日,一般的名称,使用目的,疾患領域,モダリティ
-AI搭載インフルエンザ検出装置 nodoca,nodoca,アイリス,III,承認,30400BZX00090000,2022/01/24,汎用画像診断装置用プログラム,咽頭画像からAIを用いたインフルエンザ感染の検出,Infectious Disease - Influenza,Pharyngeal Imaging
-内視鏡画像診断支援ソフトウェア EndoBRAIN,EndoBRAIN,サイバネットシステム,III,承認,30100BZX00048000,2018/12/06,内視鏡画像診断支援プログラム,大腸内視鏡画像からのポリープ病変の鑑別支援,Oncology - Colorectal,Endoscopy
-胸部X線画像病変検出プログラム EIRL X-ray Lung nodule,EIRL X-ray Lung nodule,エルピクセル,II,認証,302ADBZX00028000,2020/09/18,画像診断支援プログラム,胸部X線画像からの肺結節検出支援,Oncology - Lung,X-ray
-COVID-19肺炎画像解析プログラム Ali's Triage,Ali's Triage,エムスリーAI,II,認証,303AGBZX00021000,2021/06/25,画像診断支援プログラム,CT画像からのCOVID-19肺炎トリアージ支援,Pulmonology - COVID-19,CT
-Join-Knee,Join-Knee,アイリス,II,認証,304ADBZX00007000,2022/03/14,画像診断支援プログラム,膝関節X線画像からの変形性膝関節症の進行度評価支援,Orthopedics,X-ray
-SkinAI,SkinAI,リンクエー,II,認証,304AGBZX00122000,2022/11/18,画像診断支援プログラム,皮膚画像からの皮膚腫瘍の鑑別支援,Dermatology,Dermoscopy
-心電図解析プログラム SmartRobin AI,SmartRobin AI,カルディオインテリジェンス,II,認証,303AGBZX00098000,2022/02/28,心電図解析プログラム,心電図からの心房細動検出支援,Cardiology,ECG

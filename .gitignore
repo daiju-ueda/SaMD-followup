@@ -7,3 +7,5 @@ data/*.log
 data/fda_raw/
 data/pmda_raw/
 data/fda_results_b*.json
+ai-ml-enabled-devices.csv
+data/seed/
