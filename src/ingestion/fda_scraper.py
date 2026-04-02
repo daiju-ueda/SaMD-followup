@@ -364,32 +364,6 @@ _LABEL_PATTERNS = {
 }
 
 
-def _fetch_denovo_ids(product_codes: Iterable[str]) -> list[str]:
-    """Search De Novo database for all SaMD product codes."""
-    seen: set[str] = set()
-    sess = _session()
-    for code in sorted(set(product_codes)):
-        params = {
-            "productcode": code,
-            "sortcolumn": "decisiondatedesc",
-            "start_search": "1",
-            "pagenum": "500",
-        }
-        try:
-            r = sess.get(DENOVO_SEARCH_URL, params=params, timeout=TIMEOUT)
-            r.raise_for_status()
-            soup = BeautifulSoup(r.text, "html.parser")
-            for a in soup.select('a[href*="denovo.cfm?id="], a[href*="denovo.cfm?ID="]'):
-                href = a.get("href", "")
-                m = re.search(r"id=([A-Za-z0-9]+)", href, flags=re.IGNORECASE)
-                if m:
-                    den = m.group(1).upper()
-                    if den.startswith("DEN"):
-                        seen.add(den)
-        except Exception as e:
-            logger.warning("De Novo search failed for code %s: %s", code, e)
-    return sorted(seen)
-
 
 def _fetch_denovo_detail(denovo_id: str) -> Optional[_DeNovoRecord]:
     try:
@@ -416,14 +390,56 @@ def _fetch_denovo_detail(denovo_id: str) -> Optional[_DeNovoRecord]:
 def _denovo_to_products(
     samd_codes: list[str],
 ) -> list[tuple[Product, RegulatoryEntry]]:
-    ids = _fetch_denovo_ids(samd_codes)
-    logger.info("De Novo: found %d IDs", len(ids))
+    """Fetch De Novo records from FDA De Novo database (HTML scraping).
 
+    Uses a single search to get all De Novo IDs, then fetches details
+    with rate limiting (1 req/sec) to avoid 403.
+    """
+    import time
+
+    # Step 1: Get all De Novo IDs in one search (no product code filter)
+    sess = _session()
+    params = {
+        "sortcolumn": "decisiondatedesc",
+        "start_search": "1",
+        "pagenum": "500",
+    }
+    all_ids: set[str] = set()
+    try:
+        r = sess.get(DENOVO_SEARCH_URL, params=params, timeout=TIMEOUT)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "html.parser")
+        for a in soup.select('a[href*="denovo.cfm?id="], a[href*="denovo.cfm?ID="]'):
+            href = a.get("href", "")
+            m = re.search(r"id=([A-Za-z0-9]+)", href, flags=re.IGNORECASE)
+            if m:
+                den = m.group(1).upper()
+                if den.startswith("DEN"):
+                    all_ids.add(den)
+    except Exception:
+        logger.exception("De Novo search failed")
+        return []
+
+    logger.info("De Novo: %d IDs found from search", len(all_ids))
+
+    # Step 2: Fetch detail pages (rate limited)
     results = []
-    for den_id in ids:
+    sw_pattern = re.compile(
+        "|".join(re.escape(k) for k in SOFTWARE_KEYWORDS), re.IGNORECASE,
+    )
+    for i, den_id in enumerate(sorted(all_ids)):
         rec = _fetch_denovo_detail(den_id)
         if not rec or not rec.device_name:
+            if i < len(all_ids) - 1:
+                time.sleep(1.0)
             continue
+
+        # Filter: product code in SaMD codes OR device name matches software keywords
+        if rec.product_code not in samd_codes and not sw_pattern.search(rec.device_name):
+            if i < len(all_ids) - 1:
+                time.sleep(1.0)
+            continue
+
         product = Product(
             canonical_name=rec.device_name,
             manufacturer_name=rec.requester,
@@ -442,6 +458,10 @@ def _denovo_to_products(
             evidence_tier=EvidenceTier.TIER_1,
         )
         results.append((product, entry))
+
+        if i < len(all_ids) - 1:
+            time.sleep(1.0)
+
     logger.info("De Novo: %d SaMD products", len(results))
     return results
 
@@ -489,9 +509,8 @@ def fetch_fda_samd_products() -> list[tuple[Product, list[RegulatoryEntry]]]:
     k510_df = _parse_510k(r.content)
     k510_products = _510k_to_products(k510_df, samd_codes)
 
-    # 4. De Novo (scrape top codes only to avoid excessive requests)
-    top_codes = samd_codes[:50]  # limit to top 50 codes
-    denovo_products = _denovo_to_products(top_codes)
+    # 4. De Novo (single search + detail pages with rate limiting)
+    denovo_products = _denovo_to_products(samd_codes)
 
     # 5. Combine, deduplicate, enrich
     all_raw = pma_products + k510_products + denovo_products
