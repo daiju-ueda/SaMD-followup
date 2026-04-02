@@ -244,34 +244,81 @@ def classify_link(
         if f.feature_name in ("intended_use_match", "disease_area_match", "modality_match")
     )
 
-    # Classification logic
-    # Product name in title or abstract is strong enough signal on its own
-    if product_name_hit or (product_alias_hit and raw_score >= thresholds["manufacturer_linked_min_score"]):
-        classification = LinkClassification.EXACT_PRODUCT
+    # --- Generic name detection ---
+    # Short or common English words produce massive false positives.
+    # Require additional corroboration (manufacturer or regulatory ID) for these.
+    is_generic_name = _is_generic_product_name(terms.canonical_name)
+
+    reg_id_hit = any(
+        f.feature_value > 0 for f in features
+        if f.feature_name == "regulatory_id_in_text"
+    )
+
+    # --- Classification logic ---
+    if product_name_hit or product_alias_hit:
+        if is_generic_name:
+            # Generic name: require manufacturer co-occurrence OR regulatory ID
+            if manufacturer_hit or reg_id_hit:
+                classification = LinkClassification.EXACT_PRODUCT
+            else:
+                # Name hit alone is not enough for generic names
+                classification = LinkClassification.INDICATION_RELATED
+        else:
+            classification = LinkClassification.EXACT_PRODUCT
     elif raw_score >= thresholds["product_family_min_score"] and family_hit:
         classification = LinkClassification.PRODUCT_FAMILY
-    elif raw_score >= thresholds["manufacturer_linked_min_score"] and manufacturer_hit and indication_hit:
+    elif manufacturer_hit and indication_hit:
         classification = LinkClassification.MANUFACTURER_LINKED
-    elif raw_score >= thresholds["indication_related_min_score"] and indication_hit:
+    elif indication_hit and raw_score >= thresholds["indication_related_min_score"]:
         classification = LinkClassification.INDICATION_RELATED
     else:
         classification = LinkClassification.IRRELEVANT
 
-    # Human review logic
+    # --- Human review logic ---
     human_review_needed = False
+
+    # Ambiguous zone: moderate score without clear product name hit
     if (
         thresholds["human_review_low"] <= raw_score < thresholds["human_review_high"]
         and not product_name_hit
     ):
         human_review_needed = True
 
-    # Flag products with generic names (high false positive risk)
-    canonical_lower = terms.canonical_name.lower()
-    generic_words = {"guardian", "vision", "insight", "connect", "care", "health", "smart", "pro"}
-    if canonical_lower in generic_words:
+    # Generic names always need review even if classified as exact
+    if is_generic_name and classification == LinkClassification.EXACT_PRODUCT:
         human_review_needed = True
 
+    # Multiple products matching the same paper is suspicious
+    # (handled at the pipeline level, not here)
+
     return classification, raw_score, human_review_needed
+
+
+# Common English words and short terms that are likely to be product names
+# but also appear frequently in medical literature as regular words.
+_GENERIC_WORDS = {
+    # Single common words
+    "rapid", "halo", "aurora", "venue", "vision", "insight", "connect",
+    "care", "health", "smart", "pro", "guardian", "vital", "embrace",
+    "loop", "rho", "koala", "impala", "caddie", "jazz", "pearl",
+    "ruby", "nova", "iris", "echo", "focus", "core", "edge", "apex",
+    "wave", "flow", "link", "plus", "max", "one", "air", "red", "dot",
+    "contact", "second", "deep", "signs", "station",
+    # Short abbreviations that are also common words
+    "andi", "cina", "rus",
+}
+
+
+def _is_generic_product_name(name: str) -> bool:
+    """Check if a product name is a common English word (high FP risk)."""
+    name_lower = name.lower().strip()
+    # Check against known generic words
+    if name_lower in _GENERIC_WORDS:
+        return True
+    # Single word, <= 5 chars — very likely to be a common word
+    if " " not in name_lower and len(name_lower) <= 5:
+        return True
+    return False
 
 
 def score_and_link(

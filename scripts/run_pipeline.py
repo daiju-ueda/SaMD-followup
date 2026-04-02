@@ -20,6 +20,7 @@ from src.pipeline import (
     ingest_fda_from_web,
     ingest_pmda_from_csv,
     ingest_pmda_from_web,
+    merge_products,
     process_product,
 )
 from src.utils import setup_logging
@@ -59,6 +60,10 @@ async def main():
             all_products.extend(ingest_pmda_from_web())
         elif Path(args.pmda_csv).exists():
             all_products.extend(ingest_pmda_from_csv(args.pmda_csv))
+
+    # Cross-region deduplication (FDA ↔ PMDA)
+    if not args.skip_fda and not args.skip_pmda:
+        all_products = merge_products(all_products)
 
     if args.max_products:
         all_products = all_products[:args.max_products]

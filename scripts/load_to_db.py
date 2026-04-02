@@ -30,21 +30,21 @@ def load_products(conn, products_with_entries) -> int:
     count = 0
     for product, entries in products_with_entries:
         pid = str(product.product_id)
-        repo.insert(
+        actual_pid = repo.upsert(
             pid, product.canonical_name, product.manufacturer_name,
             product.intended_use, product.disease_area, product.modality,
         )
         for entry in entries:
-            repo.insert_regulatory_entry(
-                pid, entry.region.value, entry.regulatory_pathway.value,
+            repo.upsert_regulatory_entry(
+                actual_pid, entry.region.value, entry.regulatory_pathway.value,
                 entry.regulatory_status_raw or "", entry.regulatory_status.value,
                 entry.regulatory_id,
                 entry.clearance_date, entry.device_class,
                 entry.product_code, entry.review_panel, entry.applicant,
             )
         for alias in product.aliases:
-            repo.insert_alias(
-                pid, alias.alias_name, alias.alias_type.value,
+            repo.upsert_alias(
+                actual_pid, alias.alias_name, alias.alias_type.value,
                 alias.language, alias.source,
             )
         count += 1

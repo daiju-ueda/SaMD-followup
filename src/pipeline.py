@@ -18,6 +18,7 @@ from typing import Optional
 
 import httpx
 
+from src.ingestion.cross_region import merge_cross_region
 from src.ingestion.fda import deduplicate_fda_products, parse_fda_aiml_list
 from src.ingestion.fda_scraper import fetch_fda_samd_products
 from src.ingestion.normalizer import enrich_product
@@ -90,6 +91,17 @@ def ingest_pmda_from_web() -> list[tuple[Product, list[RegulatoryEntry]]]:
 
 
 # ---------------------------------------------------------------------------
+# Cross-region merge
+# ---------------------------------------------------------------------------
+
+def merge_products(
+    all_products: list[tuple[Product, list[RegulatoryEntry]]],
+) -> list[tuple[Product, list[RegulatoryEntry]]]:
+    """Deduplicate products across regions (FDA ↔ PMDA)."""
+    return merge_cross_region(all_products)
+
+
+# ---------------------------------------------------------------------------
 # Search terms
 # ---------------------------------------------------------------------------
 
@@ -144,15 +156,23 @@ def build_search_terms(product: Product) -> ProductSearchTerms:
 async def search_papers_for_product(
     client: httpx.AsyncClient,
     terms: ProductSearchTerms,
-    max_queries: int = 6,
+    max_queries: int = 10,
 ) -> list[Paper]:
-    """Search literature for a product. Returns deduplicated papers."""
+    """Search literature for a product across all query levels.
+
+    Levels:
+    1. Exact product name
+    2. Product family
+    3. Manufacturer + indication + AI terms
+    4. Regulatory ID
+    5. Broad indication (disease + modality + AI)
+    """
     queries = generate_all_queries(terms)
-    # Prioritize exact + family + regulatory ID queries
-    priority = [q for q in queries if q.level.value <= 2 or q.level.value == 4]
+    # Run all levels, sorted by specificity (most specific first)
+    queries.sort(key=lambda q: q.level.value)
     all_papers: list[Paper] = []
 
-    for query in priority[:max_queries]:
+    for query in queries[:max_queries]:
         try:
             if query.source == "pubmed":
                 pmids = await search_pubmed(client, query.query_text, max_results=100)

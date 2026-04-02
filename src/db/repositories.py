@@ -116,9 +116,26 @@ class ProductRepository:
         """, (limit,))
         return cur.fetchall()
 
-    def insert(self, product_id: str, canonical_name: str, manufacturer_name: str,
+    def find_by_name_and_manufacturer(self, name: str, manufacturer: str) -> Optional[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT * FROM products
+            WHERE canonical_name = %s AND manufacturer_name = %s
+            LIMIT 1
+        """, (name, manufacturer))
+        return cur.fetchone()
+
+    def upsert(self, product_id: str, canonical_name: str, manufacturer_name: str,
                intended_use: str = None, disease_area: str = None,
-               modality: str = None) -> None:
+               modality: str = None) -> str:
+        """Insert or find existing product. Returns the product_id."""
+        existing = self.find_by_name_and_manufacturer(canonical_name, manufacturer_name)
+        if existing:
+            # Update metadata if new data is richer
+            pid = str(existing["product_id"])
+            self.update_metadata(pid, disease_area, modality)
+            return pid
+
         cur = self._cur()
         cur.execute("""
             INSERT INTO products
@@ -127,13 +144,24 @@ class ProductRepository:
             VALUES (%s, %s, %s, %s, %s, %s, TRUE)
         """, (product_id, canonical_name, manufacturer_name,
               intended_use, disease_area, modality))
+        return product_id
 
-    def insert_regulatory_entry(self, product_id: str, region: str,
+    def upsert_regulatory_entry(self, product_id: str, region: str,
                                 pathway: str, status_raw: str, status: str,
                                 regulatory_id: str = None, clearance_date=None,
                                 device_class: str = None, product_code: str = None,
                                 review_panel: str = None, applicant: str = None) -> None:
+        """Insert regulatory entry, skip if already exists for this product+region+reg_id."""
         cur = self._cur()
+        # Check existing
+        if regulatory_id:
+            cur.execute("""
+                SELECT 1 FROM product_regulatory_entries
+                WHERE product_id = %s AND region = %s AND regulatory_id = %s
+            """, (product_id, region, regulatory_id))
+            if cur.fetchone():
+                return
+
         cur.execute("""
             INSERT INTO product_regulatory_entries
                 (product_id, region, regulatory_pathway, regulatory_status_raw,
@@ -144,10 +172,17 @@ class ProductRepository:
               regulatory_id, clearance_date, device_class, product_code,
               review_panel, applicant))
 
-    def insert_alias(self, product_id: str, alias_name: str,
+    def upsert_alias(self, product_id: str, alias_name: str,
                      alias_type: str = "trade_name", language: str = "en",
                      source: str = None) -> None:
+        """Insert alias if it doesn't already exist for this product."""
         cur = self._cur()
+        cur.execute("""
+            SELECT 1 FROM product_aliases
+            WHERE product_id = %s AND alias_name = %s
+        """, (product_id, alias_name))
+        if cur.fetchone():
+            return
         cur.execute("""
             INSERT INTO product_aliases
                 (product_id, alias_name, alias_type, language, source)

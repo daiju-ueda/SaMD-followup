@@ -77,15 +77,8 @@ print(f'Merged: {len(all_results)} products')
 "
 fi
 
-# Step 3: Reload DB
-echo "--- Step 3: Reloading database ---"
-psql -d samd_evidence -c "
-TRUNCATE product_paper_links CASCADE;
-TRUNCATE papers CASCADE;
-TRUNCATE product_aliases CASCADE;
-TRUNCATE product_regulatory_entries CASCADE;
-TRUNCATE products CASCADE;
-"
+# Step 3: Incremental DB update (upsert, preserves reviews + fulltext)
+echo "--- Step 3: Updating database (incremental) ---"
 $PYTHON scripts/load_to_db.py
 
 # Step 4: Fetch full text
