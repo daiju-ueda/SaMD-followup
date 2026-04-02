@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block title %}SQL Console — SaMD Evidence Tracker{% endblock %}
 {% block content %}
-<h1 style="margin-bottom:1rem; font-size:1.5rem;">SQL Console <span class="count">(read-only)</span></h1>
+<h1>SQL Console <span class="count">(read-only)</span></h1>
 
 <div class="card">
     <form method="get" action="/sql">
         <textarea name="query" rows="4" placeholder="SELECT * FROM products LIMIT 10;">{{ query }}</textarea>
         <div style="margin-top:0.5rem; display:flex; gap:0.5rem; align-items:center;">
-            <button type="submit" style="padding:0.5rem 1rem; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">Run Query</button>
-            <span class="count">Only SELECT queries allowed. Max 500 rows returned.</span>
+            <button type="submit" class="search-bar" style="padding:0.5rem 1.25rem; background:var(--primary); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:0.85rem;">Run Query</button>
+            <span class="count">Only SELECT queries. Max 500 rows.</span>
         </div>
     </form>
 </div>
@@ -23,36 +23,29 @@
     {% if results %}
     <div style="overflow-x:auto;">
         <table>
-            <tr>
-                {% for col in columns %}
-                <th>{{ col }}</th>
-                {% endfor %}
-            </tr>
+            <tr>{% for col in columns %}<th>{{ col }}</th>{% endfor %}</tr>
             {% for row in results %}
-            <tr>
-                {% for col in columns %}
-                <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ row[col] if row[col] is not none else '' }}</td>
-                {% endfor %}
-            </tr>
+            <tr>{% for col in columns %}<td class="truncate" style="max-width:300px;">{{ row[col] if row[col] is not none else '' }}</td>{% endfor %}</tr>
             {% endfor %}
         </table>
     </div>
     {% else %}
-    <p class="empty">Query returned no results.</p>
+    <p class="empty">No results.</p>
     {% endif %}
 </div>
 {% endif %}
 
 <div class="card">
     <h2>Quick Queries</h2>
-    <ul style="list-style:none; padding:0;">
-        <li style="margin-bottom:0.5rem;"><a href="/sql?query=SELECT+COUNT(*)+AS+cnt,+region+FROM+product_regulatory_entries+GROUP+BY+region">Products by region</a></li>
-        <li style="margin-bottom:0.5rem;"><a href="/sql?query=SELECT+p.canonical_name,+p.manufacturer_name,+COUNT(ppl.link_id)+AS+papers+FROM+products+p+JOIN+product_paper_links+ppl+ON+p.product_id=ppl.product_id+GROUP+BY+p.product_id+ORDER+BY+papers+DESC+LIMIT+30">Top products by papers</a></li>
-        <li style="margin-bottom:0.5rem;"><a href="/sql?query=SELECT+regulatory_pathway,+regulatory_status,+COUNT(*)+FROM+product_regulatory_entries+GROUP+BY+regulatory_pathway,+regulatory_status+ORDER+BY+count+DESC">Regulatory pathway breakdown</a></li>
-        <li style="margin-bottom:0.5rem;"><a href="/sql?query=SELECT+p.canonical_name,+p.manufacturer_name,+pre.regulatory_id,+pre.clearance_date+FROM+products+p+JOIN+product_regulatory_entries+pre+ON+p.product_id=pre.product_id+WHERE+pre.regulatory_pathway='de_novo'+ORDER+BY+pre.clearance_date+DESC">De Novo devices</a></li>
-        <li style="margin-bottom:0.5rem;"><a href="/sql?query=SELECT+p.canonical_name,+p.manufacturer_name,+pre.regulatory_id,+pre.clearance_date+FROM+products+p+JOIN+product_regulatory_entries+pre+ON+p.product_id=pre.product_id+WHERE+pre.region='jp'+ORDER+BY+pre.clearance_date+DESC+NULLS+LAST">Japanese SaMD products</a></li>
-        <li style="margin-bottom:0.5rem;"><a href="/sql?query=SELECT+link_classification,+COUNT(*)+AS+cnt,+ROUND(AVG(confidence_score)::numeric,3)+AS+avg_score+FROM+product_paper_links+GROUP+BY+link_classification+ORDER+BY+cnt+DESC">Link classification stats</a></li>
-        <li style="margin-bottom:0.5rem;"><a href="/sql?query=SELECT+pa.alias_name,+pa.alias_type,+p.canonical_name+FROM+product_aliases+pa+JOIN+products+p+ON+p.product_id=pa.product_id+ORDER+BY+pa.alias_type,+pa.alias_name+LIMIT+100">Product aliases</a></li>
-    </ul>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; font-size:0.85rem;">
+        <a href="/sql?query=SELECT+COUNT(*)+AS+cnt,+region+FROM+product_regulatory_entries+GROUP+BY+region">Products by region</a>
+        <a href="/sql?query=SELECT+regulatory_pathway,+COUNT(*)+FROM+product_regulatory_entries+GROUP+BY+regulatory_pathway+ORDER+BY+count+DESC">Regulatory pathways</a>
+        <a href="/sql?query=SELECT+p.canonical_name,+p.manufacturer_name,+COUNT(ppl.link_id)+AS+papers+FROM+products+p+JOIN+product_paper_links+ppl+ON+p.product_id=ppl.product_id+GROUP+BY+p.product_id+ORDER+BY+papers+DESC+LIMIT+30">Top products by papers</a>
+        <a href="/sql?query=SELECT+p.canonical_name,+pre.regulatory_id,+pre.clearance_date+FROM+products+p+JOIN+product_regulatory_entries+pre+ON+p.product_id=pre.product_id+WHERE+pre.regulatory_pathway='de_novo'+ORDER+BY+pre.clearance_date+DESC">De Novo devices</a>
+        <a href="/sql?query=SELECT+p.canonical_name,+pre.regulatory_id+FROM+products+p+JOIN+product_regulatory_entries+pre+ON+p.product_id=pre.product_id+WHERE+pre.region='jp'+ORDER+BY+pre.clearance_date+DESC+NULLS+LAST+LIMIT+50">Japanese SaMD</a>
+        <a href="/sql?query=SELECT+link_classification,+COUNT(*)+AS+cnt,+ROUND(AVG(confidence_score)::numeric,3)+AS+avg_score+FROM+product_paper_links+GROUP+BY+link_classification+ORDER+BY+cnt+DESC">Link stats</a>
+        <a href="/sql?query=SELECT+disease_area,+COUNT(*)+FROM+products+WHERE+disease_area+IS+NOT+NULL+GROUP+BY+disease_area+ORDER+BY+count+DESC+LIMIT+20">Disease areas</a>
+        <a href="/sql?query=SELECT+COUNT(*)+AS+total,+COUNT(fulltext)+AS+with_fulltext,+COUNT(doi)+AS+with_doi+FROM+papers">Paper coverage</a>
+    </div>
 </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Papers — SaMD Evidence Tracker{% endblock %}
 {% block content %}
-<h1 style="margin-bottom:1rem; font-size:1.5rem;">Papers <span class="count">({{ total }})</span></h1>
+<h1>Papers <span class="count">({{ total }})</span></h1>
 
 <form class="search-bar" method="get" action="/papers">
     <input type="text" name="q" placeholder="Search paper title..." value="{{ q }}">
@@ -11,12 +11,8 @@
 <div class="card" style="overflow-x:auto;">
     <table style="table-layout:fixed; width:100%;">
         <colgroup>
-            <col style="width:42%;">
-            <col style="width:20%;">
-            <col style="width:5%;">
-            <col style="width:18%;">
-            <col style="width:5%;">
-            <col style="width:5%;">
+            <col style="width:42%;"><col style="width:20%;"><col style="width:5%;">
+            <col style="width:18%;"><col style="width:5%;"><col style="width:5%;">
         </colgroup>
         <tr>
             <th>Title</th>
@@ -28,31 +24,23 @@
         </tr>
         {% for p in papers %}
         <tr>
-            <td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                <a href="/papers/{{ p.paper_id }}">{{ p.title }}</a>
-            </td>
-            <td style="font-size:0.8rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ p.journal or '' }}</td>
+            <td class="truncate"><a href="/papers/{{ p.paper_id }}">{{ p.title }}</a></td>
+            <td class="truncate" style="font-size:0.8rem;">{{ p.journal or '' }}</td>
             <td>{{ p.publication_year or '' }}</td>
-            <td style="font-size:0.8rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                {% if p.doi %}
-                <a href="https://doi.org/{{ p.doi }}" target="_blank">{{ p.doi }}</a>
-                {% endif %}
+            <td class="truncate" style="font-size:0.8rem;">
+                {% if p.doi %}<a href="https://doi.org/{{ p.doi }}" target="_blank">{{ p.doi }}</a>{% endif %}
             </td>
-            <td style="text-align:center;">{% if p.has_fulltext %}<span style="color:#166534;">&#9679;</span>{% else %}<span style="color:#e2e8f0;">&#9675;</span>{% endif %}</td>
-            <td style="text-align:right">{{ p.linked_products }}</td>
+            <td style="text-align:center;">{% if p.has_fulltext %}<span class="dot-green">&#9679;</span>{% else %}<span class="dot-gray">&#9675;</span>{% endif %}</td>
+            <td style="text-align:right">{% if p.linked_products %}<span class="badge badge-count">{{ p.linked_products }}</span>{% endif %}</td>
         </tr>
         {% endfor %}
     </table>
 
     {% if total_pages > 1 %}
     <div class="pagination">
-        {% if page > 1 %}
-        <a href="?q={{ q }}&page={{ page - 1 }}&per_page={{ per_page }}">&laquo; Prev</a>
-        {% endif %}
+        {% if page > 1 %}<a href="?q={{ q }}&page={{ page - 1 }}&per_page={{ per_page }}">&laquo; Prev</a>{% endif %}
         <span class="current">{{ page }} / {{ total_pages }}</span>
-        {% if page < total_pages %}
-        <a href="?q={{ q }}&page={{ page + 1 }}&per_page={{ per_page }}">Next &raquo;</a>
-        {% endif %}
+        {% if page < total_pages %}<a href="?q={{ q }}&page={{ page + 1 }}&per_page={{ per_page }}">Next &raquo;</a>{% endif %}
         <span class="count" style="margin-left:1rem;">{{ total }} papers</span>
     </div>
     {% endif %}

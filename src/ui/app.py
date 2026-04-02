@@ -47,7 +47,12 @@ async def dashboard(request: Request):
         "total_links": stats.link_count(),
         "by_classification": stats.links_by_classification(),
         "total_aliases": stats.alias_count(),
-        "top_products": prod_repo.get_top_by_papers(20),
+        "top_products": stats.products_with_evidence_counts(30),
+        "top_disease_areas": stats.top_disease_areas(12),
+        "top_modalities": stats.top_modalities(10),
+        "papers_by_year": stats.papers_by_year(),
+        "fulltext_stats": stats.fulltext_stats(),
+        "recent_papers": stats.recent_papers(10),
     }
     conn.close()
     return _render(request, "dashboard.html", ctx)

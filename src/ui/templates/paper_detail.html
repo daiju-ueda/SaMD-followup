@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 {% block title %}{{ paper.title[:60] }} — SaMD Evidence Tracker{% endblock %}
 {% block content %}
-<div style="margin-bottom:0.5rem;">
-    <a href="/papers">&laquo; Back to Papers</a>
-</div>
+<div style="margin-bottom:0.75rem;"><a href="/papers">&laquo; Papers</a></div>
 
-<h1 style="margin-bottom:0.5rem; font-size:1.3rem; line-height:1.4;">{{ paper.title }}</h1>
-<p style="color:#64748b; margin-bottom:1.5rem;">
+<h1 style="font-size:1.3rem; line-height:1.4; margin-bottom:0.5rem;">{{ paper.title }}</h1>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
     {% if paper.journal %}{{ paper.journal }}{% endif %}
     {% if paper.publication_year %} ({{ paper.publication_year }}){% endif %}
 </p>
 
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
-    <!-- Paper metadata -->
+<div class="grid-2">
+    <!-- Metadata -->
     <div class="card">
         <h2>Metadata</h2>
         <dl class="detail-grid">
@@ -21,37 +19,24 @@
             <dd><a href="https://doi.org/{{ paper.doi }}" target="_blank">{{ paper.doi }}</a></dd>
             {% endif %}
             {% if paper.pmid %}
-            <dt>PMID</dt>
+            <dt>PubMed</dt>
             <dd><a href="https://pubmed.ncbi.nlm.nih.gov/{{ paper.pmid }}" target="_blank">{{ paper.pmid }}</a></dd>
             {% endif %}
             {% if paper.pmcid %}
-            <dt>PMCID</dt>
+            <dt>PMC</dt>
             <dd><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/{{ paper.pmcid }}" target="_blank">{{ paper.pmcid }}</a></dd>
             {% endif %}
-            {% if paper.journal %}
-            <dt>Journal</dt>
-            <dd>{{ paper.journal }}</dd>
-            {% endif %}
-            {% if paper.publication_year %}
-            <dt>Year</dt>
-            <dd>{{ paper.publication_year }}</dd>
-            {% endif %}
-            {% if paper.volume %}
-            <dt>Volume/Issue</dt>
-            <dd>{{ paper.volume }}{% if paper.issue %} ({{ paper.issue }}){% endif %}</dd>
-            {% endif %}
-            {% if paper.citation_count %}
-            <dt>Citations</dt>
-            <dd>{{ paper.citation_count }}</dd>
-            {% endif %}
+            {% if paper.journal %}<dt>Journal</dt><dd>{{ paper.journal }}</dd>{% endif %}
+            {% if paper.publication_year %}<dt>Year</dt><dd>{{ paper.publication_year }}</dd>{% endif %}
+            {% if paper.citation_count %}<dt>Citations</dt><dd>{{ paper.citation_count }}</dd>{% endif %}
             <dt>Open Access</dt>
-            <dd>{{ "Yes" if paper.is_open_access else "No" if paper.is_open_access == false else "Unknown" }}</dd>
+            <dd>{% if paper.is_open_access %}Yes{% elif paper.is_open_access == false %}No{% else %}Unknown{% endif %}</dd>
             <dt>Full Text</dt>
             <dd>
                 {% if paper.fulltext %}
-                <span style="color:#166534;">Available ({{ paper.fulltext|length|string }} chars, via {{ paper.fulltext_source }})</span>
+                <span style="color:var(--green);">Available ({{ (paper.fulltext|length / 1000)|round(1) }}K chars via {{ paper.fulltext_source }})</span>
                 {% else %}
-                <span style="color:#94a3b8;">Not available</span>
+                <span style="color:var(--text-light);">Not available</span>
                 {% endif %}
             </dd>
             <dt>Source</dt>
@@ -68,17 +53,14 @@
             {% for lp in linked_products %}
             <tr>
                 <td><a href="/products/{{ lp.product_id }}">{{ lp.canonical_name }}</a></td>
-                <td style="font-size:0.85rem;">{{ lp.manufacturer_name }}</td>
-                <td>
-                    {% set cls = lp.link_classification %}
-                    <span class="badge badge-{{ cls.split('_')[0] }}">{{ cls }}</span>
-                </td>
+                <td style="font-size:0.82rem;" class="truncate">{{ lp.manufacturer_name }}</td>
+                <td><span class="badge badge-{{ lp.link_classification.split('_')[0] }}">{{ lp.link_classification }}</span></td>
                 <td>{{ "%.2f"|format(lp.confidence_score) }}</td>
             </tr>
             {% endfor %}
         </table>
         {% else %}
-        <p class="empty">No products linked to this paper.</p>
+        <p class="empty">No products linked.</p>
         {% endif %}
     </div>
 </div>
@@ -94,12 +76,11 @@
 <!-- Full Text -->
 {% if paper.fulltext %}
 <div class="card">
-    <h2>Full Text <span class="count">({{ paper.fulltext|length|string }} chars, source: {{ paper.fulltext_source }})</span></h2>
+    <h2>Full Text <span class="count">({{ (paper.fulltext|length / 1000)|round(1) }}K chars, source: {{ paper.fulltext_source }})</span></h2>
     <details>
-        <summary style="cursor:pointer; color:#2563eb; margin-bottom:0.75rem;">Click to expand full text</summary>
-        <div style="max-height:600px; overflow-y:auto; line-height:1.7; font-size:0.85rem; white-space:pre-wrap; word-wrap:break-word; background:#f8fafc; padding:1rem; border-radius:6px; border:1px solid #e2e8f0;">{{ paper.fulltext }}</div>
+        <summary style="cursor:pointer; color:var(--primary); margin-bottom:0.75rem; font-size:0.9rem;">Click to expand full text</summary>
+        <div style="max-height:600px; overflow-y:auto; line-height:1.7; font-size:0.85rem; white-space:pre-wrap; word-wrap:break-word; background:var(--surface-alt); padding:1rem; border-radius:8px; border:1px solid var(--border);">{{ paper.fulltext }}</div>
     </details>
 </div>
 {% endif %}
-
 {% endblock %}

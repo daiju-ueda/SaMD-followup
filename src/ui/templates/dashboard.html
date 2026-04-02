@@ -1,71 +1,145 @@
 {% extends "base.html" %}
 {% block title %}Dashboard — SaMD Evidence Tracker{% endblock %}
 {% block content %}
-<h1 style="margin-bottom:1rem; font-size:1.5rem;">Dashboard</h1>
+<h1>Dashboard</h1>
 
+<!-- Top stats -->
 <div class="stats-grid">
-    <div class="stat-card">
+    <div class="stat-card accent-blue">
         <div class="value">{{ total_products }}</div>
         <div class="label">Products</div>
     </div>
-    <div class="stat-card">
-        <div class="value">{{ total_papers }}</div>
-        <div class="label">Papers</div>
-    </div>
-    <div class="stat-card">
-        <div class="value">{{ total_links }}</div>
-        <div class="label">Product-Paper Links</div>
-    </div>
-    <div class="stat-card">
-        <div class="value">{{ total_aliases }}</div>
-        <div class="label">Aliases</div>
-    </div>
     {% for r in by_region %}
-    <div class="stat-card">
+    <div class="stat-card {% if r.region == 'us' %}accent-green{% elif r.region == 'jp' %}accent-rose{% else %}accent-amber{% endif %}">
         <div class="value">{{ r.cnt }}</div>
         <div class="label">{{ r.region|upper }} Products</div>
     </div>
     {% endfor %}
+    <div class="stat-card accent-blue">
+        <div class="value">{{ total_papers }}</div>
+        <div class="label">Papers</div>
+    </div>
+    <div class="stat-card accent-green">
+        <div class="value">{{ fulltext_stats.with_fulltext }}</div>
+        <div class="label">Full Text Available</div>
+    </div>
+    <div class="stat-card accent-amber">
+        <div class="value">{{ total_links }}</div>
+        <div class="label">Product-Paper Links</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ fulltext_stats.with_doi }}</div>
+        <div class="label">Papers with DOI</div>
+    </div>
 </div>
 
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+<div class="grid-2">
+    <!-- Regulatory Pathways -->
     <div class="card">
         <h2>Regulatory Pathways (US)</h2>
-        <table>
-            <tr><th>Pathway</th><th style="text-align:right">Count</th></tr>
-            {% for r in by_pathway %}
-            <tr>
-                <td><span class="badge badge-{{ r.regulatory_pathway }}">{{ r.regulatory_pathway }}</span></td>
-                <td style="text-align:right">{{ r.cnt }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% for r in by_pathway %}
+        <div class="bar-row">
+            <div class="bar-label"><span class="badge badge-{{ r.regulatory_pathway }}">{{ r.regulatory_pathway }}</span></div>
+            <div class="bar-track">
+                {% set max_val = by_pathway[0].cnt if by_pathway else 1 %}
+                <div class="bar-fill blue" style="width: {{ (r.cnt / max_val * 100)|round }}%">{{ r.cnt }}</div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
+
+    <!-- Link Classifications -->
     <div class="card">
-        <h2>Link Classifications</h2>
-        <table>
-            <tr><th>Classification</th><th style="text-align:right">Count</th></tr>
-            {% for r in by_classification %}
-            <tr>
-                <td><span class="badge badge-{{ r.link_classification.split('_')[0] }}">{{ r.link_classification }}</span></td>
-                <td style="text-align:right">{{ r.cnt }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        <h2>Evidence Classifications</h2>
+        {% set colors = {'exact_product': 'green', 'manufacturer_linked': 'amber', 'indication_related': 'indigo', 'product_family': 'blue'} %}
+        {% for r in by_classification %}
+        <div class="bar-row">
+            <div class="bar-label"><span class="badge badge-{{ r.link_classification.split('_')[0] }}">{{ r.link_classification }}</span></div>
+            <div class="bar-track">
+                {% set max_val = by_classification[0].cnt if by_classification else 1 %}
+                <div class="bar-fill {{ colors.get(r.link_classification, 'blue') }}" style="width: {{ (r.cnt / max_val * 100)|round }}%">{{ r.cnt }}</div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 
+<div class="grid-2">
+    <!-- Disease Areas -->
+    <div class="card">
+        <h2>Top Disease Areas</h2>
+        {% for r in top_disease_areas %}
+        <div class="bar-row">
+            <div class="bar-label" style="min-width:200px;" title="{{ r.disease_area }}">{{ r.disease_area[:30] }}</div>
+            <div class="bar-track">
+                {% set max_val = top_disease_areas[0].cnt if top_disease_areas else 1 %}
+                <div class="bar-fill rose" style="width: {{ (r.cnt / max_val * 100)|round }}%">{{ r.cnt }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modalities -->
+    <div class="card">
+        <h2>Top Modalities</h2>
+        {% for r in top_modalities %}
+        <div class="bar-row">
+            <div class="bar-label">{{ r.modality[:25] }}</div>
+            <div class="bar-track">
+                {% set max_val = top_modalities[0].cnt if top_modalities else 1 %}
+                <div class="bar-fill indigo" style="width: {{ (r.cnt / max_val * 100)|round }}%">{{ r.cnt }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Top Products -->
 <div class="card">
-    <h2>Top Products by Linked Papers</h2>
+    <div class="card-header">
+        <h2 style="margin-bottom:0">Top Products by Evidence</h2>
+        <a href="/products" style="font-size:0.85rem;">View all &rarr;</a>
+    </div>
     <table>
-        <tr><th>Product</th><th>Manufacturer</th><th style="text-align:right">Papers</th></tr>
+        <tr>
+            <th>Product</th>
+            <th>Manufacturer</th>
+            <th>Disease Area</th>
+            <th style="text-align:center">Exact</th>
+            <th style="text-align:center">Mfg</th>
+            <th style="text-align:center">Indication</th>
+            <th style="text-align:right">Total</th>
+        </tr>
         {% for p in top_products %}
         <tr>
             <td><a href="/products/{{ p.product_id }}">{{ p.canonical_name }}</a></td>
-            <td>{{ p.manufacturer_name }}</td>
-            <td style="text-align:right"><strong>{{ p.paper_count }}</strong></td>
+            <td class="truncate" style="max-width:200px;">{{ p.manufacturer_name }}</td>
+            <td style="font-size:0.8rem;">{{ p.disease_area or '' }}</td>
+            <td style="text-align:center">{% if p.exact_cnt %}<span class="badge badge-exact">{{ p.exact_cnt }}</span>{% else %}<span class="dot-gray">0</span>{% endif %}</td>
+            <td style="text-align:center">{% if p.mfg_cnt %}<span class="badge badge-mfg">{{ p.mfg_cnt }}</span>{% else %}<span class="dot-gray">0</span>{% endif %}</td>
+            <td style="text-align:center">{% if p.ind_cnt %}<span class="badge badge-indication">{{ p.ind_cnt }}</span>{% else %}<span class="dot-gray">0</span>{% endif %}</td>
+            <td style="text-align:right"><strong>{{ p.total_cnt }}</strong></td>
         </tr>
         {% endfor %}
     </table>
+</div>
+
+<!-- Recent Papers -->
+<div class="card">
+    <div class="card-header">
+        <h2 style="margin-bottom:0">Recent Papers</h2>
+        <a href="/papers" style="font-size:0.85rem;">View all &rarr;</a>
+    </div>
+    {% for p in recent_papers %}
+    <div class="paper-item">
+        <div class="paper-title"><a href="/papers/{{ p.paper_id }}">{{ p.title }}</a></div>
+        <div class="paper-meta">
+            {% if p.journal %}{{ p.journal }}{% endif %}
+            {% if p.publication_year %} ({{ p.publication_year }}){% endif %}
+            {% if p.doi %} &middot; <a href="https://doi.org/{{ p.doi }}" target="_blank">DOI</a>{% endif %}
+            &middot; {{ p.linked_products }} linked product{{ 's' if p.linked_products != 1 }}
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

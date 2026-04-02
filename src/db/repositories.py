@@ -385,6 +385,75 @@ class StatsRepository:
         cur.execute("SELECT COUNT(*) AS cnt FROM product_aliases")
         return cur.fetchone()["cnt"]
 
+    def top_disease_areas(self, limit: int = 10) -> list[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT disease_area, COUNT(*) AS cnt
+            FROM products WHERE disease_area IS NOT NULL AND disease_area != ''
+            GROUP BY disease_area ORDER BY cnt DESC LIMIT %s
+        """, (limit,))
+        return cur.fetchall()
+
+    def top_modalities(self, limit: int = 10) -> list[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT modality, COUNT(*) AS cnt
+            FROM products WHERE modality IS NOT NULL AND modality != ''
+            GROUP BY modality ORDER BY cnt DESC LIMIT %s
+        """, (limit,))
+        return cur.fetchall()
+
+    def papers_by_year(self) -> list[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT publication_year AS year, COUNT(*) AS cnt
+            FROM papers WHERE publication_year IS NOT NULL
+            GROUP BY publication_year ORDER BY publication_year
+        """)
+        return cur.fetchall()
+
+    def products_with_evidence_counts(self, limit: int = 30) -> list[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT p.product_id, p.canonical_name, p.manufacturer_name,
+                   p.disease_area, p.modality,
+                   SUM(CASE WHEN ppl.link_classification = 'exact_product' THEN 1 ELSE 0 END) AS exact_cnt,
+                   SUM(CASE WHEN ppl.link_classification = 'manufacturer_linked' THEN 1 ELSE 0 END) AS mfg_cnt,
+                   SUM(CASE WHEN ppl.link_classification = 'indication_related' THEN 1 ELSE 0 END) AS ind_cnt,
+                   COUNT(*) AS total_cnt
+            FROM products p
+            JOIN product_paper_links ppl ON p.product_id = ppl.product_id
+            GROUP BY p.product_id
+            ORDER BY exact_cnt DESC, total_cnt DESC
+            LIMIT %s
+        """, (limit,))
+        return cur.fetchall()
+
+    def fulltext_stats(self) -> dict:
+        cur = self._cur()
+        cur.execute("""
+            SELECT COUNT(*) AS total,
+                   COUNT(fulltext) AS with_fulltext,
+                   COUNT(doi) AS with_doi,
+                   COUNT(pmid) AS with_pmid
+            FROM papers
+        """)
+        return cur.fetchone()
+
+    def recent_papers(self, limit: int = 10) -> list[dict]:
+        cur = self._cur()
+        cur.execute("""
+            SELECT pa.paper_id, pa.title, pa.journal, pa.publication_year, pa.doi,
+                   COUNT(ppl.link_id) AS linked_products
+            FROM papers pa
+            LEFT JOIN product_paper_links ppl ON pa.paper_id = ppl.paper_id
+            WHERE pa.publication_year IS NOT NULL
+            GROUP BY pa.paper_id
+            ORDER BY pa.publication_year DESC, pa.title
+            LIMIT %s
+        """, (limit,))
+        return cur.fetchall()
+
     def execute_readonly(self, query: str) -> tuple[list[dict], list[str], int]:
         """Execute a read-only query. Returns (rows, columns, row_count).
 
