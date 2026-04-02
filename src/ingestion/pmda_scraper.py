@@ -53,12 +53,25 @@ APPROVAL_LINK_TEXT = "製造販売承認品目の一覧情報はこちら"
 CERT_LINK_TEXT = "認証品目リスト"
 CERT_EXCEL_HINT = "エクセル版"
 
-# Keywords to filter SaMD candidates from the full certification list
-SAMD_NAME_KEYWORDS = [
+# Keywords to INCLUDE SaMD candidates from the full certification list
+SAMD_INCLUDE_KEYWORDS = [
     "プログラム",
     "software",
     "SaMD",
     "アプリ",
+]
+
+# Keywords to EXCLUDE non-SaMD devices that match the include keywords
+# (e.g., "プログラム式補聴器" is a hearing aid, not SaMD)
+SAMD_EXCLUDE_KEYWORDS = [
+    "プログラム式補聴器",
+    "プログラム式洗浄",
+    "プログラム式消毒",
+    "プログラム式滅菌",
+    "プログラム付き電子体温計",
+    "プログラム式電解水",
+    "プログラム式電位治療",
+    "電解水生成器",
 ]
 
 # Manufacturer JP→EN mappings: shared from src.ingestion.jp_mappings
@@ -153,19 +166,35 @@ def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _filter_samd(df: pd.DataFrame) -> pd.DataFrame:
-    """Filter certification list for SaMD candidates by keyword matching."""
+    """Filter certification list for SaMD candidates.
+
+    Include rows with SaMD keywords, then exclude known non-SaMD
+    (e.g., programmable hearing aids, sterilizers).
+    """
     df = _normalize_columns(df)
     text_cols = [c for c in df.columns
                  if any(k in c for k in ["一般的名称", "販売名", "類別", "名称"])]
     if not text_cols:
         return df.iloc[0:0].copy()
 
-    mask = pd.Series(False, index=df.index)
+    # Include: SaMD keywords
+    include_mask = pd.Series(False, index=df.index)
     for col in text_cols:
         s = df[col].astype(str).fillna("")
-        for kw in SAMD_NAME_KEYWORDS:
-            mask |= s.str.contains(kw, case=False, na=False)
-    return df.loc[mask].copy()
+        for kw in SAMD_INCLUDE_KEYWORDS:
+            include_mask |= s.str.contains(kw, case=False, na=False)
+
+    # Exclude: non-SaMD devices
+    exclude_mask = pd.Series(False, index=df.index)
+    for col in text_cols:
+        s = df[col].astype(str).fillna("")
+        for kw in SAMD_EXCLUDE_KEYWORDS:
+            exclude_mask |= s.str.contains(kw, case=False, na=False)
+
+    result = df.loc[include_mask & ~exclude_mask].copy()
+    logger.info("PMDA certification filter: %d included, %d excluded → %d",
+                include_mask.sum(), exclude_mask.sum(), len(result))
+    return result
 
 
 # ---------------------------------------------------------------------------

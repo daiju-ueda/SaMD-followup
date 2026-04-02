@@ -49,23 +49,35 @@ UA = "Mozilla/5.0 (compatible; SaMD-Evidence-Tracker/1.0)"
 
 FOICLASS_ZIP_URL = "https://www.accessdata.fda.gov/premarket/ftparea/foiclass.zip"
 PMA_ZIP_URL = "https://www.accessdata.fda.gov/premarket/ftparea/pma.zip"
-PMNLSTMN_ZIP_URL = "https://www.accessdata.fda.gov/premarket/ftparea/pmnlstmn.zip"
+PMN96CUR_ZIP_URL = "https://www.accessdata.fda.gov/premarket/ftparea/pmn96cur.zip"  # all 510(k) since 1996
 DENOVO_SEARCH_URL = "https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/denovo.cfm"
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "fda_raw"
 STATE_DIR = DATA_DIR / "state"
 
 # Keywords to identify SaMD product codes from foiclass
+# Broad keywords for software-related product codes (used in foiclass filtering)
 SOFTWARE_KEYWORDS = [
     "software", "software as a medical device",
     "mobile medical application", "mobile medical app",
     "artificial intelligence", "machine learning", "algorithm",
     "computer-aided", "computer assisted", "decision support",
     "image processing", "analysis software", "triage software",
-    "notification software", "cloud", "app", "application", "program",
+    "notification software", "cloud", "application", "program",
 ]
 
-# Manual allowlist for product codes known to be SaMD/AI
+# Strict AI/ML keywords for filtering individual device records
+AIML_KEYWORDS = [
+    "artificial intelligence", "machine learning", "deep learning",
+    "neural network", "computer-aided detection", "computer-aided diagnosis",
+    "computer assisted detection", "computer assisted diagnosis",
+    "software as a medical device", "samd", "ai-based", "ai based",
+    "ai-powered", "ai powered", "convolutional", "segmentation",
+    "clinical decision support", "image analysis",
+    "cad", "radiological computer",
+]
+
+# Manual allowlist for product codes known to be AI/ML SaMD
 MANUAL_PRODUCT_CODE_ALLOWLIST: set[str] = set()
 
 TIMEOUT = 60
@@ -165,19 +177,33 @@ def _parse_foiclass(data: bytes) -> pd.DataFrame:
     return df
 
 
-def derive_samd_product_codes(foiclass_df: pd.DataFrame) -> list[str]:
-    """Extract product codes likely to contain SaMD devices."""
+def derive_samd_product_codes(foiclass_df: pd.DataFrame) -> tuple[list[str], list[str]]:
+    """Extract product codes for SaMD devices.
+
+    Returns (strict_codes, broad_codes):
+    - strict_codes: AI/ML-specific codes (high confidence SaMD)
+    - broad_codes: software-related codes (may include non-SaMD software)
+    """
     text_cols = ["device_name", "definition", "technical_method", "target_area"]
-    pattern = re.compile("|".join(re.escape(k) for k in SOFTWARE_KEYWORDS), re.IGNORECASE)
 
-    mask = pd.Series(False, index=foiclass_df.index)
+    # Strict: AI/ML-specific terms
+    ai_pattern = re.compile("|".join(re.escape(k) for k in AIML_KEYWORDS), re.IGNORECASE)
+    ai_mask = pd.Series(False, index=foiclass_df.index)
     for col in text_cols:
-        mask |= foiclass_df[col].fillna("").str.contains(pattern, na=False)
+        ai_mask |= foiclass_df[col].fillna("").str.contains(ai_pattern, na=False)
+    ai_mask |= foiclass_df["product_code"].isin(MANUAL_PRODUCT_CODE_ALLOWLIST)
+    strict_codes = foiclass_df.loc[ai_mask, "product_code"].dropna().unique().tolist()
 
-    mask |= foiclass_df["product_code"].isin(MANUAL_PRODUCT_CODE_ALLOWLIST)
-    codes = foiclass_df.loc[mask, "product_code"].dropna().unique().tolist()
-    logger.info("Derived %d SaMD product codes from foiclass", len(codes))
-    return sorted(codes)
+    # Broad: any software-related terms
+    sw_pattern = re.compile("|".join(re.escape(k) for k in SOFTWARE_KEYWORDS), re.IGNORECASE)
+    sw_mask = pd.Series(False, index=foiclass_df.index)
+    for col in text_cols:
+        sw_mask |= foiclass_df[col].fillna("").str.contains(sw_pattern, na=False)
+    broad_codes = foiclass_df.loc[sw_mask, "product_code"].dropna().unique().tolist()
+
+    logger.info("Derived %d strict AI/ML + %d broad software product codes from foiclass",
+                len(strict_codes), len(broad_codes))
+    return sorted(strict_codes), sorted(broad_codes)
 
 
 # ---------------------------------------------------------------------------
@@ -213,9 +239,14 @@ def _parse_pma(data: bytes) -> pd.DataFrame:
 
 def _pma_to_products(
     df: pd.DataFrame,
-    samd_codes: list[str],
+    strict_codes: list[str],
+    broad_codes: list[str],
 ) -> list[tuple[Product, RegulatoryEntry]]:
-    hits = df[df["product_code"].isin(samd_codes)].copy()
+    """Filter PMA records: strict codes pass directly, broad codes need AI/ML keywords in name."""
+    ai_pattern = re.compile("|".join(re.escape(k) for k in AIML_KEYWORDS), re.IGNORECASE)
+    strict_mask = df["product_code"].isin(strict_codes)
+    broad_mask = df["product_code"].isin(broad_codes) & df["trade_name"].fillna("").str.contains(ai_pattern, na=False)
+    hits = df[strict_mask | broad_mask].copy()
     results = []
     for _, row in hits.iterrows():
         trade_name = row.get("trade_name", "")
@@ -283,13 +314,18 @@ def _parse_510k(data: bytes) -> pd.DataFrame:
 
 def _510k_to_products(
     df: pd.DataFrame,
-    samd_codes: list[str],
+    strict_codes: list[str],
+    broad_codes: list[str],
 ) -> list[tuple[Product, RegulatoryEntry]]:
+    """Filter 510(k): strict codes pass, broad codes need AI/ML keywords in device name."""
     if "product_code" not in df.columns:
         logger.warning("510(k) data missing product_code column")
         return []
 
-    hits = df[df["product_code"].isin(samd_codes)].copy()
+    ai_pattern = re.compile("|".join(re.escape(k) for k in AIML_KEYWORDS), re.IGNORECASE)
+    strict_mask = df["product_code"].isin(strict_codes)
+    broad_mask = df["product_code"].isin(broad_codes) & df.get("device_name", pd.Series()).fillna("").str.contains(ai_pattern, na=False)
+    hits = df[strict_mask | broad_mask].copy()
     results = []
     for _, row in hits.iterrows():
         device_name = str(row.get("device_name", "")).strip()
@@ -388,7 +424,8 @@ def _fetch_denovo_detail(denovo_id: str) -> Optional[_DeNovoRecord]:
 
 
 def _denovo_to_products(
-    samd_codes: list[str],
+    strict_codes: list[str],
+    broad_codes: list[str],
 ) -> list[tuple[Product, RegulatoryEntry]]:
     """Fetch De Novo records from FDA De Novo database (HTML scraping).
 
@@ -424,8 +461,8 @@ def _denovo_to_products(
 
     # Step 2: Fetch detail pages (rate limited)
     results = []
-    sw_pattern = re.compile(
-        "|".join(re.escape(k) for k in SOFTWARE_KEYWORDS), re.IGNORECASE,
+    ai_pattern = re.compile(
+        "|".join(re.escape(k) for k in AIML_KEYWORDS), re.IGNORECASE,
     )
     for i, den_id in enumerate(sorted(all_ids)):
         rec = _fetch_denovo_detail(den_id)
@@ -434,8 +471,11 @@ def _denovo_to_products(
                 time.sleep(1.0)
             continue
 
-        # Filter: product code in SaMD codes OR device name matches software keywords
-        if rec.product_code not in samd_codes and not sw_pattern.search(rec.device_name):
+        # Filter: strict code passes, broad code needs AI keyword in name
+        in_strict = rec.product_code in strict_codes
+        in_broad = rec.product_code in broad_codes
+        has_ai = ai_pattern.search(rec.device_name)
+        if not (in_strict or (in_broad and has_ai) or has_ai):
             if i < len(all_ids) - 1:
                 time.sleep(1.0)
             continue
@@ -491,7 +531,7 @@ def fetch_fda_samd_products() -> list[tuple[Product, list[RegulatoryEntry]]]:
     _save_raw("foiclass", foiclass_data)
 
     foiclass_df = _parse_foiclass(foiclass_data)
-    samd_codes = derive_samd_product_codes(foiclass_df)
+    strict_codes, broad_codes = derive_samd_product_codes(foiclass_df)
 
     # 2. PMA
     logger.info("Downloading pma.zip...")
@@ -499,18 +539,18 @@ def fetch_fda_samd_products() -> list[tuple[Product, list[RegulatoryEntry]]]:
     r.raise_for_status()
     _save_raw("pma", r.content)
     pma_df = _parse_pma(r.content)
-    pma_products = _pma_to_products(pma_df, samd_codes)
+    pma_products = _pma_to_products(pma_df, strict_codes, broad_codes)
 
-    # 3. 510(k)
-    logger.info("Downloading pmnlstmn.zip...")
-    r = sess.get(PMNLSTMN_ZIP_URL, timeout=TIMEOUT)
+    # 3. 510(k) — full database since 1996
+    logger.info("Downloading pmn96cur.zip (all 510(k) since 1996)...")
+    r = sess.get(PMN96CUR_ZIP_URL, timeout=120)
     r.raise_for_status()
-    _save_raw("pmnlstmn", r.content)
+    _save_raw("pmn96cur", r.content)
     k510_df = _parse_510k(r.content)
-    k510_products = _510k_to_products(k510_df, samd_codes)
+    k510_products = _510k_to_products(k510_df, strict_codes, broad_codes)
 
     # 4. De Novo (single search + detail pages with rate limiting)
-    denovo_products = _denovo_to_products(samd_codes)
+    denovo_products = _denovo_to_products(strict_codes, broad_codes)
 
     # 5. Combine, deduplicate, enrich
     all_raw = pma_products + k510_products + denovo_products
