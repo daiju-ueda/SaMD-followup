@@ -306,6 +306,13 @@ _GENERIC_WORDS = {
     "contact", "second", "deep", "signs", "station",
     # Short abbreviations that are also common words
     "andi", "cina", "rus",
+    # Common terms extracted from Japanese product names
+    "attractive", "viewer", "confirm", "elements", "leaf", "neo",
+    "join", "cvs", "ffr", "dxa", "bsi", "pwv", "pro",
+    "basic", "advance", "standard", "lite", "premium",
+    "system", "suite", "studio", "navigator", "planner",
+    "monitor", "analyzer", "tracker", "manager", "assist",
+    "select", "guide", "scan", "view", "image",
 }
 
 

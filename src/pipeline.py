@@ -111,15 +111,39 @@ def _is_japanese(text: str) -> bool:
     return bool(re.search(r'[\u3000-\u9fff\uf900-\ufaff]', text))
 
 
+def _extract_latin_from_japanese(text: str) -> Optional[str]:
+    """Extract Latin (ASCII/halfwidth) tokens from a mixed JP/EN string.
+
+    Example: 'ＴｏｍｏＴｈｅｒａｐｙプランニングステーション' → 'TomoTherapy'
+    Example: '内視鏡画像診断支援ソフトウェア EndoBRAIN' → 'EndoBRAIN'
+    """
+    import re
+    import unicodedata
+    # Normalize fullwidth ASCII to halfwidth
+    text = unicodedata.normalize("NFKC", text)
+    # Extract sequences of Latin letters, digits, hyphens
+    tokens = re.findall(r'[A-Za-z][A-Za-z0-9\-\.]{2,}', text)
+    if tokens:
+        return " ".join(tokens)
+    return None
+
+
 def build_search_terms(product: Product) -> ProductSearchTerms:
     """Build searchable terms from a Product and its relations.
 
     Japanese-only names are excluded from search terms since we search
     English-language literature. They remain as aliases for display.
     """
+    from src.linking.scorer import _is_generic_product_name
+
     all_names = []
     if not _is_japanese(product.canonical_name):
         all_names.append(product.canonical_name)
+    else:
+        # Try to extract Latin text from Japanese name
+        latin = _extract_latin_from_japanese(product.canonical_name)
+        if latin and not _is_generic_product_name(latin):
+            all_names.append(latin)
 
     family_names = []
     manufacturer_names = []
@@ -128,8 +152,10 @@ def build_search_terms(product: Product) -> ProductSearchTerms:
     regulatory_ids = []
 
     for alias in product.aliases:
-        # Skip Japanese-only aliases for literature search
-        if _is_japanese(alias.alias_name) and alias.language == "ja":
+        if _is_japanese(alias.alias_name):
+            latin = _extract_latin_from_japanese(alias.alias_name)
+            if latin and latin not in all_names and not _is_generic_product_name(latin):
+                all_names.append(latin)
             continue
         if alias.alias_type.value == "product_family":
             family_names.append(alias.alias_name)
