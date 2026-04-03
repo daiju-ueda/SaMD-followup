@@ -14,7 +14,7 @@ import logging
 from difflib import SequenceMatcher
 from typing import Optional
 
-from src.models.product import Product, RegulatoryEntry
+from src.models.product import AliasType, Product, ProductAlias, RegulatoryEntry
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +91,6 @@ def merge_cross_region(
                     combined_entries.append(entry)
                 # Add the other name as alias
                 if p2.canonical_name != p1.canonical_name:
-                    from src.models.product import ProductAlias, AliasType
                     combined_aliases.append(ProductAlias(
                         product_id=p1.product_id,
                         alias_name=p2.canonical_name,

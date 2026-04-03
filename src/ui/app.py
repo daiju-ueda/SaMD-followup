@@ -14,6 +14,7 @@ import src.bootstrap  # noqa: F401 — path + .env setup
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.responses import RedirectResponse
 
 from src.db.connection import get_connection
 from src.db.repositories import ProductRepository, PaperRepository, StatsRepository
@@ -206,7 +207,6 @@ async def submit_review(request: Request, link_id: str):
                            new_classification=new_classification, notes=notes)
     conn.close()
 
-    from starlette.responses import RedirectResponse
     return RedirectResponse(url="/review", status_code=303)
 
 

@@ -9,6 +9,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from src.config import settings
+
 
 class LinkClassification(str, Enum):
     EXACT_PRODUCT = "exact_product"
@@ -82,7 +84,6 @@ DEFAULT_FEATURE_WEIGHTS: dict[str, float] = {
 
 def get_classification_thresholds() -> dict[str, float]:
     """Load thresholds from settings (allows env override)."""
-    from src.config import settings
     return {
         "exact_product_min_score": settings.exact_product_min_score,
         "product_family_min_score": settings.product_family_min_score,

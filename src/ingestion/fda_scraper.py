@@ -15,6 +15,7 @@ import hashlib
 import io
 import logging
 import re
+import time
 import zipfile
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
@@ -437,7 +438,6 @@ def _denovo_to_products(
     Uses a single search to get all De Novo IDs, then fetches details
     with rate limiting (1 req/sec) to avoid 403.
     """
-    import time
 
     # Step 1: Get all De Novo IDs in one search (no product code filter)
     sess = _session()

@@ -11,6 +11,7 @@ Single source of truth for:
 
 from __future__ import annotations
 
+import asyncio
 import csv
 import logging
 from pathlib import Path
@@ -243,7 +244,6 @@ async def enrich_with_fulltext(
     Only fetches for papers without existing fulltext, up to max_fetch.
     This enables fulltext-based scoring in the linking step.
     """
-    import asyncio
     fetched = 0
     for paper in papers:
         if paper.fulltext or fetched >= max_fetch:
