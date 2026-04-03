@@ -1,38 +1,38 @@
 # SaMD Evidence Tracker
 
-**Product-centric regulatory and literature database for Software as a Medical Device**
+**Product-centric AI/ML SaMD regulatory and literature database**
 
-Collects approved/cleared SaMD products from the US (FDA) and Japan (PMDA), links them to English-language publications, and displays evidence organized by product — with strict separation between exact product evidence and related literature.
+Collects AI/ML-enabled Software as a Medical Device (SaMD) products from the US (FDA) and Japan (PMDA), links them to English-language publications, and displays evidence organized by product — with strict separation between exact product evidence and related literature.
 
 ## Overview
 
 | | |
 |---|---|
-| **Regions** | US (FDA), Japan (PMDA), EU (designed, Phase 2) |
-| **FDA sources** | accessdata.fda.gov bulk files (foiclass, PMA, 510(k), De Novo) |
-| **PMDA sources** | pmda.go.jp Excel lists (approved + certified devices) |
-| **Literature** | PubMed, Europe PMC, OpenAlex |
-| **Full text** | Europe PMC OA, NCBI PMC OA |
-| **Database** | PostgreSQL |
-| **UI** | FastAPI + Jinja2 |
+| **Regions** | US (FDA), Japan (PMDA) |
+| **FDA source** | Official AI/ML-Enabled Medical Devices CSV (1,430+ products, gold standard) |
+| **FDA fallback** | accessdata.fda.gov bulk files (foiclass, PMA, pmn96cur, De Novo DB) |
+| **PMDA sources** | pmda.go.jp Excel lists — AI flag for approved, keyword filter for certified |
+| **Literature** | PubMed, Europe PMC (full-text search), OpenAlex |
+| **Full text** | Europe PMC OA, NCBI PMC OA — used for scoring |
+| **Database** | PostgreSQL (incremental upsert) |
+| **UI** | FastAPI + Jinja2 (port 8001) |
 | **Updates** | Monthly cron (1st of each month, 3:00 AM) |
 
 ## Architecture
 
 ```
-Data Ingestion          Normalization & Linking      Display
-──────────────          ───────────────────────      ───────
-FDA bulk zips  ──┐
-PMDA Excel     ──┼→ Product Master ──┐              Dashboard
-                 │   (dedup, cross-   │              Product List
-PubMed API     ──┐   region merge)   ├───────────→  Product Detail
-Europe PMC API ──┼→ Paper Corpus ────┤              Paper Detail
-OpenAlex API   ──┘   (DOI dedup)     │              SQL Console
-                                     │
-                  Scorer ────────────┘
-                  (15 features, weighted)
-                  exact_product / product_family /
-                  manufacturer_linked / indication_related
+Product Ingestion           Scoring & Linking              Display
+─────────────────           ─────────────────              ───────
+FDA CSV (gold)  ──┐
+FDA bulk (fallback)┤→ Product Master ──┐                   Dashboard
+PMDA Excel      ──┘  (cross-region     │                   Products (US/JP)
+                      merge, dedup)    │                   Product Detail
+PubMed          ──┐                    │                   Paper Detail
+Europe PMC (FT) ──┼→ Paper Corpus ─────┼→ 15-feature ──→  Review Queue
+OpenAlex        ──┘  (DOI dedup)       │   Scorer          SQL Console
+                                       │
+                  Fulltext fetch ───────┤
+                  Fulltext rescore ─────┘
 ```
 
 ## Evidence Classification
@@ -41,11 +41,20 @@ Papers are classified into three tiers, displayed separately to prevent misattri
 
 | Classification | Meaning | Criteria |
 |---|---|---|
-| **exact_product** | Paper explicitly names the product | Product name in title/abstract + manufacturer corroboration for generic names |
+| **exact_product** | Paper explicitly names the product | Product name in title/abstract/fulltext + manufacturer corroboration for generic names |
 | **manufacturer_linked** | Same manufacturer + matching indication | Manufacturer in author affiliations + disease/modality match |
 | **indication_related** | Same disease area and modality | Disease + modality + AI/ML terms, no product-specific mention |
 
-**False positive handling**: Generic product names (e.g., "Rapid", "HALO", "Vision") require manufacturer co-occurrence or regulatory ID confirmation. Without corroboration, they are demoted to `indication_related` with `human_review_needed=true`.
+**False positive handling:**
+- Generic product names (e.g., "Loop System", "Red Dot", "Vital Signs") require manufacturer co-occurrence or regulatory ID for `exact_product`
+- Multi-word phrases: each word checked against generic word list (55+ words)
+- Japanese product names: Latin tokens extracted via NFKC normalization, filtered for proper-noun patterns (mixed case, acronyms, special chars)
+- Without corroboration, demoted to `indication_related`
+
+**Fulltext scoring:**
+- Pipeline fetches full text for top candidates (Europe PMC OA)
+- `product_name_in_fulltext` feature (weight 10) catches mentions in paper body
+- Post-pipeline rescore: scans DB fulltext, upgrades non-exact → exact when product name found in body, new links marked `human_review_needed=true`
 
 ## Setup
 
@@ -78,14 +87,20 @@ pip install httpx pydantic pydantic-settings psycopg2-binary \
 ### Running
 
 ```bash
-# Full pipeline: FDA + PMDA → literature search → scoring
+# Full pipeline: FDA (CSV) + PMDA (web) → literature search → scoring
+python3 scripts/run_pipeline.py --pmda-web --output data/pipeline_results.json
+
+# Using FDA bulk files instead of CSV (fallback, ~50% coverage)
 python3 scripts/run_pipeline.py --fda-web --pmda-web --output data/pipeline_results.json
 
 # Load into database (incremental upsert)
-python3 scripts/load_to_db.py --fda-web --pmda-web
+python3 scripts/load_to_db.py --pmda-web
 
 # Fetch full text for open-access papers
 python3 scripts/fetch_fulltext.py
+
+# Re-score using stored full text (upgrades + new links)
+python3 scripts/rescore_fulltext.py
 
 # Start web UI
 python3 -m uvicorn src.ui.app:app --host 0.0.0.0 --port 8001
@@ -94,10 +109,13 @@ python3 -m uvicorn src.ui.app:app --host 0.0.0.0 --port 8001
 ### CLI Options
 
 ```bash
-# FDA only (from bulk files)
+# FDA only (from CSV, recommended)
+python3 scripts/run_pipeline.py --skip-pmda
+
+# FDA only (from bulk files, fallback)
 python3 scripts/run_pipeline.py --skip-pmda --fda-web
 
-# PMDA only (from Excel download)
+# PMDA only (from web Excel)
 python3 scripts/run_pipeline.py --skip-fda --pmda-web
 
 # Resume from checkpoint
@@ -112,15 +130,15 @@ python3 scripts/fetch_fulltext.py --retry-failed
 ```
 src/
 ├── bootstrap.py              # Path + .env setup (shared by all entry points)
-├── config/settings.py        # Environment-based configuration
-├── utils.py                  # Date parsing, logging
+├── config/settings.py        # Environment-based configuration (env vars)
+├── utils.py                  # Date parsing, logging, JP text extraction
 ├── pipeline.py               # Pipeline orchestrator
 │
 ├── ingestion/                # Product data collection
 │   ├── fda.py                # FDA CSV parsing, deduplication, pathway inference
-│   ├── fda_scraper.py        # FDA bulk file download (foiclass/PMA/510k/De Novo)
+│   ├── fda_scraper.py        # FDA bulk file download (foiclass/PMA/pmn96cur/De Novo)
 │   ├── pmda.py               # PMDA CSV parser (fallback)
-│   ├── pmda_scraper.py       # PMDA Excel download (approved + certified)
+│   ├── pmda_scraper.py       # PMDA Excel download (AI flag + keyword filter)
 │   ├── normalizer.py         # Name normalization, disease area/modality inference
 │   ├── cross_region.py       # Cross-region product merge (FDA ↔ PMDA)
 │   └── jp_mappings.py        # Japanese → English manufacturer name mappings
@@ -129,34 +147,35 @@ src/
 │   ├── query_generator.py    # 5-level search query generation
 │   ├── pubmed.py             # PubMed E-utilities client
 │   ├── openalex.py           # OpenAlex API client
-│   ├── europe_pmc.py         # Europe PMC API client
+│   ├── europe_pmc.py         # Europe PMC API client (full-text search)
 │   ├── fulltext.py           # Full-text fetcher (Europe PMC / NCBI PMC OA)
 │   ├── parsers.py            # Shared parsers (abstract reconstruction, JATS XML)
 │   ├── local_openalex.py     # Local OpenAlex snapshot search
 │   └── local_pmc.py          # Local PMC XML full-text search
 │
 ├── linking/                  # Product-paper linking
-│   ├── scorer.py             # 15-feature weighted scoring, 5-way classification
+│   ├── scorer.py             # 15-feature scoring, generic name detection, classification
 │   └── deduplicator.py       # DOI/PMID-based paper deduplication
 │
 ├── models/                   # Pydantic domain models
 │   ├── product.py            # Product, RegulatoryEntry, ProductAlias
-│   ├── paper.py              # Paper, PaperAuthor
-│   └── linking.py            # ProductPaperLink, scoring config
+│   ├── paper.py              # Paper, PaperAuthor (with fulltext field)
+│   └── linking.py            # ProductPaperLink, scoring config + thresholds
 │
 ├── db/                       # Database layer
 │   ├── schema_pg95.sql       # PostgreSQL schema
 │   ├── connection.py         # Connection management
-│   └── repositories.py       # Product/Paper/Stats repositories (upsert)
+│   └── repositories.py       # Product/Paper/Stats repositories (upsert, review)
 │
 └── ui/                       # Web UI
-    ├── app.py                # FastAPI application
+    ├── app.py                # FastAPI app (dashboard, products, papers, review, SQL)
     └── templates/            # Jinja2 templates
 
 scripts/
-├── run_pipeline.py           # Pipeline CLI
+├── run_pipeline.py           # Pipeline CLI (search + score)
 ├── load_to_db.py             # Database loader (incremental upsert)
 ├── fetch_fulltext.py         # Full-text batch fetcher
+├── rescore_fulltext.py       # Re-score links using stored full text
 └── monthly_update.sh         # Monthly cron update script
 ```
 
@@ -164,19 +183,22 @@ scripts/
 
 ### FDA (United States)
 
-| Source | URL | Content |
+| Source | Method | Content |
 |---|---|---|
-| foiclass.zip | accessdata.fda.gov/premarket/ftparea/ | Product classification → derive SaMD codes |
-| pma.zip | Same | PMA approvals (pipe-delimited) |
-| pmnlstmn.zip | Same | 510(k) monthly clearances (pipe-delimited) |
-| De Novo DB | accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/denovo.cfm | De Novo authorizations (HTML) |
+| **AI/ML CSV** (primary) | Manual download from fda.gov | 1,430+ curated AI/ML SaMD products |
+| foiclass.zip (fallback) | Auto-download from accessdata.fda.gov | Product classification → derive SaMD codes |
+| pma.zip (fallback) | Auto-download | PMA approvals (pipe-delimited) |
+| pmn96cur.zip (fallback) | Auto-download | All 510(k) since 1996 (pipe-delimited) |
+| De Novo DB (fallback) | HTML scraping | De Novo authorizations |
+
+The FDA CSV is the gold standard (FDA's own curated list). Bulk files capture ~50% due to product code heuristics limitations.
 
 ### PMDA (Japan)
 
-| Source | URL | Content |
+| Source | Method | Content |
 |---|---|---|
-| Approved SaMD Excel | pmda.go.jp | Class III/IV approved program medical devices |
-| Certified device Excel | pmda.go.jp | Class II certified devices (filtered by SaMD keywords) |
+| Approved SaMD Excel | Auto-download from pmda.go.jp | Program medical devices with AI活用医療機器=○ flag + keyword supplement |
+| Certified device Excel | Auto-download | Class II certified devices filtered by AI/ML keywords (解析, 検出, 診断支援, AI, etc.) |
 
 ## Scoring
 
@@ -184,8 +206,9 @@ scripts/
 
 | Feature | Weight | Description |
 |---|---|---|
-| product_name_in_title | 30 | Product name appears in paper title |
-| product_name_in_abstract | 20 | Product name appears in abstract |
+| product_name_in_title | 30 | Product name in paper title |
+| product_name_in_abstract | 20 | Product name in abstract |
+| product_name_in_fulltext | 10 | Product name in paper body (OA only) |
 | regulatory_id_in_text | 25 | Regulatory ID (e.g., K210000) in text |
 | product_alias_in_title | 20 | Alias/trade name in title |
 | product_alias_in_abstract | 15 | Alias/trade name in abstract |
@@ -204,10 +227,12 @@ scripts/
 ```
 cron: 0 3 1 * *
 
-1. PMDA: download Excel lists (approved + certified) → literature search
-2. FDA: download bulk files (foiclass + PMA + 510k + De Novo) → literature search
-3. Incremental DB update (upsert — preserves human reviews + full text)
-4. Full-text fetch (new papers only)
+1. PMDA: download Excel lists (AI-flagged approved + AI/ML-filtered certified)
+2. FDA: use local CSV (primary) or download bulk files (fallback)
+3. Literature search: PubMed + Europe PMC + OpenAlex (5-level queries)
+4. Incremental DB update (upsert — preserves human reviews + full text)
+5. Full-text fetch (new OA papers only)
+6. Full-text rescore (upgrade links, find new fulltext-only matches)
 ```
 
 ## License
